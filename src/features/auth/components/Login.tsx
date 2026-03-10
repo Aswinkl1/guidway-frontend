@@ -3,6 +3,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { Link } from "react-router";
 import z, { keyof } from "zod";
 
 const loginSchema = z.object({
@@ -259,9 +260,11 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
       {/* Sign up */}
       <p className="text-center text-sm text-gray-500 mt-5">
         Don't have an account?{" "}
-        <button className="text-blue-600 hover:text-blue-700 font-semibold transition-colors">
-          Sign up
-        </button>
+        <Link to={"/auth/signup"}>
+          <button className=" cursor-pointer text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+            Sign up
+          </button>
+        </Link>
       </p>
     </div>
   );
