@@ -1,16 +1,16 @@
 import { api } from "@/lib/axios";
 import SignupForm, { type SignupSchemaType } from "../components/Signup";
-import { useNavigate } from "react-router";
+
 import { useState } from "react";
 import { CheckEmailPage } from "../components/checkEmail";
 
 export default function Signup() {
-  const [isSignedUP, setIsSignedUp] = useState(true);
+  const [isSignedUP, setIsSignedUp] = useState(false);
   async function handleSubmit(data: SignupSchemaType): Promise<void> {
     try {
       console.log("data fromt the ", data);
       // send the request to the backend
-      const res = await api.post("/signup", data);
+      await api.post("/signup", data);
       // show the user to go and verify the singup page
       setIsSignedUp(true);
     } catch (error) {

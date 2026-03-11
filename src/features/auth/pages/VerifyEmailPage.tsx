@@ -1,16 +1,19 @@
-import { useSearchParams } from "react-router";
+import { useLoaderData, useSearchParams } from "react-router";
+import { LinkExpiredPage } from "../components/LinkExpiredPage";
+import { VerifySuccessPage } from "../components/VerifySuccessfull";
 
-function isTokenExpired(token: string): boolean {
-  if (!token) return true;
-  // decode the token
-
-  // current time in second
-
-  // check if the current time is less that token exp
-  return false;
-}
 export const VerifyEmailPage = () => {
-  const [searchParams] = useSearchParams();
-  const token = searchParams.get("token");
-  return <h1>jkdjdj</h1>;
+  const isTokenValid = useLoaderData();
+  const title = "Email verification successfull";
+  const message =
+    "Your account has been verifed. You can now log in to your account with your new credentials";
+  return (
+    <>
+      {isTokenValid ? (
+        <VerifySuccessPage title={title} message={message} />
+      ) : (
+        <LinkExpiredPage />
+      )}
+    </>
+  );
 };

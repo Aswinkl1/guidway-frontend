@@ -1,4 +1,5 @@
 import { CheckCircle } from "lucide-react";
+import { Link } from "react-router";
 
 export function VerifySuccessPage({
   title,
@@ -29,9 +30,12 @@ export function VerifySuccessPage({
         </p>
 
         {/* CTA Button */}
-        <button className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 rounded-lg transition-colors">
+        <Link
+          to="/auth/login"
+          className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
+        >
           Back to log in
-        </button>
+        </Link>
       </div>
     </div>
   );

@@ -3,6 +3,8 @@ import { Root } from "./App";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import SignupPage from "@/features/auth/pages/SignupPage";
+import { VerifyEmailPage } from "@/features/auth/pages/VerifyEmailPage";
+import verifyToken from "@/lib/verifyEmailLoder";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +26,11 @@ export const router = createBrowserRouter([
       {
         path: "signup",
         Component: SignupPage,
+      },
+      {
+        path: "verify",
+        loader: verifyToken,
+        Component: VerifyEmailPage,
       },
     ],
   },
