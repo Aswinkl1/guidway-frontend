@@ -1,4 +1,4 @@
-import { useLoaderData, useSearchParams } from "react-router";
+import { useLoaderData } from "react-router";
 import { LinkExpiredPage } from "../components/LinkExpiredPage";
 import { VerifySuccessPage } from "../components/VerifySuccessfull";
 

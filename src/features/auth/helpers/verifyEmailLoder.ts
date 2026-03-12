@@ -1,7 +1,7 @@
 import { jwtDecode } from "jwt-decode";
-import { api } from "./axios";
+import { api } from "../../../lib/axios";
 
-function isTokenExpired(token: string): boolean {
+export function isTokenExpired(token: string): boolean {
   try {
     if (!token) return true;
     // decode the token
