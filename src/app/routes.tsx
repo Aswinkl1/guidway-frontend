@@ -6,7 +6,10 @@ import SignupPage from "@/features/auth/pages/SignupPage";
 import { VerifyEmailPage } from "@/features/auth/pages/VerifyEmailPage";
 import verifyToken from "@/features/auth/helpers/verifyEmailLoder";
 import { ForgotPasswordPage } from "@/features/auth/pages/ForgetpasswordPage";
-import { ResetPasswordPage } from "@/features/auth/pages/resetPasswordPage";
+import {
+  ResetPasswordPage,
+  verifyTokenForResetPassword,
+} from "@/features/auth/pages/resetPasswordPage";
 
 export const router = createBrowserRouter([
   {
@@ -40,6 +43,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "reset-password",
+        loader: verifyTokenForResetPassword,
         Component: ResetPasswordPage,
       },
     ],

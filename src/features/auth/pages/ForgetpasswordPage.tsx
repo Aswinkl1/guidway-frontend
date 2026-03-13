@@ -1,19 +1,29 @@
+import { api } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, History } from "lucide-react";
 import { useForm } from "react-hook-form";
 import z from "zod";
+import { CheckEmailPage } from "../components/checkEmail";
+import { handleServerErrors } from "@/helpers/formErrorHelper";
+import { useState } from "react";
 
 const forgetPasswordEmailSchema = z.object({
   email: z.email("please enter a valid email"),
 });
 
-function onSubmit(data: forgetPasswordEmailType) {
-  try {
-  } catch (error) {}
-}
 type forgetPasswordEmailType = z.infer<typeof forgetPasswordEmailSchema>;
 
 export function ForgotPasswordPage() {
+  const [isReqestSuccessFull, setIsReqestSuccessFull] = useState(false);
+  async function onSubmit(data: forgetPasswordEmailType) {
+    try {
+      const res = await api.post("/forget-password", data);
+
+      setIsReqestSuccessFull(true);
+    } catch (error) {
+      handleServerErrors(error, setError, data);
+    }
+  }
   const {
     register,
     handleSubmit,
@@ -22,6 +32,9 @@ export function ForgotPasswordPage() {
   } = useForm({
     resolver: zodResolver(forgetPasswordEmailSchema),
   });
+  // if the req was successfull show them the email check page
+  if (isReqestSuccessFull) return <CheckEmailPage />;
+
   return (
     <div className="flex-1 flex flex-col items-center justify-center px-4 gap-4">
       <div className="bg-white rounded-2xl shadow-sm border border-gray-100 w-full max-w-sm px-8 py-10 flex flex-col items-center text-center gap-5">
