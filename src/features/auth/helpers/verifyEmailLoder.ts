@@ -1,23 +1,24 @@
 import { jwtDecode } from "jwt-decode";
 import { api } from "../../../lib/axios";
 
-export function isTokenExpired(token: string): boolean {
+export function isTokenValid(token: string): String | null {
   try {
-    if (!token) return true;
+    if (!token) return null;
     // decode the token
     const decodeToken = jwtDecode(token);
-
+    console.log(decodeToken);
     // current time in second
     const currentTime = Date.now() / 1000;
     if (!decodeToken.exp) {
-      return true;
+      return null;
     }
 
     // check if the current time is less that token exp
-    return decodeToken.exp < currentTime;
+    // decoded time 10:40 > current time 10:50 return null
+    return decodeToken.exp > currentTime ? token : null;
   } catch (error) {
     console.log(error);
-    return true;
+    return null;
   }
 }
 
@@ -30,7 +31,7 @@ export default async function verifyToken({ request }: { request: Request }) {
       return false;
     }
 
-    if (!isTokenExpired(token)) {
+    if (!isTokenValid(token)) {
       await api.get(`/verify?token=${token}`);
       return true;
     }

@@ -2,14 +2,12 @@ import { useForm } from "react-hook-form";
 import { useState } from "react";
 import { ArrowLeft, Eye, EyeOff, Info } from "lucide-react";
 import z from "zod";
-import type { A } from "node_modules/react-router/dist/development/router-cLsU7kHk.d.mts";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { handleServerErrors } from "@/helpers/formErrorHelper";
 
-type CreateNewPasswordFormValues = {
-  password: string;
-  confirmPassword: string;
+type ResetPassowordProb = {
+  onSubmit: (data: Omit<ResetSchemaType, "confirmPassword">) => Promise<void>;
 };
-
 const resetSchema = z
   .object({
     password: z
@@ -24,8 +22,8 @@ const resetSchema = z
     path: ["confirmPassword"],
   });
 
-type ResetSchemaType = z.infer<typeof resetSchema>;
-export function ResetPassword() {
+export type ResetSchemaType = z.infer<typeof resetSchema>;
+export function ResetPassword({ onSubmit }: ResetPassowordProb) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
 
@@ -33,13 +31,17 @@ export function ResetPassword() {
     register,
     handleSubmit,
     formState: { errors },
+    setError,
   } = useForm<ResetSchemaType>({
     resolver: zodResolver(resetSchema),
   });
 
-  const onSubmit = (data: ResetSchemaType) => {
-    console.log(data);
-    // handle password reset logic here
+  const submitHandler = async (data: ResetSchemaType) => {
+    try {
+      await onSubmit({ password: data.password });
+    } catch (error) {
+      handleServerErrors(error, setError, data);
+    }
   };
 
   return (
@@ -55,7 +57,10 @@ export function ResetPassword() {
           </p>
         </div>
 
-        <form onSubmit={handleSubmit(onSubmit)} className="flex flex-col gap-4">
+        <form
+          onSubmit={handleSubmit(submitHandler)}
+          className="flex flex-col gap-4"
+        >
           {/* New Password */}
           <div className="flex flex-col gap-1.5">
             <label className="text-sm font-medium text-gray-700">

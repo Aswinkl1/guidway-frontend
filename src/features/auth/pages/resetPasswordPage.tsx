@@ -1,8 +1,13 @@
-import { useLoaderData } from "react-router";
+import { useLoaderData, useNavigate } from "react-router";
 import { LinkExpiredPage } from "../components/LinkExpiredPage";
 
-import { isTokenExpired } from "../helpers/verifyEmailLoder";
-import { ResetPassword } from "../components/ResetPassword";
+import { isTokenValid } from "../helpers/verifyEmailLoder";
+import {
+  ResetPassword,
+  type ResetSchemaType,
+} from "../components/ResetPassword";
+import { api } from "@/lib/axios";
+import toast from "react-hot-toast";
 
 // helper loder function
 export async function verifyTokenForResetPassword({
@@ -15,20 +20,35 @@ export async function verifyTokenForResetPassword({
 
     const token = url.searchParams.get("token");
     if (!token) {
-      return false;
+      return null;
     }
 
-    if (!isTokenExpired(token)) {
-      return true;
+    if (isTokenValid(token)) {
+      return token;
     }
-    return false;
+    return null;
   } catch (error) {
     console.log(error);
-    return false;
+    return null;
   }
 }
+
 export function ResetPasswordPage() {
-  const data = useLoaderData();
-  if (!data) return <LinkExpiredPage />;
-  return <ResetPassword />;
+  const navigate = useNavigate();
+  const token = useLoaderData();
+  console.log(token);
+
+  async function onSubmit(data: Omit<ResetSchemaType, "confirmPassword">) {
+    try {
+      const paylod = { password: data.password, token };
+      await api.patch("/reset-password", paylod);
+      toast.success("password changed successfully");
+      await new Promise((res) => setTimeout(res, 2000));
+      navigate("/auth/login");
+    } catch (error) {
+      throw error;
+    }
+  }
+  if (!token) return <LinkExpiredPage />;
+  return <ResetPassword onSubmit={onSubmit} />;
 }

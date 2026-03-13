@@ -18,7 +18,7 @@ export function ForgotPasswordPage() {
   async function onSubmit(data: forgetPasswordEmailType) {
     try {
       const res = await api.post("/forget-password", data);
-
+      
       setIsReqestSuccessFull(true);
     } catch (error) {
       handleServerErrors(error, setError, data);

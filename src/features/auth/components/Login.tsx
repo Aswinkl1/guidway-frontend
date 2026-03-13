@@ -169,12 +169,13 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
             <label className="block text-sm font-medium text-gray-700">
               Password
             </label>
-            <button
+            <Link
+              to={"/auth/forget-password"}
               type="button"
               className="text-sm text-blue-600 hover:text-blue-700 font-medium transition-colors cursor-pointer"
             >
               Forgot password?
-            </button>
+            </Link>
           </div>
 
           <div className="relative">
