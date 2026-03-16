@@ -10,19 +10,22 @@ import {
   ResetPasswordPage,
   verifyTokenForResetPassword,
 } from "@/features/auth/pages/resetPasswordPage";
+import AuthLoader from "@/helpers/AuthLoader";
 
 export const router = createBrowserRouter([
   {
     path: "/",
+    loader: AuthLoader,
     Component: Root,
   },
   {
     path: "/auth",
+    loader: AuthLoader,
     Component: AuthLayout,
     children: [
       {
         index: true,
-        element: <Navigate to="/auth/login" replace />,
+        element: <Navigate to="/auth/login" replace={true} />,
       },
       {
         path: "login",

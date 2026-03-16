@@ -26,7 +26,7 @@ export function LoginPage() {
       toast.success("login successfull");
       await new Promise((res) => setTimeout(res, 1000));
       // redirect the user into home page
-      navigate("/");
+      navigate("/", { replace: true });
     } catch (error) {
       toast.error("please try again");
 

@@ -38,11 +38,15 @@ api.interceptors.response.use(
     if (error.response.status !== 401 || originalRequest._retry) {
       return Promise.reject(error);
     }
+    if (originalRequest.url === "/refresh") {
+      return Promise.reject(error);
+    }
     console.log("helooo");
     originalRequest._retry = true;
 
     try {
-      const { data } = await api.post("/refresh");
+      console.log("this is happening");
+      const { data } = await api.get("/refresh");
       console.log(data);
       store.dispatch(
         setCredentials({

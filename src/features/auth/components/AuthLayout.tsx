@@ -1,4 +1,7 @@
-import { Outlet } from "react-router";
+import { useAppSelector } from "@/app/store/store";
+import { useEffect } from "react";
+
+import { Outlet, useNavigate } from "react-router";
 
 const GuidwayIcon = () => (
   <svg
@@ -31,6 +34,12 @@ const GuidwayIcon = () => (
   </svg>
 );
 export function AuthLayout() {
+  const token = useAppSelector((state) => state.auth.token);
+  const naviage = useNavigate();
+  useEffect(() => {
+    if (token) naviage("/", { replace: true });
+  }, [token, naviage]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Navbar */}
