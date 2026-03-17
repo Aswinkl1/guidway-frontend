@@ -11,6 +11,9 @@ import {
   verifyTokenForResetPassword,
 } from "@/features/auth/pages/resetPasswordPage";
 import AuthLoader from "@/helpers/AuthLoader";
+import MentorAdminUsers from "@/features/admin/pages/user";
+import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
+import { AdminRoot } from "@/components/adminRoot";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +40,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "verify",
+        id: "verify-email",
         loader: verifyToken,
         Component: VerifyEmailPage,
       },
@@ -48,6 +52,24 @@ export const router = createBrowserRouter([
         path: "reset-password",
         loader: verifyTokenForResetPassword,
         Component: ResetPasswordPage,
+      },
+    ],
+  },
+  {
+    path: "/admin",
+    loader: AuthLoader,
+    children: [
+      {
+        index: true,
+        Component: AdminRoot,
+      },
+      {
+        path: "login",
+        Component: AdminLoginPage,
+      },
+      {
+        path: "users",
+        Component: MentorAdminUsers,
       },
     ],
   },
