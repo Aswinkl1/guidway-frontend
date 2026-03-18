@@ -19,57 +19,61 @@ export const router = createBrowserRouter([
   {
     path: "/",
     loader: AuthLoader,
-    Component: Root,
-  },
-  {
-    path: "/auth",
-    loader: AuthLoader,
-    Component: AuthLayout,
     children: [
       {
         index: true,
-        element: <Navigate to="/auth/login" replace={true} />,
+        Component: Root,
+      },
+
+      {
+        path: "/auth",
+        Component: AuthLayout,
+        children: [
+          {
+            index: true,
+            element: <Navigate to="/auth/login" replace={true} />,
+          },
+          {
+            path: "login",
+            Component: LoginPage,
+          },
+          {
+            path: "signup",
+            Component: SignupPage,
+          },
+          {
+            path: "verify",
+            id: "verify-email",
+            loader: verifyToken,
+            Component: VerifyEmailPage,
+          },
+          {
+            path: "forget-password",
+            Component: ForgotPasswordPage,
+          },
+          {
+            path: "reset-password",
+            loader: verifyTokenForResetPassword,
+            Component: ResetPasswordPage,
+          },
+        ],
       },
       {
-        path: "login",
-        Component: LoginPage,
-      },
-      {
-        path: "signup",
-        Component: SignupPage,
-      },
-      {
-        path: "verify",
-        id: "verify-email",
-        loader: verifyToken,
-        Component: VerifyEmailPage,
-      },
-      {
-        path: "forget-password",
-        Component: ForgotPasswordPage,
-      },
-      {
-        path: "reset-password",
-        loader: verifyTokenForResetPassword,
-        Component: ResetPasswordPage,
-      },
-    ],
-  },
-  {
-    path: "/admin",
-    loader: AuthLoader,
-    children: [
-      {
-        index: true,
-        Component: AdminRoot,
-      },
-      {
-        path: "login",
-        Component: AdminLoginPage,
-      },
-      {
-        path: "users",
-        Component: MentorAdminUsers,
+        path: "/admin",
+        children: [
+          {
+            index: true,
+            Component: AdminRoot,
+          },
+          {
+            path: "login",
+            Component: AdminLoginPage,
+          },
+          {
+            path: "users",
+            Component: MentorAdminUsers,
+          },
+        ],
       },
     ],
   },

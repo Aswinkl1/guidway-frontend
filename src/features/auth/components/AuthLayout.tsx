@@ -34,11 +34,14 @@ const GuidwayIcon = () => (
   </svg>
 );
 export function AuthLayout() {
-  const token = useAppSelector((state) => state.auth.token);
+  const authState = useAppSelector((state) => state.auth);
   const naviage = useNavigate();
   useEffect(() => {
-    if (token) naviage("/", { replace: true });
-  }, [token, naviage]);
+    if (authState.token) {
+      if (authState.role === "admin") naviage("/admin", { replace: true });
+      else naviage("/", { replace: true });
+    }
+  }, [authState, naviage]);
 
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
@@ -52,4 +55,5 @@ export function AuthLayout() {
       <Outlet />
     </div>
   );
+  1;
 }
