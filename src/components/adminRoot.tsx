@@ -8,7 +8,7 @@ export function AdminRoot() {
   useEffect(() => {
     if (!auth.token) naviage("/admin/login", { replace: true });
     if (auth.role !== "admin") naviage("/", { replace: true });
-  }, [auth.token, naviage]);
+  }, [auth, naviage]);
 
   return <h1>i am admin</h1>;
 }
