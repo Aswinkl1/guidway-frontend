@@ -14,6 +14,7 @@ import AuthLoader from "@/helpers/AuthLoader";
 import MentorAdminUsers from "@/features/admin/pages/user";
 import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
+import { AdminRootLayout } from "@/layout/AdminLayout";
 
 export const router = createBrowserRouter([
   {
@@ -56,18 +57,19 @@ export const router = createBrowserRouter([
             loader: verifyTokenForResetPassword,
             Component: ResetPasswordPage,
           },
+          {
+            path: "admin/login",
+            Component: AdminLoginPage,
+          },
         ],
       },
       {
         path: "/admin",
+        Component:AdminRootLayout,
         children: [
           {
             index: true,
             Component: AdminRoot,
-          },
-          {
-            path: "login",
-            Component: AdminLoginPage,
           },
           {
             path: "users",
