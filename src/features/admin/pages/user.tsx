@@ -11,48 +11,118 @@ interface User {
 }
 
 const initialUsers: User[] = [
-  { id: 1, name: "Sarah Chen",    email: "sarah.c@example.com",    status: "Unblocked", avatar: "SC", color: "#ec4899" },
-  { id: 2, name: "Alex Rivera",   email: "alex.r@example.com",     status: "Unblocked", avatar: "AR", color: "#3b82f6" },
-  { id: 3, name: "Emma Wilson",   email: "emma.w@example.com",     status: "Blocked",   avatar: "EW", color: "#a855f7" },
-  { id: 4, name: "Michael Ross",  email: "mike.ross@example.com",  status: "Unblocked", avatar: "MR", color: "#f59e0b" },
-  { id: 5, name: "Lisa Patel",    email: "lisa.p@example.com",     status: "Unblocked", avatar: "LP", color: "#14b8a6" },
-  { id: 6, name: "David Kim",     email: "david.kim@example.com",  status: "Blocked",   avatar: "DK", color: "#64748b" },
+  {
+    id: 1,
+    name: "Sarah Chen",
+    email: "sarah.c@example.com",
+    status: "Unblocked",
+    avatar: "SC",
+    color: "#ec4899",
+  },
+  {
+    id: 2,
+    name: "Alex Rivera",
+    email: "alex.r@example.com",
+    status: "Unblocked",
+    avatar: "AR",
+    color: "#3b82f6",
+  },
+  {
+    id: 3,
+    name: "Emma Wilson",
+    email: "emma.w@example.com",
+    status: "Blocked",
+    avatar: "EW",
+    color: "#a855f7",
+  },
+  {
+    id: 4,
+    name: "Michael Ross",
+    email: "mike.ross@example.com",
+    status: "Unblocked",
+    avatar: "MR",
+    color: "#f59e0b",
+  },
+  {
+    id: 5,
+    name: "Lisa Patel",
+    email: "lisa.p@example.com",
+    status: "Unblocked",
+    avatar: "LP",
+    color: "#14b8a6",
+  },
+  {
+    id: 6,
+    name: "David Kim",
+    email: "david.kim@example.com",
+    status: "Blocked",
+    avatar: "DK",
+    color: "#64748b",
+  },
 ];
-
-
 
 // ─── Icon Components ──────────────────────────────────────────────────────────
 
 const EyeIcon = () => (
-  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg
+    className="w-3.5 h-3.5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
     <path strokeWidth="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
     <circle cx="12" cy="12" r="3" strokeWidth="2" />
   </svg>
 );
 
 const BlockIcon = () => (
-  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+  <svg
+    className="w-3.5 h-3.5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
     <circle cx="12" cy="12" r="10" strokeWidth="2" />
     <path strokeWidth="2" strokeLinecap="round" d="M4.93 4.93l14.14 14.14" />
   </svg>
 );
 
 const UnblockIcon = () => (
-  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeWidth="2" strokeLinecap="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+  <svg
+    className="w-3.5 h-3.5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeWidth="2"
+      strokeLinecap="round"
+      d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"
+    />
   </svg>
 );
 
 const TrashIcon = () => (
-  <svg className="w-3.5 h-3.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-    <path strokeWidth="2" strokeLinecap="round" d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6" />
+  <svg
+    className="w-3.5 h-3.5"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
+  >
+    <path
+      strokeWidth="2"
+      strokeLinecap="round"
+      d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"
+    />
   </svg>
 );
 
 const ChevronDown = ({ open }: { open: boolean }) => (
   <svg
     className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
-    fill="none" stroke="currentColor" viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    viewBox="0 0 24 24"
   >
     <path strokeWidth="2" strokeLinecap="round" d="M6 9l6 6 6-6" />
   </svg>
@@ -63,7 +133,9 @@ const ChevronDown = ({ open }: { open: boolean }) => (
 export default function AdminUsersPanel() {
   const [users, setUsers] = useState<User[]>(initialUsers);
   const [search, setSearch] = useState("");
-  const [statusFilter, setStatusFilter] = useState<"All" | "Unblocked" | "Blocked">("All");
+  const [statusFilter, setStatusFilter] = useState<
+    "All" | "Unblocked" | "Blocked"
+  >("All");
   const [dropdownOpen, setDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [viewModal, setViewModal] = useState<User | null>(null);
@@ -81,13 +153,18 @@ export default function AdminUsersPanel() {
   });
 
   const totalPages = Math.max(1, Math.ceil(filtered.length / USERS_PER_PAGE));
-  const paginated = filtered.slice((currentPage - 1) * USERS_PER_PAGE, currentPage * USERS_PER_PAGE);
+  const paginated = filtered.slice(
+    (currentPage - 1) * USERS_PER_PAGE,
+    currentPage * USERS_PER_PAGE,
+  );
 
   const toggleBlock = (id: number) => {
     setUsers((prev) =>
       prev.map((u) =>
-        u.id === id ? { ...u, status: u.status === "Blocked" ? "Unblocked" : "Blocked" } : u
-      )
+        u.id === id
+          ? { ...u, status: u.status === "Blocked" ? "Unblocked" : "Blocked" }
+          : u,
+      ),
     );
   };
 
@@ -112,8 +189,12 @@ export default function AdminUsersPanel() {
         {/* Page header */}
         <div className="flex items-start justify-between mb-6">
           <div>
-            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">Users</h1>
-            <p className="text-sm text-gray-400 mt-0.5">Manage mentee accounts and platform access.</p>
+            <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
+              Users
+            </h1>
+            <p className="text-sm text-gray-400 mt-0.5">
+              Manage mentee accounts and platform access.
+            </p>
           </div>
           <div className="text-right">
             <span className="text-3xl font-bold text-gray-900">
@@ -129,16 +210,25 @@ export default function AdminUsersPanel() {
           <div className="relative flex-1 max-w-sm">
             <svg
               className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-gray-400 pointer-events-none"
-              fill="none" stroke="currentColor" viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
             >
               <circle cx="11" cy="11" r="8" strokeWidth="2" />
-              <path strokeWidth="2" strokeLinecap="round" d="M21 21l-4.35-4.35" />
+              <path
+                strokeWidth="2"
+                strokeLinecap="round"
+                d="M21 21l-4.35-4.35"
+              />
             </svg>
             <input
               type="text"
               placeholder="Search by name or email..."
               value={search}
-              onChange={(e) => { setSearch(e.target.value); setCurrentPage(1); }}
+              onChange={(e) => {
+                setSearch(e.target.value);
+                setCurrentPage(1);
+              }}
               className="w-full pl-9 pr-4 py-2 text-sm border border-gray-200 rounded-lg bg-white focus:outline-none focus:ring-2 focus:ring-indigo-300 placeholder-gray-400"
             />
           </div>
@@ -159,7 +249,11 @@ export default function AdminUsersPanel() {
                 {(["All", "Unblocked", "Blocked"] as const).map((opt) => (
                   <button
                     key={opt}
-                    onClick={() => { setStatusFilter(opt); setDropdownOpen(false); setCurrentPage(1); }}
+                    onClick={() => {
+                      setStatusFilter(opt);
+                      setDropdownOpen(false);
+                      setCurrentPage(1);
+                    }}
                     className={`w-full text-left px-4 py-2.5 text-sm transition-colors ${
                       statusFilter === opt
                         ? "bg-indigo-50 text-indigo-600 font-medium"
@@ -200,7 +294,10 @@ export default function AdminUsersPanel() {
             <tbody>
               {paginated.length === 0 ? (
                 <tr>
-                  <td colSpan={3} className="text-center py-16 text-gray-400 text-sm">
+                  <td
+                    colSpan={3}
+                    className="text-center py-16 text-gray-400 text-sm"
+                  >
                     No users found.
                   </td>
                 </tr>
@@ -209,7 +306,9 @@ export default function AdminUsersPanel() {
                   <tr
                     key={user.id}
                     className={`transition-colors hover:bg-gray-50 ${
-                      idx < paginated.length - 1 ? "border-b border-gray-100" : ""
+                      idx < paginated.length - 1
+                        ? "border-b border-gray-100"
+                        : ""
                     }`}
                   >
                     {/* User */}
@@ -222,8 +321,12 @@ export default function AdminUsersPanel() {
                           {user.avatar}
                         </div>
                         <div className="min-w-0">
-                          <p className="text-sm font-semibold text-gray-800 truncate">{user.name}</p>
-                          <p className="text-xs text-gray-400 truncate">{user.email}</p>
+                          <p className="text-sm font-semibold text-gray-800 truncate">
+                            {user.name}
+                          </p>
+                          <p className="text-xs text-gray-400 truncate">
+                            {user.email}
+                          </p>
                         </div>
                       </div>
                     </td>
@@ -239,7 +342,9 @@ export default function AdminUsersPanel() {
                       >
                         <span
                           className={`w-1.5 h-1.5 rounded-full shrink-0 ${
-                            user.status === "Unblocked" ? "bg-green-500" : "bg-red-400"
+                            user.status === "Unblocked"
+                              ? "bg-green-500"
+                              : "bg-red-400"
                           }`}
                         />
                         {user.status}
@@ -372,7 +477,9 @@ export default function AdminUsersPanel() {
             >
               <span
                 className={`w-1.5 h-1.5 rounded-full ${
-                  viewModal.status === "Unblocked" ? "bg-green-500" : "bg-red-400"
+                  viewModal.status === "Unblocked"
+                    ? "bg-green-500"
+                    : "bg-red-400"
                 }`}
               />
               {viewModal.status}
@@ -400,11 +507,15 @@ export default function AdminUsersPanel() {
             <div className="w-12 h-12 rounded-full bg-red-50 flex items-center justify-center mx-auto mb-4">
               <TrashIcon />
             </div>
-            <h3 className="text-center font-bold text-gray-900 mb-1">Delete User</h3>
+            <h3 className="text-center font-bold text-gray-900 mb-1">
+              Delete User
+            </h3>
             <p className="text-center text-sm text-gray-500 mb-5">
               Are you sure you want to delete{" "}
-              <span className="font-semibold text-gray-700">{deleteModal.name}</span>?
-              This action cannot be undone.
+              <span className="font-semibold text-gray-700">
+                {deleteModal.name}
+              </span>
+              ? This action cannot be undone.
             </p>
             <div className="flex gap-2">
               <button
