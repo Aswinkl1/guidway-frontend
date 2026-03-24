@@ -7,11 +7,16 @@ import { router } from "./app/routes";
 import { Toaster } from "react-hot-toast";
 import { Provider } from "react-redux";
 import { store } from "./app/store/store";
-
+import { QueryClientProvider, QueryClient } from "@tanstack/react-query";
+// import { getUsers } from "./services/admin/adminServices";
+// getUsers();
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <Provider store={store}>
-      <RouterProvider router={router} />
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+      </QueryClientProvider>
       <Toaster />
     </Provider>
   </StrictMode>,
