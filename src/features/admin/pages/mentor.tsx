@@ -7,7 +7,7 @@ import {
 import { UsersTable } from "../components/UsersTable";
 import { Navbar } from "../components/Navbar";
 
-interface User {
+export interface User {
   id: string;
   name: string;
   email: string;
@@ -17,10 +17,10 @@ interface User {
 }
 
 // ─── Main Component ───────────────────────────────────────────────────────────
-export default function AdminUsersPanel() {
+export default function AdminMentorPanel() {
   const { filter, setFilter } = useUserFilter();
-  const { data, isLoading } = useUsers("mentee", filter);
-  const { mutate: updateBlockStatus } = useUpdateBlockStatus("mentee");
+  const { data, isLoading } = useUsers("mentor", filter);
+  const { mutate: updateBlockStatus } = useUpdateBlockStatus("mentor");
 
   console.log("we got data again", data);
 

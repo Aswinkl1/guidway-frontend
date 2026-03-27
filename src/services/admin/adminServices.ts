@@ -12,6 +12,7 @@ export const getUsers = async (filter: filterProb) => {
     status = undefined,
     limit = 2,
     Verified,
+    role,
   } = filter;
   const query: Record<string, any> = {
     page,
@@ -33,6 +34,7 @@ export const getUsers = async (filter: filterProb) => {
   } else if (Verified == "false") {
     query.isVerified = false;
   }
+  query.role = role;
 
   const response = await api.get(`/admin/users`, { params: query });
   return response.data.result;

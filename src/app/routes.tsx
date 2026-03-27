@@ -15,6 +15,7 @@ import MentorAdminUsers from "@/features/admin/pages/user";
 import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
 import { AdminRootLayout } from "@/layout/AdminLayout";
+import AdminMentorPanel from "@/features/admin/pages/mentor";
 
 export const router = createBrowserRouter([
   {
@@ -74,6 +75,10 @@ export const router = createBrowserRouter([
           {
             path: "users",
             Component: MentorAdminUsers,
+          },
+          {
+            path: "mentors",
+            Component: AdminMentorPanel,
           },
         ],
       },
