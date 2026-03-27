@@ -1,14 +1,18 @@
 import { useState } from "react";
 import { Navbar } from "../components/Navbar";
-import { useUserFilter, useUsers } from "../hooks/useUsers";
+import {
+  useUpdateBlockStatus,
+  useUserFilter,
+  useUsers,
+} from "../hooks/useUsers";
 import { CircleUser } from "lucide-react";
 import { useDebouncedCallback } from "use-debounce";
 interface User {
-  id: number;
+  id: string;
   name: string;
   email: string;
   isBlocked: boolean;
-  isVerifed: boolean;
+  isVerified: boolean;
   profileImageUrl: string;
 }
 
@@ -83,6 +87,7 @@ const ChevronDown = ({ open }: { open: boolean }) => (
 export default function AdminUsersPanel() {
   const { filter, setFilter } = useUserFilter();
   const { data, isLoading } = useUsers(filter);
+  const { mutate: updateBlockStatus, isPending } = useUpdateBlockStatus();
 
   const [statusDropdownOpen, setStatusDropdownOpen] = useState(false);
   const [verifyDropdownOpen, setVerifyDropdownOpen] = useState(false);
@@ -93,7 +98,7 @@ export default function AdminUsersPanel() {
   if (isLoading) return <h1>Loading...</h1>;
 
   const { users, totalItems: totalUsers, totalPages, currentPage } = data;
-
+  console.log("we got data again", data);
   const getPageNums = (): (number | "...")[] => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -107,8 +112,7 @@ export default function AdminUsersPanel() {
   };
 
   const toggleBlock = (user: User) => {
-    // wire to your mutation here
-    console.log("toggle block", user.id);
+    updateBlockStatus({ userId: user.id, newBlockStatus: !user.isBlocked });
   };
 
   const statusLabel = filter.status
@@ -356,12 +360,12 @@ export default function AdminUsersPanel() {
                     <td className="px-4 py-4">
                       <span
                         className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium whitespace-nowrap ${
-                          !user.isBlocked
+                          user.isVerified
                             ? "bg-green-50 text-green-600"
                             : "bg-red-50 text-red-500"
                         }`}
                       >
-                        {user.isVerifed ? "X Unverified" : "✓ Verified"}
+                        {user.isVerified ? "✓ Verified" : "X Unverified"}
                       </span>
                     </td>
                     {/* Actions */}
@@ -374,6 +378,7 @@ export default function AdminUsersPanel() {
 
                         {user.isBlocked ? (
                           <button
+                            disabled={isPending}
                             onClick={() => toggleBlock(user)}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap"
                           >
@@ -382,6 +387,7 @@ export default function AdminUsersPanel() {
                           </button>
                         ) : (
                           <button
+                            disabled={isPending}
                             onClick={() => toggleBlock(user)}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-red-500 border border-red-200 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap"
                           >

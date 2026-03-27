@@ -1,5 +1,10 @@
-import { getUsers } from "@/services/admin/adminServices";
-import { useQuery, keepPreviousData } from "@tanstack/react-query";
+import { getUsers, updateBlockStatus } from "@/services/admin/adminServices";
+import {
+  useQuery,
+  keepPreviousData,
+  useMutation,
+  useQueryClient,
+} from "@tanstack/react-query";
 import { useSearchParams } from "react-router";
 
 export interface filterProb {
@@ -28,7 +33,7 @@ export const useUsers = (filter: filterProb) => {
   return useQuery({
     queryKey: userKeys.list(filter),
     queryFn: () => fetchUsers(filter),
-    placeholderData: keepPreviousData,
+    // placeholderData: keepPreviousData,
   });
 };
 
@@ -68,4 +73,19 @@ export const useUserFilter = () => {
   };
 
   return { filter, setFilter };
+};
+
+export type BlockStatusProb = {
+  userId: string;
+  newBlockStatus: boolean;
+};
+
+export const useUpdateBlockStatus = () => {
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: (data: BlockStatusProb) => updateBlockStatus(data),
+    onSuccess: () =>
+      queryClient.invalidateQueries({ queryKey: userKeys.lists() }),
+  });
 };

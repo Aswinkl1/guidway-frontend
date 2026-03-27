@@ -1,4 +1,7 @@
-import type { filterProb } from "@/features/admin/hooks/useUsers";
+import type {
+  BlockStatusProb,
+  filterProb,
+} from "@/features/admin/hooks/useUsers";
 import { api } from "@/lib/axios";
 
 export const getUsers = async (filter: filterProb) => {
@@ -32,5 +35,11 @@ export const getUsers = async (filter: filterProb) => {
   }
 
   const response = await api.get(`/admin/users`, { params: query });
+  return response.data.result;
+};
+
+export const updateBlockStatus = async (data: BlockStatusProb) => {
+  const response = await api.patch("/admin/block-status", data);
+
   return response.data.result;
 };
