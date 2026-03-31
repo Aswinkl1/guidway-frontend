@@ -351,10 +351,10 @@ export const UsersTable = ({
                   {/* Actions */}
                   <td className="px-4 py-4">
                     <div className="flex items-center gap-2">
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
+                      {/* <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-gray-600 border border-gray-200 rounded-lg hover:bg-gray-100 transition-colors whitespace-nowrap">
                         <EyeIcon />
                         View
-                      </button>
+                      </button> */}
 
                       {user.isBlocked ? (
                         <button
@@ -374,10 +374,10 @@ export const UsersTable = ({
                         </button>
                       )}
 
-                      <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-red-400 border border-red-100 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap">
+                      {/* <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-red-400 border border-red-100 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap">
                         <TrashIcon />
                         Delete
-                      </button>
+                      </button> */}
                     </div>
                   </td>
                 </tr>

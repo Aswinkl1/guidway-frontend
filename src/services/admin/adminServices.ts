@@ -45,3 +45,8 @@ export const updateBlockStatus = async (data: BlockStatusProb) => {
 
   return response.data.result;
 };
+
+export const logout = async () => {
+  const response = await api.post("logout");
+  return response.data.result;
+};

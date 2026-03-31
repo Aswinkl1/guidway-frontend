@@ -16,6 +16,7 @@ import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
 import { AdminRootLayout } from "@/layout/AdminLayout";
 import AdminMentorPanel from "@/features/admin/pages/mentor";
+import GuidWayHomePage from "@/pages/homePage";
 
 export const router = createBrowserRouter([
   {
@@ -24,7 +25,7 @@ export const router = createBrowserRouter([
     children: [
       {
         index: true,
-        Component: Root,
+        Component: GuidWayHomePage,
       },
 
       {
