@@ -26,7 +26,7 @@ const NAV_ITEMS = [
     active: true,
     icon: (
       <svg
-        className="w-[18px] h-[18px]"
+        className="w-4.5 h-4.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -49,7 +49,7 @@ const NAV_ITEMS = [
     label: "Mentors",
     icon: (
       <svg
-        className="w-[18px] h-[18px]"
+        className="w-4.5 h-4.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -66,7 +66,7 @@ const NAV_ITEMS = [
     label: "Bookings",
     icon: (
       <svg
-        className="w-[18px] h-[18px]"
+        className="w-4.5 h-4.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -80,7 +80,7 @@ const NAV_ITEMS = [
     label: "Earnings",
     icon: (
       <svg
-        className="w-[18px] h-[18px]"
+        className="w-4.5 h-4.5"
         fill="none"
         stroke="currentColor"
         viewBox="0 0 24 24"
@@ -101,7 +101,7 @@ export const Navbar = () => {
 
   async function handleLogout() {
     try {
-      const res = await logout();
+      await logout();
       dispatch(reduxLogout());
       toast.success("logout successfull");
     } catch {

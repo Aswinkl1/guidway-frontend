@@ -1,5 +1,5 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { Root } from "./App";
+// import { Root } from "./App";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import SignupPage from "@/features/auth/pages/SignupPage";
