@@ -4,10 +4,10 @@ import { LinkExpiredPage } from "../components/LinkExpiredPage";
 import { isTokenValid } from "../helpers/verifyEmailLoder";
 import {
   ResetPassword,
-  type ResetSchemaType,
+  type ResetPasswordPayload,
 } from "../components/ResetPassword";
-import { api } from "@/lib/axios";
 import toast from "react-hot-toast";
+import { resetPassword } from "../services/authService";
 
 // helper loder function
 export async function verifyTokenForResetPassword({
@@ -38,10 +38,10 @@ export function ResetPasswordPage() {
   const token = useLoaderData();
   console.log(token);
 
-  async function onSubmit(data: Omit<ResetSchemaType, "confirmPassword">) {
+  async function onSubmit(data: Omit<ResetPasswordPayload, "confirmPassword">) {
     try {
       const paylod = { password: data.password, token };
-      await api.patch("/reset-password", paylod);
+      await resetPassword(paylod);
       toast.success("password changed successfully");
       await new Promise((res) => setTimeout(res, 2000));
       navigate("/auth/login");

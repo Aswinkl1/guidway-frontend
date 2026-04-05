@@ -1,4 +1,3 @@
-import { api } from "@/lib/axios";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { ArrowLeft, History } from "lucide-react";
 import { useForm } from "react-hook-form";
@@ -6,19 +5,21 @@ import z from "zod";
 import { CheckEmailPage } from "../components/checkEmail";
 import { handleServerErrors } from "@/helpers/formErrorHelper";
 import { useState } from "react";
+import { forgetPassword } from "../services/authService";
+import { useNavigate } from "react-router";
 
 const forgetPasswordEmailSchema = z.object({
   email: z.email("please enter a valid email"),
 });
 
-type forgetPasswordEmailType = z.infer<typeof forgetPasswordEmailSchema>;
+export type forgetPasswordPayload = z.infer<typeof forgetPasswordEmailSchema>;
 
 export function ForgotPasswordPage() {
   const [isReqestSuccessFull, setIsReqestSuccessFull] = useState(false);
-  async function onSubmit(data: forgetPasswordEmailType) {
+  const navigate = useNavigate();
+  async function onSubmit(data: forgetPasswordPayload) {
     try {
-      const res = await api.post("/forget-password", data);
-
+      await forgetPassword(data);
       setIsReqestSuccessFull(true);
     } catch (error) {
       handleServerErrors(error, setError, data);
@@ -82,13 +83,16 @@ export function ForgotPasswordPage() {
           </div>
 
           {/* Submit */}
-          <button className="w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold py-3 rounded-lg transition-colors">
+          <button className=" cursor-pointer w-full bg-gray-900 hover:bg-gray-800 text-white text-sm font-semibold py-3 rounded-lg transition-colors">
             Send reset link
           </button>
         </form>
 
         {/* Back to log in */}
-        <button className="flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors">
+        <button
+          onClick={() => navigate("/auth/login")}
+          className="cursor-pointer flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
+        >
           <ArrowLeft className="w-3.5 h-3.5" />
           Back to log in
         </button>

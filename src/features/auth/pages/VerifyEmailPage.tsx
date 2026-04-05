@@ -1,4 +1,4 @@
-import { useLoaderData, useRouteLoaderData } from "react-router";
+import { useRouteLoaderData } from "react-router";
 import { LinkExpiredPage } from "../components/LinkExpiredPage";
 import { VerifySuccessPage } from "../components/VerifySuccessfull";
 

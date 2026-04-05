@@ -3,8 +3,8 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { z } from "zod";
 import { Link } from "react-router";
-import { AxiosError } from "axios";
-import type { serverErrorv } from "@/types/serverErrors";
+
+import { handleServerErrors } from "@/helpers/formErrorHelper";
 
 const signupSchema = z
   .object({
@@ -29,12 +29,15 @@ const signupSchema = z
   });
 
 type RawSignupFields = z.infer<typeof signupSchema>;
-export type SignupSchemaType = RawSignupFields & {
+
+export type SignupPayload = RawSignupFields & {
   role: "mentee" | "mentor";
 };
+
 interface SignupProps {
-  onSubmit: (data: SignupSchemaType) => Promise<void>;
+  onSubmit: (data: SignupPayload) => Promise<void>;
 }
+
 export default function SignupForm({ onSubmit }: SignupProps) {
   const [role, setRole] = useState<"mentee" | "mentor">("mentee");
 
@@ -51,25 +54,8 @@ export default function SignupForm({ onSubmit }: SignupProps) {
     try {
       await onSubmit({ ...data, role });
     } catch (error) {
-      if (error instanceof AxiosError && error?.response?.data?.errors) {
-        const serializedErrors = error.response.data.errors as serverErrorv;
-
-        serializedErrors.forEach((err) => {
-          if (err.field == undefined) {
-            setError("root.serverError", {
-              message: err.message,
-              type: "server",
-            });
-          } else {
-            setError(err.field as keyof typeof data, {
-              message: err.message,
-              type: "server",
-            });
-          }
-        });
-      }
+      handleServerErrors(error, setError, data);
     }
-    // simulate API call
   };
 
   return (
@@ -97,7 +83,7 @@ export default function SignupForm({ onSubmit }: SignupProps) {
             key={r}
             type="button"
             onClick={() => setRole(r)}
-            className={`flex-1 py-2 text-sm font-medium capitalize transition-colors ${
+            className={` cursor-pointer flex-1 py-2 text-sm font-medium capitalize transition-colors ${
               role === r
                 ? "bg-white text-indigo-600 shadow-sm"
                 : "bg-gray-50 text-gray-500 hover:text-gray-700"
@@ -218,7 +204,7 @@ export default function SignupForm({ onSubmit }: SignupProps) {
         <button
           type="submit"
           disabled={isSubmitting}
-          className="w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg text-sm transition-colors mt-2"
+          className="cursor-pointer w-full bg-indigo-600 hover:bg-indigo-700 disabled:opacity-60 disabled:cursor-not-allowed text-white font-semibold py-3 rounded-lg text-sm transition-colors mt-2"
         >
           {isSubmitting ? "Creating account..." : "Create Account"}
         </button>
@@ -235,7 +221,7 @@ export default function SignupForm({ onSubmit }: SignupProps) {
         {/* Google */}
         <button
           type="button"
-          className="w-full flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+          className="cursor-pointer w-full flex items-center justify-center gap-2 border border-gray-200 rounded-lg py-2.5 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
         >
           <svg width="18" height="18" viewBox="0 0 48 48">
             <path

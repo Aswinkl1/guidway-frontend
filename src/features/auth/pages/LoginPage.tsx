@@ -1,25 +1,24 @@
 import { useState } from "react";
-import { Login } from "../components/Login";
-import { api } from "@/lib/axios";
+import { Login, type LoginPayload } from "../components/Login";
 import { useNavigate } from "react-router";
 import toast from "react-hot-toast";
 import { useAppDispatch } from "@/app/store/store";
 import { setCredentials } from "../redux/UserAuthSlice";
+import { userLogin } from "@/features/auth/services/authService";
 export function LoginPage() {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
   const navigate = useNavigate();
-  const onSubmit = async (data: any): Promise<void> => {
+  const onSubmit = async (data: LoginPayload): Promise<void> => {
     setIsLoading(true);
     try {
-      const res = await api.post(`/login`, data);
-      console.log(res);
+      const res = await userLogin(data);
 
       // saving the token in redux
       dispatch(
         setCredentials({
-          role: res.data.result.role,
-          token: res.data.result.accessToken,
+          role: res.result.role,
+          token: res.result.accessToken,
         }),
       );
 

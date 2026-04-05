@@ -11,7 +11,7 @@ import {
   verifyTokenForResetPassword,
 } from "@/features/auth/pages/resetPasswordPage";
 import AuthLoader from "@/helpers/AuthLoader";
-import MentorAdminUsers from "@/features/admin/pages/user";
+// import MentorAdminUsers from "@/features/admin/pages/user";
 import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
 
@@ -69,10 +69,10 @@ export const router = createBrowserRouter([
             path: "login",
             Component: AdminLoginPage,
           },
-          {
-            path: "users",
-            Component: MentorAdminUsers,
-          },
+          // {
+          //   path: "users",
+          //   Component: MentorAdminUsers,
+          // },
         ],
       },
     ],

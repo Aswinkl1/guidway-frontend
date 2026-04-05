@@ -1,10 +1,9 @@
-import type { serverErrorv } from "@/types/serverErrors";
+import { handleServerErrors } from "@/helpers/formErrorHelper";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { AxiosError } from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router";
-import z, { keyof } from "zod";
+import z from "zod";
 
 const loginSchema = z.object({
   email: z.email("please enter a valid email"),
@@ -17,14 +16,16 @@ const loginSchema = z.object({
     .regex(/[0-9]/, "Password must contain at least one number."),
 });
 
-type LoginSchemaType = z.infer<typeof loginSchema>;
+export type LoginPayload = z.infer<typeof loginSchema>;
+
 interface EyeIconProps {
   open: boolean;
 }
 
 interface LoginProps {
-  onSubmit: (data: any) => Promise<void>; // A function that takes data and returns nothing
+  onSubmit: (data: LoginPayload) => Promise<void>; // A function that takes data and returns nothing
   isLoading: boolean; // A simple true/false
+  isAdmin?: boolean;
 }
 const GoogleIcon = () => (
   <svg
@@ -80,29 +81,13 @@ const EyeIcon = ({ open }: EyeIconProps) =>
     </svg>
   );
 
-export const Login = ({ onSubmit, isLoading }: LoginProps) => {
+export const Login = ({ onSubmit, isLoading, isAdmin = false }: LoginProps) => {
   const [showPassword, setShowPassword] = useState(false);
-  const submitHandler = async (data: LoginSchemaType) => {
+  const submitHandler = async (data: LoginPayload) => {
     try {
       await onSubmit(data);
     } catch (error) {
-      if (error instanceof AxiosError && error?.response?.data?.errors) {
-        const serializedErrors = error.response.data.errors as serverErrorv;
-
-        serializedErrors.forEach((err) => {
-          if (err.field == undefined) {
-            setError("root.serverError", {
-              message: err.message,
-              type: "server",
-            });
-          } else {
-            setError(err.field as keyof typeof data, {
-              message: err.message,
-              type: "server",
-            });
-          }
-        });
-      }
+      handleServerErrors(error, setError, data);
     }
   };
 
@@ -111,7 +96,7 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<LoginSchemaType>({
+  } = useForm<LoginPayload>({
     resolver: zodResolver(loginSchema),
   });
 
@@ -196,7 +181,7 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
             <button
               type="button"
               onClick={() => setShowPassword(!showPassword)}
-              className="absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
+              className="cursor-pointer absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600 transition-colors"
             >
               <EyeIcon open={showPassword} />
             </button>
@@ -212,7 +197,7 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
         <button
           type="submit"
           disabled={isLoading}
-          className="w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2.5 rounded-lg text-sm transition-colors mt-2 flex items-center justify-center gap-2"
+          className="cursor-pointer w-full bg-blue-600 hover:bg-blue-700 disabled:bg-blue-400 text-white font-medium py-2.5 rounded-lg text-sm transition-colors mt-2 flex items-center justify-center gap-2"
         >
           {isLoading ? (
             <>
@@ -243,30 +228,34 @@ export const Login = ({ onSubmit, isLoading }: LoginProps) => {
         </button>
       </form>
 
-      {/* Divider */}
-      <div className="flex items-center gap-3 my-5">
-        <div className="flex-1 h-px bg-gray-100" />
-        <span className="text-xs text-gray-400 uppercase tracking-wide">
-          or
-        </span>
-        <div className="flex-1 h-px bg-gray-100" />
-      </div>
+      {!isAdmin ? (
+        <>
+          {/* Divider */}
+          <div className="flex items-center gap-3 my-5">
+            <div className="flex-1 h-px bg-gray-100" />
+            <span className="text-xs text-gray-400 uppercase tracking-wide">
+              or
+            </span>
+            <div className="flex-1 h-px bg-gray-100" />
+          </div>
 
-      {/* Google */}
-      <button className="w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-        <GoogleIcon />
-        Login with Google
-      </button>
-
-      {/* Sign up */}
-      <p className="text-center text-sm text-gray-500 mt-5">
-        Don't have an account?{" "}
-        <Link to={"/auth/signup"}>
-          <button className=" cursor-pointer text-blue-600 hover:text-blue-700 font-semibold transition-colors">
-            Sign up
+          {/* Google */}
+          <button className=" cursor-pointer w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <GoogleIcon />
+            Login with Google
           </button>
-        </Link>
-      </p>
+
+          {/* Sign up */}
+          <p className="text-center text-sm text-gray-500 mt-5">
+            Don't have an account?{" "}
+            <Link to={"/auth/signup"}>
+              <button className=" cursor-pointer text-blue-600 hover:text-blue-700 font-semibold transition-colors">
+                Sign up
+              </button>
+            </Link>
+          </p>
+        </>
+      ) : null}
     </div>
   );
 };
