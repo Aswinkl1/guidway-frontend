@@ -6,8 +6,11 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { handleServerErrors } from "@/helpers/formErrorHelper";
 
 type ResetPassowordProb = {
-  onSubmit: (data: Omit<ResetSchemaType, "confirmPassword">) => Promise<void>;
+  onSubmit: (
+    data: Omit<ResetPasswordPayload, "confirmPassword">,
+  ) => Promise<void>;
 };
+
 const resetSchema = z
   .object({
     password: z
@@ -22,7 +25,8 @@ const resetSchema = z
     path: ["confirmPassword"],
   });
 
-export type ResetSchemaType = z.infer<typeof resetSchema>;
+export type ResetPasswordPayload = z.infer<typeof resetSchema>;
+
 export function ResetPassword({ onSubmit }: ResetPassowordProb) {
   const [showPassword, setShowPassword] = useState(false);
   const [showConfirm, setShowConfirm] = useState(false);
@@ -32,11 +36,11 @@ export function ResetPassword({ onSubmit }: ResetPassowordProb) {
     handleSubmit,
     formState: { errors },
     setError,
-  } = useForm<ResetSchemaType>({
+  } = useForm<ResetPasswordPayload>({
     resolver: zodResolver(resetSchema),
   });
 
-  const submitHandler = async (data: ResetSchemaType) => {
+  const submitHandler = async (data: ResetPasswordPayload) => {
     try {
       await onSubmit({ password: data.password });
     } catch (error) {

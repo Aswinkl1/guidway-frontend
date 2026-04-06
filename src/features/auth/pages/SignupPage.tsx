@@ -1,16 +1,16 @@
-import { api } from "@/lib/axios";
-import SignupForm, { type SignupSchemaType } from "../components/Signup";
+import SignupForm, { type SignupPayload } from "../components/Signup";
 
 import { useState } from "react";
 import { CheckEmailPage } from "../components/checkEmail";
+import { userSignup } from "@/features/auth/services/authService";
 
 export default function Signup() {
   const [isSignedUP, setIsSignedUp] = useState(false);
-  async function handleSubmit(data: SignupSchemaType): Promise<void> {
+  async function handleSubmit(data: SignupPayload): Promise<void> {
     try {
       console.log("data fromt the ", data);
       // send the request to the backend
-      await api.post("/signup", data);
+      await userSignup(data);
       // show the user to go and verify the singup page
       setIsSignedUp(true);
     } catch (error) {
