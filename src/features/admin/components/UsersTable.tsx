@@ -18,9 +18,6 @@ export interface UsersTableProps {
   toggleBlock: (user: User) => void;
 }
 
-function handleConfirmAction(user: User | null) {
-  if (!user) return;
-}
 interface User {
   id: string;
   name: string;
@@ -29,17 +26,6 @@ interface User {
   isVerified: boolean;
   profileImageUrl: string;
 }
-const EyeIcon = () => (
-  <svg
-    className="w-3.5 h-3.5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path strokeWidth="2" d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z" />
-    <circle cx="12" cy="12" r="3" strokeWidth="2" />
-  </svg>
-);
 
 const BlockIcon = () => (
   <svg
@@ -68,21 +54,6 @@ const UnblockIcon = () => (
   </svg>
 );
 
-const TrashIcon = () => (
-  <svg
-    className="w-3.5 h-3.5"
-    fill="none"
-    stroke="currentColor"
-    viewBox="0 0 24 24"
-  >
-    <path
-      strokeWidth="2"
-      strokeLinecap="round"
-      d="M3 6h18M8 6V4h8v2M19 6l-1 14H6L5 6"
-    />
-  </svg>
-);
-
 const ChevronDown = ({ open }: { open: boolean }) => (
   <svg
     className={`w-4 h-4 text-gray-400 transition-transform duration-200 ${open ? "rotate-180" : ""}`}
@@ -93,6 +64,7 @@ const ChevronDown = ({ open }: { open: boolean }) => (
     <path strokeWidth="2" strokeLinecap="round" d="M6 9l6 6 6-6" />
   </svg>
 );
+
 export const UsersTable = ({
   data,
   filter,
@@ -115,6 +87,7 @@ export const UsersTable = ({
     if (!user) return;
     toggleBlock(user);
   }
+
   const { users, totalItems: totalUsers, totalPages, currentPage } = data;
 
   const getPageNums = (): (number | "...")[] => {
@@ -143,6 +116,7 @@ export const UsersTable = ({
       ? "Verified"
       : "Not Verified"
     : "All";
+
   return (
     <>
       <BlockUserModal
