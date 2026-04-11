@@ -7,6 +7,7 @@ import { handleServerErrors } from "@/helpers/formErrorHelper";
 import { useState } from "react";
 import { forgetPassword } from "../services/authService";
 import { useNavigate } from "react-router";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 
 const forgetPasswordEmailSchema = z.object({
   email: z.email("please enter a valid email"),
@@ -90,7 +91,7 @@ export function ForgotPasswordPage() {
 
         {/* Back to log in */}
         <button
-          onClick={() => navigate("/auth/login")}
+          onClick={() => navigate(CLIENT_ROUTES.AUTH.LOGIN)}
           className="cursor-pointer flex items-center gap-1.5 text-sm text-gray-500 hover:text-gray-700 transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />

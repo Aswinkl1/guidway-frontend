@@ -1,4 +1,6 @@
 import { createBrowserRouter, Navigate } from "react-router";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
+
 // import { Root } from "./App";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
@@ -20,7 +22,7 @@ import GuidWayHomePage from "@/pages/homePage";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: CLIENT_ROUTES.HOME,
     loader: AuthLoader,
     children: [
       {
@@ -29,44 +31,44 @@ export const router = createBrowserRouter([
       },
 
       {
-        path: "/auth",
+        path: CLIENT_ROUTES.AUTH.ROOT,
         Component: AuthLayout,
         children: [
           {
             index: true,
-            element: <Navigate to="/auth/login" replace={true} />,
+            element: <Navigate to={CLIENT_ROUTES.AUTH.LOGIN} replace={true} />,
           },
           {
-            path: "login",
+            path: CLIENT_ROUTES.AUTH.LOGIN,
             Component: LoginPage,
           },
           {
-            path: "signup",
+            path: CLIENT_ROUTES.AUTH.SIGNUP,
             Component: SignupPage,
           },
           {
-            path: "verify",
+            path: CLIENT_ROUTES.AUTH.VERIFY,
             id: "verify-email",
             loader: verifyToken,
             Component: VerifyEmailPage,
           },
           {
-            path: "forget-password",
+            path: CLIENT_ROUTES.AUTH.FORGET_PASSWORD,
             Component: ForgotPasswordPage,
           },
           {
-            path: "reset-password",
+            path: CLIENT_ROUTES.AUTH.RESET_PASSWORD,
             loader: verifyTokenForResetPassword,
             Component: ResetPasswordPage,
           },
           {
-            path: "admin/login",
+            path: CLIENT_ROUTES.AUTH.ADMIN_LOGIN,
             Component: AdminLoginPage,
           },
         ],
       },
       {
-        path: "/admin",
+        path: CLIENT_ROUTES.ADMIN.ROOT,
         Component: AdminRootLayout,
         children: [
           {
@@ -74,11 +76,11 @@ export const router = createBrowserRouter([
             Component: AdminRoot,
           },
           {
-            path: "users",
+            path: CLIENT_ROUTES.ADMIN.USERS,
             Component: MentorAdminUsers,
           },
           {
-            path: "mentors",
+            path: CLIENT_ROUTES.ADMIN.MENTORS,
             Component: AdminMentorPanel,
           },
         ],
