@@ -1,4 +1,3 @@
-import { getUsers, updateBlockStatus } from "@/services/admin/adminServices";
 import {
   useQuery,
   keepPreviousData,
@@ -8,6 +7,7 @@ import {
 
 import { useSearchParams } from "react-router";
 import type { User } from "../pages/mentor";
+import { getUsers, updateBlockStatus } from "../services/adminServices";
 
 export interface filterProb {
   page: number;

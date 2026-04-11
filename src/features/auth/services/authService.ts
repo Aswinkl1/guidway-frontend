@@ -31,3 +31,8 @@ export const resetPassword = async (
   const response = await api.patch(ROUTES.AUTH.RESET_PASSWORD, data);
   return response.data;
 };
+
+export const logout = async () => {
+  const response = await api.post(ROUTES.AUTH.LOGOUT);
+  return response.data.result;
+};
