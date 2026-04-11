@@ -13,7 +13,7 @@ import {
   verifyTokenForResetPassword,
 } from "@/features/auth/pages/resetPasswordPage";
 import AuthLoader from "@/helpers/AuthLoader";
-import MentorAdminUsers from "@/features/admin/pages/user";
+// import MentorAdminUsers from "@/features/admin/pages/user";
 import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
 import { AdminRootLayout } from "@/layout/AdminLayout";
