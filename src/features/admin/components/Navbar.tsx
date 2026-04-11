@@ -1,9 +1,9 @@
-import { logout } from "@/services/admin/adminServices";
 import { LogOut } from "lucide-react";
 import { useNavigate } from "react-router";
 import { logout as reduxLogout } from "@/features/auth/redux/UserAuthSlice";
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { logout } from "@/features/auth/services/authService";
 const NAV_ITEMS = [
   {
     label: "Dashboard",

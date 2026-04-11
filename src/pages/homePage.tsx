@@ -23,9 +23,10 @@ import {
 import { useAppSelector } from "@/app/store/store";
 import { useNavigate } from "react-router";
 import { logout as reduxLogout } from "@/features/auth/redux/UserAuthSlice";
-import { logout } from "@/services/admin/adminServices";
+
 import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
+import { logout } from "@/features/auth/services/authService";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 

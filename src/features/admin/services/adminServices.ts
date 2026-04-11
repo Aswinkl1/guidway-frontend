@@ -48,8 +48,3 @@ export const updateBlockStatus = async (data: BlockStatusProb) => {
   const response = await api.patch(ROUTES.ADMIN.BLOCK_STATUS, data);
   return response.data.result;
 };
-
-export const logout = async () => {
-  const response = await api.post(ROUTES.AUTH.LOGOUT);
-  return response.data.result;
-};
