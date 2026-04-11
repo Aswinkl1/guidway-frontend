@@ -240,10 +240,12 @@ export const Login = ({ onSubmit, isLoading, isAdmin = false }: LoginProps) => {
           </div>
 
           {/* Google */}
-          <button className=" cursor-pointer w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
-            <GoogleIcon />
-            Login with Google
-          </button>
+          <a href="http://localhost:3000/api/v1/auth/google">
+            <button className="w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+              <GoogleIcon />
+              Login with Google
+            </button>
+          </a>
 
           {/* Sign up */}
           <p className="text-center text-sm text-gray-500 mt-5">

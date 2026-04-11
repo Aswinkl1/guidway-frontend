@@ -7,7 +7,7 @@ import axios, {
 } from "axios";
 
 export const api: AxiosInstance = axios.create({
-  baseURL: `${import.meta.env.VITE_BACKEND_BASE_URL}/${import.meta.env.VITE_BACKEND_API_VERSION}`,
+  baseURL: `${import.meta.env.VITE_BACKEND_BASE_URL}`,
   withCredentials: true,
   timeout: 10000,
 });

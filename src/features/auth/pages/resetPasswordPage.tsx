@@ -8,6 +8,7 @@ import {
 } from "../components/ResetPassword";
 import toast from "react-hot-toast";
 import { resetPassword } from "../services/authService";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 
 // helper loder function
 export async function verifyTokenForResetPassword({
@@ -44,7 +45,7 @@ export function ResetPasswordPage() {
       await resetPassword(paylod);
       toast.success("password changed successfully");
       await new Promise((res) => setTimeout(res, 2000));
-      navigate("/auth/login");
+      navigate(CLIENT_ROUTES.AUTH.LOGIN);
     } catch (error) {
       throw error;
     }

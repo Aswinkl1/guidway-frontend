@@ -3,9 +3,9 @@ import type {
   filterProb,
 } from "@/features/admin/hooks/useUsers";
 import { api } from "@/lib/axios";
+import { ROUTES } from "@/constants/apiRoutes";
 
 export const getUsers = async (filter: filterProb) => {
-  // console.log("filet skldkfj dkl", filter);
   const {
     page = 1,
     search = "",
@@ -14,6 +14,7 @@ export const getUsers = async (filter: filterProb) => {
     Verified,
     role,
   } = filter;
+
   const query: Record<string, any> = {
     page,
     limit,
@@ -22,31 +23,33 @@ export const getUsers = async (filter: filterProb) => {
   if (search) {
     query.search = search;
   }
-  if (status == "blocked") {
+
+  if (status === "blocked") {
     query.isBlocked = true;
-  } else if (status == "active") {
+  } else if (status === "active") {
     query.isBlocked = false;
   }
 
-  if (Verified == "true") {
-    console.log("Verified", Verified);
+  if (Verified === "true") {
     query.isVerified = true;
-  } else if (Verified == "false") {
+  } else if (Verified === "false") {
     query.isVerified = false;
   }
-  query.role = role;
 
-  const response = await api.get(`/admin/users`, { params: query });
+  if (role) {
+    query.role = role;
+  }
+
+  const response = await api.get(ROUTES.ADMIN.USERS, { params: query });
   return response.data.result;
 };
 
 export const updateBlockStatus = async (data: BlockStatusProb) => {
-  const response = await api.patch("/admin/block-status", data);
-
+  const response = await api.patch(ROUTES.ADMIN.BLOCK_STATUS, data);
   return response.data.result;
 };
 
 export const logout = async () => {
-  const response = await api.post("logout");
+  const response = await api.post(ROUTES.AUTH.LOGOUT);
   return response.data.result;
 };

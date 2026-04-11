@@ -1,3 +1,4 @@
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 import { CheckCircle } from "lucide-react";
 import { Link } from "react-router";
 
@@ -31,7 +32,7 @@ export function VerifySuccessPage({
 
         {/* CTA Button */}
         <Link
-          to="/auth/login"
+          to={CLIENT_ROUTES.AUTH.LOGIN}
           className="w-full mt-2 bg-blue-600 hover:bg-blue-700 text-white text-sm font-semibold py-3 rounded-lg transition-colors"
         >
           Back to log in

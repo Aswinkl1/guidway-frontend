@@ -1,5 +1,7 @@
 import { createBrowserRouter, Navigate } from "react-router";
-import { Root } from "./App";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
+
+// import { Root } from "./App";
 import { LoginPage } from "@/features/auth/pages/LoginPage";
 import { AuthLayout } from "@/features/auth/components/AuthLayout";
 import SignupPage from "@/features/auth/pages/SignupPage";
@@ -14,65 +16,73 @@ import AuthLoader from "@/helpers/AuthLoader";
 // import MentorAdminUsers from "@/features/admin/pages/user";
 import { AdminLoginPage } from "@/features/auth/pages/AdminLogin";
 import { AdminRoot } from "@/components/adminRoot";
+import { AdminRootLayout } from "@/layout/AdminLayout";
+import AdminMentorPanel from "@/features/admin/pages/mentor";
+import GuidWayHomePage from "@/pages/homePage";
 
 export const router = createBrowserRouter([
   {
-    path: "/",
+    path: CLIENT_ROUTES.HOME,
     loader: AuthLoader,
     children: [
       {
         index: true,
-        Component: Root,
+        Component: GuidWayHomePage,
       },
 
       {
-        path: "/auth",
+        path: CLIENT_ROUTES.AUTH.ROOT,
         Component: AuthLayout,
         children: [
           {
             index: true,
-            element: <Navigate to="/auth/login" replace={true} />,
+            element: <Navigate to={CLIENT_ROUTES.AUTH.LOGIN} replace={true} />,
           },
           {
-            path: "login",
+            path: CLIENT_ROUTES.AUTH.LOGIN,
             Component: LoginPage,
           },
           {
-            path: "signup",
+            path: CLIENT_ROUTES.AUTH.SIGNUP,
             Component: SignupPage,
           },
           {
-            path: "verify",
+            path: CLIENT_ROUTES.AUTH.VERIFY,
             id: "verify-email",
             loader: verifyToken,
             Component: VerifyEmailPage,
           },
           {
-            path: "forget-password",
+            path: CLIENT_ROUTES.AUTH.FORGET_PASSWORD,
             Component: ForgotPasswordPage,
           },
           {
-            path: "reset-password",
+            path: CLIENT_ROUTES.AUTH.RESET_PASSWORD,
             loader: verifyTokenForResetPassword,
             Component: ResetPasswordPage,
+          },
+          {
+            path: CLIENT_ROUTES.AUTH.ADMIN_LOGIN,
+            Component: AdminLoginPage,
           },
         ],
       },
       {
-        path: "/admin",
+        path: CLIENT_ROUTES.ADMIN.ROOT,
+        Component: AdminRootLayout,
         children: [
           {
             index: true,
             Component: AdminRoot,
           },
           {
-            path: "login",
-            Component: AdminLoginPage,
+            path: CLIENT_ROUTES.ADMIN.USERS,
+            Component: MentorAdminUsers,
           },
-          // {
-          //   path: "users",
-          //   Component: MentorAdminUsers,
-          // },
+          {
+            path: CLIENT_ROUTES.ADMIN.MENTORS,
+            Component: AdminMentorPanel,
+          },
         ],
       },
     ],

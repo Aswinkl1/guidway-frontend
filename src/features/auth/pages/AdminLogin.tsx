@@ -5,6 +5,7 @@ import toast from "react-hot-toast";
 import { useAppDispatch } from "@/app/store/store";
 import { setCredentials } from "../redux/UserAuthSlice";
 import { adminLogin } from "../services/authService";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 export function AdminLoginPage() {
   const dispatch = useAppDispatch();
   const [isLoading, setIsLoading] = useState(false);
@@ -25,7 +26,7 @@ export function AdminLoginPage() {
       toast.success("login successfull");
       await new Promise((res) => setTimeout(res, 1000));
       // redirect the user into home page
-      navigate("/admin", { replace: true });
+      navigate(CLIENT_ROUTES.ADMIN.ROOT, { replace: true });
     } catch (error) {
       toast.error("please try again");
 
