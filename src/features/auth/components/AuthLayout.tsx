@@ -1,4 +1,7 @@
-import { Outlet } from "react-router";
+import { useAppSelector } from "@/app/store/store";
+import { useEffect } from "react";
+
+import { Outlet, useNavigate } from "react-router";
 
 const GuidwayIcon = () => (
   <svg
@@ -31,6 +34,15 @@ const GuidwayIcon = () => (
   </svg>
 );
 export function AuthLayout() {
+  const authState = useAppSelector((state) => state.auth);
+  const naviage = useNavigate();
+  useEffect(() => {
+    if (authState.token) {
+      if (authState.role === "admin") naviage("/admin", { replace: true });
+      else naviage("/", { replace: true });
+    }
+  }, [authState, naviage]);
+
   return (
     <div className="min-h-screen bg-gray-50 flex flex-col">
       {/* Navbar */}
@@ -43,4 +55,5 @@ export function AuthLayout() {
       <Outlet />
     </div>
   );
+  1;
 }
