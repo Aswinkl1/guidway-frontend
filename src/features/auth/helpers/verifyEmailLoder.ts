@@ -1,5 +1,6 @@
 import { jwtDecode } from "jwt-decode";
 import { api } from "../../../lib/axios";
+import { ROUTES } from "@/constants/apiRoutes";
 
 export function isTokenValid(token: string): String | null {
   try {
@@ -37,7 +38,7 @@ export default async function verifyToken({ request }: { request: Request }) {
     console.log("is token validiii", isTokenValid(token));
 
     if (isTokenValid(token)) {
-      await api.get(`/verify?token=${token}`);
+      await api.get(`${ROUTES.AUTH.VERIFY}?token=${token}`);
       return true;
     }
     return false;
