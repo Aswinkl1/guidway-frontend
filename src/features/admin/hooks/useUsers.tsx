@@ -6,8 +6,14 @@ import {
 } from "@tanstack/react-query";
 
 import { useSearchParams } from "react-router";
-import type { User } from "../pages/mentor";
-import { getUsers, updateBlockStatus } from "../services/adminServices";
+// import type { User } from "../pages/mentor";
+import {
+  getUsers,
+  updateBlockStatus,
+  verifyMentor,
+} from "../services/adminServices";
+import type { User } from "../user.types";
+import toast from "react-hot-toast";
 
 export interface filterProb {
   page: number;
@@ -99,6 +105,11 @@ export const useUpdateBlockStatus = (entity: "mentee" | "mentor") => {
     onSuccess: (_, variables) => {
       const { userId, newBlockStatus } = variables;
       console.log(newBlockStatus);
+      toast.success(
+        newBlockStatus
+          ? `Block ${entity} successfull`
+          : `UnBlock ${entity} successfull`,
+      );
       queryClient.setQueriesData({ queryKey: keys.lists() }, (old: any) => {
         if (!old) return old;
         console.log("old", old);
@@ -106,6 +117,31 @@ export const useUpdateBlockStatus = (entity: "mentee" | "mentor") => {
           ...old,
           users: old.users.map((user: User) =>
             user.id === userId ? { ...user, isBlocked: newBlockStatus } : user,
+          ),
+        };
+      });
+    },
+  });
+};
+
+export const useVerifyMentor = (entity: "mentee" | "mentor") => {
+  const queryClient = useQueryClient();
+  const keys = entity === "mentee" ? menteeKeys : mentorKeys;
+  return useMutation({
+    mutationFn: (data: { mentorId: string }) => verifyMentor(data),
+
+    onSuccess: (_, variables) => {
+      const { mentorId } = variables;
+      toast.success("Verify mentor successfull");
+      queryClient.setQueriesData({ queryKey: keys.lists() }, (old: any) => {
+        if (!old) return old;
+        console.log("old", old);
+        return {
+          ...old,
+          users: old.users.map((user: User) =>
+            user.mentorId === mentorId
+              ? { ...user, mentorIsVerified: true }
+              : user,
           ),
         };
       });

@@ -18,5 +18,6 @@ export const ROUTES = {
   ADMIN: {
     USERS: "/api/v1/admin/users",
     BLOCK_STATUS: "/api/v1/admin/block-status",
+    VERIFY_MENTOR: "/api/v1/admin/verify-mentor",
   },
 } as const;

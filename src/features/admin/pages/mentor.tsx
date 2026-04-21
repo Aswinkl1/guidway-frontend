@@ -2,30 +2,31 @@ import {
   useUpdateBlockStatus,
   useUserFilter,
   useUsers,
+  useVerifyMentor,
 } from "../hooks/useUsers";
 
 import { UsersTable } from "../components/UsersTable";
 import { Navbar } from "../components/Navbar";
-
-export interface User {
-  id: string;
-  name: string;
-  email: string;
-  isBlocked: boolean;
-  isVerified: boolean;
-  profileImageUrl: string;
-}
+import type { User } from "../user.types";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function AdminMentorPanel() {
   const { filter, setFilter } = useUserFilter();
   const { data, isLoading } = useUsers("mentor", filter);
   const { mutate: updateBlockStatus } = useUpdateBlockStatus("mentor");
-
+  const { mutate: verifyMentor } = useVerifyMentor("mentor");
   console.log("we got data again", data);
 
   const toggleBlock = (user: User) => {
     updateBlockStatus({ userId: user.id, newBlockStatus: !user.isBlocked });
+  };
+
+  const handleVerifyMentor = (user: User) => {
+    if (!user.mentorId) {
+      console.log("mentor id not found");
+      return;
+    }
+    verifyMentor({ mentorId: user.mentorId });
   };
 
   return (
@@ -48,8 +49,10 @@ export default function AdminMentorPanel() {
           <UsersTable
             data={data}
             toggleBlock={toggleBlock}
+            handleVerifyMentor={handleVerifyMentor}
             setFilter={setFilter}
             filter={filter}
+            title="Mentor"
           />
         )}
       </div>
