@@ -378,7 +378,7 @@ export const UsersTable = ({
                           </button>
                         )}
 
-                        {!user.mentorIsVerified && (
+                        {user.mentorId && !user.mentorIsVerified && (
                           <button
                             onClick={() => handleVerifyMentor(user)}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap"
