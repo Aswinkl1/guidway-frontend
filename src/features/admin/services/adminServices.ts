@@ -48,3 +48,8 @@ export const updateBlockStatus = async (data: BlockStatusProb) => {
   const response = await api.patch(ROUTES.ADMIN.BLOCK_STATUS, data);
   return response.data.result;
 };
+
+export const verifyMentor = async (data: { mentorId: string }) => {
+  const response = await api.patch(ROUTES.ADMIN.VERIFY_MENTOR, data);
+  return response.data.result;
+};

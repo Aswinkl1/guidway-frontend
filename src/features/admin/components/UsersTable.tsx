@@ -3,6 +3,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { filterProb } from "../hooks/useUsers";
 import { BlockUserModal } from "./ToggleUserStatusModal";
+import type { User } from "../user.types";
 
 export interface UsersTableProps {
   data: {
@@ -16,15 +17,8 @@ export interface UsersTableProps {
   filter: filterProb;
   setFilter: (updates: Partial<filterProb>) => void;
   toggleBlock: (user: User) => void;
-}
-
-interface User {
-  id: string;
-  name: string;
-  email: string;
-  isBlocked: boolean;
-  isVerified: boolean;
-  profileImageUrl: string;
+  title: string;
+  handleVerifyMentor: (user: User) => void;
 }
 
 const BlockIcon = () => (
@@ -70,6 +64,8 @@ export const UsersTable = ({
   filter,
   setFilter,
   toggleBlock,
+  title,
+  handleVerifyMentor,
 }: UsersTableProps) => {
   const [dialogOpen, setDialogOpen] = useState(false);
   const [selectedItem, setselectedItem] = useState<{
@@ -131,10 +127,10 @@ export const UsersTable = ({
         <div className="flex items-start justify-between mb-6">
           <div>
             <h1 className="text-2xl font-bold text-gray-900 tracking-tight">
-              Users
+              {title}
             </h1>
             <p className="text-sm text-gray-400 mt-0.5">
-              Manage mentee accounts and platform access.
+              Manage {title} accounts and platform access.
             </p>
           </div>
           <div className="text-right">
@@ -379,6 +375,16 @@ export const UsersTable = ({
                           >
                             <BlockIcon />
                             Block
+                          </button>
+                        )}
+
+                        {!user.mentorIsVerified && (
+                          <button
+                            onClick={() => handleVerifyMentor(user)}
+                            className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap"
+                          >
+                            <UnblockIcon />
+                            verify
                           </button>
                         )}
 
