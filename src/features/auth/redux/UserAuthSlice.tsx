@@ -1,6 +1,6 @@
+import { Role } from "@/types/role";
 import { createSlice, type PayloadAction } from "@reduxjs/toolkit";
 
-type Role = "mentor" | "mentee" | "admin";
 export interface IUserAuthSlice {
   token: string | null;
   role: Role | null;

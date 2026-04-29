@@ -5,6 +5,7 @@ import { z } from "zod";
 import { Link } from "react-router";
 
 import { handleServerErrors } from "@/helpers/formErrorHelper";
+import { Role } from "@/types/role";
 
 const GoogleIcon = () => (
   <svg
@@ -66,7 +67,7 @@ const signupSchema = z
 type RawSignupFields = z.infer<typeof signupSchema>;
 
 export type SignupPayload = RawSignupFields & {
-  role: "mentee" | "mentor";
+  role: Role;
 };
 
 interface SignupProps {
@@ -74,7 +75,7 @@ interface SignupProps {
 }
 
 export default function SignupForm({ onSubmit }: SignupProps) {
-  const [role, setRole] = useState<"mentee" | "mentor">("mentee");
+  const [role, setRole] = useState<Role>(Role.MENTEE);
 
   const {
     register,
@@ -113,7 +114,7 @@ export default function SignupForm({ onSubmit }: SignupProps) {
         </div>
       )}
       <div className="flex rounded-lg border border-gray-200 overflow-hidden mb-6">
-        {(["mentee", "mentor"] as const).map((r) => (
+        {([Role.MENTEE, Role.MENTOR] as const).map((r) => (
           <button
             key={r}
             type="button"
@@ -252,7 +253,7 @@ export default function SignupForm({ onSubmit }: SignupProps) {
           <div className="flex-1 h-px bg-gray-200" />
         </div>
 
-        {role === "mentor" ? (
+        {role === Role.MENTOR ? (
           <a href="http://localhost:3000/api/v1/auth/linkedin">
             <button
               type="button"
