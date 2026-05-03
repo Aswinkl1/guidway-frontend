@@ -6,6 +6,7 @@ import {
 
 import { UsersTable } from "../components/UsersTable";
 import { Navbar } from "../components/Navbar";
+import { Role } from "@/types/role";
 
 interface User {
   id: string;
@@ -19,8 +20,8 @@ interface User {
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function AdminUsersPanel() {
   const { filter, setFilter } = useUserFilter();
-  const { data, isLoading } = useUsers("mentee", filter);
-  const { mutate: updateBlockStatus } = useUpdateBlockStatus("mentee");
+  const { data, isLoading } = useUsers(Role.MENTEE, filter);
+  const { mutate: updateBlockStatus } = useUpdateBlockStatus(Role.MENTEE);
 
   console.log("we got data again", data);
 
@@ -50,6 +51,8 @@ export default function AdminUsersPanel() {
             toggleBlock={toggleBlock}
             setFilter={setFilter}
             filter={filter}
+            title={Role.MENTEE}
+            handleVerifyMentor={() => {}}
           />
         )}
       </div>

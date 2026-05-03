@@ -8,13 +8,14 @@ import {
 import { UsersTable } from "../components/UsersTable";
 import { Navbar } from "../components/Navbar";
 import type { User } from "../user.types";
+import { Role } from "@/types/role";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
 export default function AdminMentorPanel() {
   const { filter, setFilter } = useUserFilter();
-  const { data, isLoading } = useUsers("mentor", filter);
-  const { mutate: updateBlockStatus } = useUpdateBlockStatus("mentor");
-  const { mutate: verifyMentor } = useVerifyMentor("mentor");
+  const { data, isLoading } = useUsers(Role.MENTOR, filter);
+  const { mutate: updateBlockStatus } = useUpdateBlockStatus(Role.MENTOR);
+  const { mutate: verifyMentor } = useVerifyMentor(Role.MENTOR);
   console.log("we got data again", data);
 
   const toggleBlock = (user: User) => {
@@ -52,7 +53,7 @@ export default function AdminMentorPanel() {
             handleVerifyMentor={handleVerifyMentor}
             setFilter={setFilter}
             filter={filter}
-            title="Mentor"
+            title={Role.MENTOR}
           />
         )}
       </div>

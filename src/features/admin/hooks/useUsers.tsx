@@ -14,6 +14,7 @@ import {
 } from "../services/adminServices";
 import type { User } from "../user.types";
 import toast from "react-hot-toast";
+import { Role } from "@/types/role";
 
 export interface filterProb {
   page: number;
@@ -21,7 +22,7 @@ export interface filterProb {
   status: string | undefined;
   limit: number;
   Verified: string | null;
-  role: "mentee" | "mentor";
+  role: Role;
 }
 
 export const USER_QUERY_KEYS = ["users"];
@@ -40,10 +41,10 @@ const createKeys = (entity: string) => {
   return KEYS;
 };
 
-const menteeKeys = createKeys("mentee");
-const mentorKeys = createKeys("mentor");
-export const useUsers = (entity: "mentee" | "mentor", filter: filterProb) => {
-  const keys = entity === "mentee" ? menteeKeys : mentorKeys;
+const menteeKeys = createKeys(Role.MENTEE);
+const mentorKeys = createKeys(Role.MENTOR);
+export const useUsers = (entity: Role, filter: filterProb) => {
+  const keys = entity === Role.MENTEE ? menteeKeys : mentorKeys;
   filter.role = entity;
   return useQuery({
     queryKey: keys.list(filter),
@@ -61,7 +62,7 @@ export const useUserFilter = () => {
     limit: Number(searchParams.get("limit") ?? 10),
     status: searchParams.get("status") ?? undefined,
     Verified: searchParams.get("Verified"),
-    role: searchParams.get("role") as "mentee" | "mentor",
+    role: searchParams.get("role") as Role,
   };
 
   const setFilter = (updates: Partial<filterProb>) => {
@@ -96,9 +97,9 @@ export type BlockStatusProb = {
   newBlockStatus: boolean;
 };
 
-export const useUpdateBlockStatus = (entity: "mentee" | "mentor") => {
+export const useUpdateBlockStatus = (entity: Role) => {
   const queryClient = useQueryClient();
-  const keys = entity === "mentee" ? menteeKeys : mentorKeys;
+  const keys = entity === Role.MENTEE ? menteeKeys : mentorKeys;
   return useMutation({
     mutationFn: (data: BlockStatusProb) => updateBlockStatus(data),
 
@@ -124,9 +125,9 @@ export const useUpdateBlockStatus = (entity: "mentee" | "mentor") => {
   });
 };
 
-export const useVerifyMentor = (entity: "mentee" | "mentor") => {
+export const useVerifyMentor = (entity: Role) => {
   const queryClient = useQueryClient();
-  const keys = entity === "mentee" ? menteeKeys : mentorKeys;
+  const keys = entity === Role.MENTEE ? menteeKeys : mentorKeys;
   return useMutation({
     mutationFn: (data: { mentorId: string }) => verifyMentor(data),
 
