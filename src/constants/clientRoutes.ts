@@ -14,4 +14,9 @@ export const CLIENT_ROUTES = {
     USERS: "/admin/users",
     MENTORS: "/admin/mentors",
   },
+  MENTOR: {
+    ROOT: "/mentor",
+    PROFILE: "/mentor/profile",
+    SESSIONS: "/mentor/sessions",
+  },
 } as const;

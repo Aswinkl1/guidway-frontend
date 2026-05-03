@@ -19,6 +19,8 @@ import { AdminRoot } from "@/components/adminRoot";
 import { AdminRootLayout } from "@/layout/AdminLayout";
 import AdminMentorPanel from "@/features/admin/pages/mentor";
 import GuidWayHomePage from "@/pages/homePage";
+import MentorProfilePage from "@/features/mentor/pages/MentorProfilePage";
+import { MentorLayout } from "@/features/mentor/components/MentorLayout";
 
 export const router = createBrowserRouter([
   {
@@ -64,6 +66,16 @@ export const router = createBrowserRouter([
           {
             path: CLIENT_ROUTES.AUTH.ADMIN_LOGIN,
             Component: AdminLoginPage,
+          },
+        ],
+      },
+      {
+        path: CLIENT_ROUTES.MENTOR.ROOT,
+        Component: MentorLayout,
+        children: [
+          {
+            path: CLIENT_ROUTES.MENTOR.PROFILE,
+            Component: MentorProfilePage,
           },
         ],
       },
