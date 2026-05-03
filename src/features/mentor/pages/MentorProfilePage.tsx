@@ -31,7 +31,7 @@ import {
   EducationEntry,
   QuickActionRow,
   VisibilityToggle,
-} from "@/components/shared"; // or @/components/shared for the shared ones
+} from "@/components/shared";
 
 const MentorProfilePage: React.FC = () => {
   const [publicProfile, setPublicProfile] = useState(true);
