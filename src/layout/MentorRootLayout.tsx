@@ -8,9 +8,9 @@ export function AdminRootLayout() {
   const auth = useAppSelector((state) => state.auth);
   const naviage = useNavigate();
   useEffect(() => {
-    if (!auth.token) naviage(CLIENT_ROUTES.AUTH.ADMIN_LOGIN, { replace: true });
-    if (auth.role !== Role.ADMIN)
-      naviage(CLIENT_ROUTES.ADMIN.ROOT, { replace: true });
+    if (!auth.token) naviage(CLIENT_ROUTES.AUTH.LOGIN, { replace: true });
+    if (auth.role !== Role.MENTOR)
+      naviage(CLIENT_ROUTES.MENTOR.ROOT, { replace: true });
   }, [auth, naviage]);
 
   return (
