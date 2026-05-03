@@ -23,11 +23,11 @@ export default function AdminMentorPanel() {
   };
 
   const handleVerifyMentor = (user: User) => {
-    if (!user.mentorId) {
-      console.log("mentor id not found");
+    if (!user.id) {
+      console.log("user id not found");
       return;
     }
-    verifyMentor({ mentorId: user.mentorId });
+    verifyMentor({ mentorId: user.id });
   };
 
   return (
