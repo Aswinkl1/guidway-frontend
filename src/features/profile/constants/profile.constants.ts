@@ -1,11 +1,20 @@
-export const EMPLOYMENT_TYPES = [
-  { value: "FULL_TIME" as const, label: "Full-time" },
-  { value: "PART_TIME" as const, label: "Part-time" },
-  { value: "CONTRACT" as const, label: "Contract" },
-  { value: "INTERNSHIP" as const, label: "Internship" },
-  { value: "FREELANCE" as const, label: "Freelance" },
-  { value: "SELF_EMPLOYED" as const, label: "Self-employed" },
-  { value: "VOLUNTEER" as const, label: "Volunteer" },
+import z from "zod";
+
+export const EMPLOYMENT_TYPE_VALUES = [
+  "FULL_TIME",
+  "PART_TIME",
+  "CONTRACT",
+  "INTERNSHIP",
+  "FREELANCE",
+  "SELF_EMPLOYED",
+  "VOLUNTEER",
 ] as const;
 
-export type EmploymentTypeValue = (typeof EMPLOYMENT_TYPES)[number]["value"];
+export const EmploymentTypeEnum = z.enum(EMPLOYMENT_TYPE_VALUES);
+
+export type EmploymentTypeValue = (typeof EMPLOYMENT_TYPE_VALUES)[number];
+
+export const EMPLOYMENT_TYPES = EMPLOYMENT_TYPE_VALUES.map((value) => ({
+  value,
+  label: value.replace("_", " "),
+}));
