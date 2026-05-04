@@ -33,13 +33,14 @@ import {
   VisibilityToggle,
 } from "@/components/shared";
 import { ExperienceModal } from "../components/modals";
+import { useAddExperience } from "../hooks/useExperienceMutation";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
   const [acceptingBookings, setAcceptingBookings] = useState(true);
   const [expOpen, setExpOpen] = useState(false);
   const [eduOpen, setEduOpen] = useState(false);
-
+  const { mutateAsync, isPending } = useAddExperience();
   const skills = [
     "Python",
     "System Design",
@@ -53,7 +54,7 @@ const MentorProfilePage = () => {
       <ExperienceModal
         open={expOpen}
         onClose={() => setExpOpen(false)}
-        onSave={() => {}}
+        onSave={mutateAsync}
       />
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold text-slate-900">My Profile</h1>

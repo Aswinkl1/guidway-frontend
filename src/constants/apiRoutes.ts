@@ -20,11 +20,9 @@ export const ROUTES = {
     BLOCK_STATUS: "/api/v1/admin/block-status",
     VERIFY_MENTOR: "/api/v1/admin/verify-mentor",
   },
-  MENTOR:{
-    EXPERIENCE:{
-      ROOT:"/api/v1/experience",
-      
-    }
-    
-  }
+  MENTOR: {
+    EXPERIENCE: {
+      ROOT: "/api/v1/mentor/experience",
+    },
+  },
 } as const;
