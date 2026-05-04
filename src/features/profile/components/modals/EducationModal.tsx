@@ -1,7 +1,7 @@
-import { useState } from "react";
+// EducationModal.tsx
 import { GraduationCap } from "lucide-react";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
-
+import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import {
@@ -11,39 +11,28 @@ import {
   ModalHeader,
   ModalFooter,
 } from "@/components/shared";
-import type {
-  EducationFormData,
-  EducationErrors,
-} from "@/features/profile/types/profile.types";
-import { Separator } from "@/components/ui/separator";
 import { createPortal } from "react-dom";
+import { Controller, useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import {
+  CreateEducationSchema,
+  type EducationFormData,
+} from "../../schemas/education.schema";
+
+const currentYear = new Date().getFullYear();
 
 const EDUCATION_DEFAULTS: EducationFormData = {
   institution: "",
   degree: "",
   fieldOfStudy: "",
-  startMonth: "",
-  startYear: "",
-  endMonth: "",
-  endYear: "",
+  startMonth: new Date().getMonth() + 1,
+  startYear: currentYear,
+  endMonth: undefined,
+  endYear: undefined,
   isCurrent: false,
-  grade: "",
-  description: "",
+  grade: undefined,
+  description: undefined,
 };
-
-function validateEducation(data: EducationFormData): EducationErrors {
-  const e: EducationErrors = {};
-  if (!data.institution.trim()) e.institution = "Institution is required";
-  if (!data.degree.trim()) e.degree = "Degree is required";
-  if (!data.fieldOfStudy.trim()) e.fieldOfStudy = "Field of study is required";
-  if (data.startMonth === "") e.startMonth = "Start month is required";
-  if (data.startYear === "") e.startYear = "Start year is required";
-  if (!data.isCurrent) {
-    if (data.endMonth === "") e.endMonth = "End month is required";
-    if (data.endYear === "") e.endYear = "End year is required";
-  }
-  return e;
-}
 
 interface EducationModalProps {
   open: boolean;
@@ -52,50 +41,41 @@ interface EducationModalProps {
   initialData?: Partial<EducationFormData>;
 }
 
-export const EducationModal: React.FC<EducationModalProps> = ({
+export const EducationModal = ({
   open,
   onClose,
   onSave,
   initialData,
-}) => {
-  const [form, setForm] = useState<EducationFormData>({
-    ...EDUCATION_DEFAULTS,
-    ...initialData,
+}: EducationModalProps) => {
+  const {
+    register,
+    control,
+    setValue,
+    handleSubmit,
+    watch,
+    reset,
+    formState: { errors, isSubmitting },
+  } = useForm<EducationFormData>({
+    resolver: zodResolver(CreateEducationSchema),
+    defaultValues: { ...EDUCATION_DEFAULTS, ...initialData },
   });
-  const [errors, setErrors] = useState<EducationErrors>({});
-  const [saving, setSaving] = useState(false);
 
-  const set = <K extends keyof EducationFormData>(
-    key: K,
-    value: EducationFormData[K],
-  ) => {
-    setForm((prev) => ({ ...prev, [key]: value }));
-    setErrors((prev) => ({ ...prev, [key]: undefined }));
-  };
+  const isCurrent = watch("isCurrent");
 
-  const handleSave = async () => {
-    const errs = validateEducation(form);
-    if (Object.keys(errs).length) {
-      setErrors(errs);
-      return;
-    }
-    setSaving(true);
-    try {
-      await onSave(form);
-      onClose();
-    } finally {
-      setSaving(false);
-    }
+  const submitHandler = async (data: EducationFormData) => {
+    await onSave(data);
+    onClose();
+    reset();
   };
 
   const handleClose = () => {
-    setForm({ ...EDUCATION_DEFAULTS, ...initialData });
-    setErrors({});
+    reset({ ...EDUCATION_DEFAULTS, ...initialData });
     onClose();
   };
 
   const modalRoot = document.getElementById("modal-root");
   if (!modalRoot) return null;
+
   return createPortal(
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="max-w-lg w-full rounded-2xl p-6 gap-0">
@@ -108,33 +88,35 @@ export const EducationModal: React.FC<EducationModalProps> = ({
         <Separator className="my-4" />
 
         <div className="flex flex-col gap-4 max-h-[60vh] overflow-y-auto pr-1">
-          <FormField label="Institution" required error={errors.institution}>
+          <FormField
+            label="Institution"
+            required
+            error={errors.institution?.message}
+          >
             <Input
               placeholder="e.g. Stanford University"
-              value={form.institution}
-              onChange={(e) => set("institution", e.target.value)}
+              {...register("institution")}
               className="h-9 text-sm border-slate-200"
             />
           </FormField>
 
           <div className="grid grid-cols-2 gap-3">
-            <FormField label="Degree" required error={errors.degree}>
+            <FormField label="Degree" required error={errors.degree?.message}>
               <Input
                 placeholder="e.g. B.Sc."
-                value={form.degree}
-                onChange={(e) => set("degree", e.target.value)}
+                {...register("degree")}
                 className="h-9 text-sm border-slate-200"
               />
             </FormField>
+
             <FormField
               label="Field of Study"
               required
-              error={errors.fieldOfStudy}
+              error={errors.fieldOfStudy?.message}
             >
               <Input
                 placeholder="e.g. Computer Science"
-                value={form.fieldOfStudy}
-                onChange={(e) => set("fieldOfStudy", e.target.value)}
+                {...register("fieldOfStudy")}
                 className="h-9 text-sm border-slate-200"
               />
             </FormField>
@@ -143,57 +125,73 @@ export const EducationModal: React.FC<EducationModalProps> = ({
           <FormField
             label="Start Date"
             required
-            error={errors.startMonth || errors.startYear}
+            error={errors.startMonth?.message || errors.startYear?.message}
           >
-            <MonthYearPicker
-              monthValue={form.startMonth}
-              yearValue={form.startYear}
-              onMonthChange={(v) => set("startMonth", v)}
-              onYearChange={(v) => set("startYear", v)}
+            <Controller
+              control={control}
+              name="startMonth"
+              render={({ field }) => (
+                <MonthYearPicker
+                  monthValue={field.value}
+                  yearValue={watch("startYear")}
+                  onMonthChange={field.onChange}
+                  onYearChange={(v) => setValue("startYear", Number(v))}
+                />
+              )}
             />
           </FormField>
 
-          <CurrentToggle
-            checked={form.isCurrent}
-            onChange={(v) => {
-              set("isCurrent", v);
-              if (v) {
-                set("endMonth", "");
-                set("endYear", "");
-              }
-            }}
-            label="I am currently studying here"
+          <Controller
+            control={control}
+            name="isCurrent"
+            render={({ field }) => (
+              <CurrentToggle
+                checked={field.value}
+                onChange={(v) => {
+                  field.onChange(v);
+                  if (v) {
+                    setValue("endMonth", null);
+                    setValue("endYear", null);
+                  }
+                }}
+                label="I am currently studying here"
+              />
+            )}
           />
 
-          {!form.isCurrent && (
+          {!isCurrent && (
             <FormField
               label="End Date"
               required
-              error={errors.endMonth || errors.endYear}
+              error={errors.endMonth?.message || errors.endYear?.message}
             >
-              <MonthYearPicker
-                monthValue={form.endMonth}
-                yearValue={form.endYear}
-                onMonthChange={(v) => set("endMonth", v)}
-                onYearChange={(v) => set("endYear", v)}
+              <Controller
+                control={control}
+                name="endMonth"
+                render={({ field }) => (
+                  <MonthYearPicker
+                    monthValue={field.value ?? ""}
+                    yearValue={watch("endYear") ?? ""}
+                    onMonthChange={field.onChange}
+                    onYearChange={(v) => setValue("endYear", Number(v))}
+                  />
+                )}
               />
             </FormField>
           )}
 
-          <FormField label="Grade / GPA" error={errors.grade}>
+          <FormField label="Grade / GPA" error={errors.grade?.message}>
             <Input
               placeholder="e.g. 4.0 GPA or First Class Honours"
-              value={form.grade}
-              onChange={(e) => set("grade", e.target.value)}
+              {...register("grade")}
               className="h-9 text-sm border-slate-200"
             />
           </FormField>
 
-          <FormField label="Description" error={errors.description}>
+          <FormField label="Description" error={errors.description?.message}>
             <Textarea
               placeholder="Relevant coursework, thesis, activities…"
-              value={form.description}
-              onChange={(e) => set("description", e.target.value)}
+              {...register("description")}
               rows={3}
               className="text-sm border-slate-200 resize-none"
             />
@@ -203,8 +201,8 @@ export const EducationModal: React.FC<EducationModalProps> = ({
         <Separator className="my-4" />
         <ModalFooter
           onClose={handleClose}
-          onSave={handleSave}
-          isSaving={saving}
+          onSave={handleSubmit(submitHandler)}
+          isSaving={isSubmitting}
         />
       </DialogContent>
     </Dialog>,

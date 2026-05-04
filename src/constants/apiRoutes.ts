@@ -24,5 +24,8 @@ export const ROUTES = {
     EXPERIENCE: {
       ROOT: "/api/v1/mentor/experience",
     },
+    EDUCATION: {
+      ROOT: "/api/v1/mentor/education",
+    },
   },
 } as const;
