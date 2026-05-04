@@ -291,9 +291,9 @@ const MentorProfilePage = () => {
               />
             </SectionCard>
 
-            {/* Awards & Education */}
+            {/* Awards  */}
             <SectionCard
-              title="Awards & Education"
+              title="Awards "
               actionLabel={
                 <span className="flex items-center gap-1">
                   <Plus size={13} /> Add
@@ -319,12 +319,22 @@ const MentorProfilePage = () => {
                 year="2021"
               />
 
-              <div className="flex items-center gap-1.5 mt-4 mb-2">
+              {/* <div className="flex items-center gap-1.5 mt-4 mb-2">
                 <GraduationCap size={13} className="text-slate-400" />
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
                   Education
                 </span>
-              </div>
+              </div> */}
+            </SectionCard>
+            <SectionCard
+              title="Education"
+              actionLabel={
+                <span className="flex items-center gap-1">
+                  <Plus size={13} /> Add
+                </span>
+              }
+              onAction={() => {}}
+            >
               <EducationEntry
                 school="Stanford University"
                 degree="M.S. Computer Science"
