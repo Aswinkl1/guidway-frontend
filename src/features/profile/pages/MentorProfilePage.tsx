@@ -32,11 +32,23 @@ import {
   QuickActionRow,
   VisibilityToggle,
 } from "@/components/shared";
+import { EducationModal, ExperienceModal } from "../components/modals";
+import { useAddExperience } from "../hooks/useExperienceMutation";
+import { useAddEducation } from "../hooks/useEducationMutation";
 
-const MentorProfilePage: React.FC = () => {
+const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
   const [acceptingBookings, setAcceptingBookings] = useState(true);
-
+  const [expOpen, setExpOpen] = useState(false);
+  const [eduOpen, setEduOpen] = useState(false);
+  const {
+    mutateAsync: mutateAsyncForExperience,
+    isPending: isPendingForExperience,
+  } = useAddExperience();
+  const {
+    mutateAsync: mutateAsyncForEducation,
+    isPending: isPendingForEducation,
+  } = useAddEducation();
   const skills = [
     "Python",
     "System Design",
@@ -47,6 +59,16 @@ const MentorProfilePage: React.FC = () => {
 
   return (
     <>
+      <EducationModal
+        open={eduOpen}
+        onClose={() => setEduOpen(false)}
+        onSave={mutateAsyncForEducation}
+      />
+      <ExperienceModal
+        open={expOpen}
+        onClose={() => setExpOpen(false)}
+        onSave={mutateAsyncForExperience}
+      />
       <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold text-slate-900">My Profile</h1>
         <div className="flex items-center gap-3">
@@ -263,7 +285,9 @@ const MentorProfilePage: React.FC = () => {
                   <Plus size={13} /> Add Experience
                 </span>
               }
-              onAction={() => {}}
+              onAction={() => {
+                setExpOpen(true);
+              }}
             >
               <WorkEntry
                 company="Google"
@@ -280,9 +304,9 @@ const MentorProfilePage: React.FC = () => {
               />
             </SectionCard>
 
-            {/* Awards & Education */}
+            {/* Awards  */}
             <SectionCard
-              title="Awards & Education"
+              title="Awards "
               actionLabel={
                 <span className="flex items-center gap-1">
                   <Plus size={13} /> Add
@@ -307,7 +331,16 @@ const MentorProfilePage: React.FC = () => {
                 type="Certificate"
                 year="2021"
               />
-
+            </SectionCard>
+            <SectionCard
+              title="Education"
+              actionLabel={
+                <span className="flex items-center gap-1">
+                  <Plus size={13} /> Add
+                </span>
+              }
+              onAction={() => setEduOpen(true)}
+            >
               <div className="flex items-center gap-1.5 mt-4 mb-2">
                 <GraduationCap size={13} className="text-slate-400" />
                 <span className="text-xs font-semibold text-slate-400 uppercase tracking-widest">
