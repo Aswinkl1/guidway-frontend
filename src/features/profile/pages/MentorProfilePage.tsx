@@ -35,12 +35,16 @@ import {
 import { EducationModal, ExperienceModal } from "../components/modals";
 import { useAddExperience } from "../hooks/useExperienceMutation";
 import { useAddEducation } from "../hooks/useEducationMutation";
+import { AchievementModal } from "../components/modals/AchievementModal";
+import { useAddAchievement } from "../hooks/useAchievementMutation";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
   const [acceptingBookings, setAcceptingBookings] = useState(true);
   const [expOpen, setExpOpen] = useState(false);
   const [eduOpen, setEduOpen] = useState(false);
+  const [achOpen, setAchOpen] = useState(false);
+
   const {
     mutateAsync: mutateAsyncForExperience,
     isPending: isPendingForExperience,
@@ -49,6 +53,11 @@ const MentorProfilePage = () => {
     mutateAsync: mutateAsyncForEducation,
     isPending: isPendingForEducation,
   } = useAddEducation();
+
+  const {
+    mutateAsync: mutateAsyncForAchievement,
+    isPending: isPendingForAchievement,
+  } = useAddAchievement();
   const skills = [
     "Python",
     "System Design",
@@ -59,6 +68,11 @@ const MentorProfilePage = () => {
 
   return (
     <>
+      <AchievementModal
+        open={achOpen}
+        onClose={() => setAchOpen(false)}
+        onSave={mutateAsyncForAchievement}
+      />
       <EducationModal
         open={eduOpen}
         onClose={() => setEduOpen(false)}
@@ -312,7 +326,9 @@ const MentorProfilePage = () => {
                   <Plus size={13} /> Add
                 </span>
               }
-              onAction={() => {}}
+              onAction={() => {
+                setAchOpen(true);
+              }}
             >
               <div className="flex items-center gap-1.5 mb-2">
                 <Trophy size={13} className="text-slate-400" />
