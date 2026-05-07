@@ -30,5 +30,8 @@ export const ROUTES = {
     ACHIEVEMENT: {
       ROOT: "/api/v1/mentor/achievement",
     },
+    PROFILE: {
+      ROOT: "/api/v1/mentor/profile",
+    },
   },
 } as const;

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import {
   Bell,
   MessageSquare,
@@ -37,6 +37,7 @@ import { useAddExperience } from "../hooks/useExperienceMutation";
 import { useAddEducation } from "../hooks/useEducationMutation";
 import { AchievementModal } from "../components/modals/AchievementModal";
 import { useAddAchievement } from "../hooks/useAchievementMutation";
+import { useProfile } from "../hooks/useProfile";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -66,6 +67,11 @@ const MentorProfilePage = () => {
     "React",
   ];
 
+  const { data: { result: mentorData } = {}, isPending } = useProfile();
+
+  if (isPending) {
+    return <></>;
+  }
   return (
     <>
       <AchievementModal
@@ -168,7 +174,7 @@ const MentorProfilePage = () => {
                   </Avatar>
                   <div className="flex-1">
                     <h2 className="text-2xl font-bold text-slate-900">
-                      Sarah Jenkins
+                      {mentorData.name}
                     </h2>
                     <p className="text-slate-500 text-sm mt-0.5">
                       Senior Staff Engineer at Google
@@ -303,19 +309,19 @@ const MentorProfilePage = () => {
                 setExpOpen(true);
               }}
             >
-              <WorkEntry
-                company="Google"
-                role="Senior Staff Engineer"
-                period="Jan 2019 – Present"
-                duration="5 yrs 4 mos"
-              />
-              <Separator />
-              <WorkEntry
-                company="Uber"
-                role="Senior Software Engineer"
-                period="Mar 2015 – Dec 2018"
-                duration="3 yrs 10 mos"
-              />
+              {/* TODO give a type here for the e  */}
+              {mentorData.experiences.map((e: any) => (
+                <>
+                  <WorkEntry
+                    key={e.id}
+                    company={e.company}
+                    role={e.role}
+                    period={`${e.startYear} - ${e.endYear}`}
+                    duration={`${e.endYear - e.startYear}`}
+                  />
+                  <Separator />
+                </>
+              ))}
             </SectionCard>
 
             {/* Awards  */}
@@ -336,17 +342,17 @@ const MentorProfilePage = () => {
                   Achievements & Awards
                 </span>
               </div>
-              <AwardEntry
-                title="Best Engineering Mentor"
-                type="Award"
-                year="2023"
-              />
-              <Separator />
-              <AwardEntry
-                title="Cloud Architecture Certification"
-                type="Certificate"
-                year="2021"
-              />
+              {mentorData.achievements.map((v: any) => (
+                <>
+                  <AwardEntry
+                    key={v.id}
+                    title={v.title}
+                    type={v.type}
+                    year={v.year}
+                  />
+                  <Separator />
+                </>
+              ))}
             </SectionCard>
             <SectionCard
               title="Education"
@@ -363,19 +369,18 @@ const MentorProfilePage = () => {
                   Education
                 </span>
               </div>
-              <EducationEntry
-                school="Stanford University"
-                degree="M.S. Computer Science"
-                years="2013 – 2015"
-                gpa="4.0 GPA"
-              />
-              <Separator />
-              <EducationEntry
-                school="UC Berkeley"
-                degree="B.S. Electrical Engineering"
-                years="2009 – 2013"
-                gpa="3.8 GPA"
-              />
+              {mentorData.education.map((v: any) => (
+                <Fragment key={v.id}>
+                  <EducationEntry
+                    key={v.id}
+                    school={v.institution}
+                    degree={v.degree}
+                    years={v.startYear}
+                    gpa={v.grade}
+                  />
+                  <Separator />
+                </Fragment>
+              ))}
             </SectionCard>
           </div>
 

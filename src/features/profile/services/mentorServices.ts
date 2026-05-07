@@ -18,3 +18,8 @@ export const AddAchievement = async (data: AchievementFormData) => {
   const response = await api.post(ROUTES.MENTOR.ACHIEVEMENT.ROOT, data);
   return response.data;
 };
+
+export const getMentorProfile = async () => {
+  const response = await api.get(ROUTES.MENTOR.PROFILE.ROOT);
+  return response.data;
+};
