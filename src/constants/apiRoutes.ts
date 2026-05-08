@@ -33,5 +33,8 @@ export const ROUTES = {
     PROFILE: {
       ROOT: "/api/v1/mentor/profile",
     },
+    SKILL: {
+      ROOT: "/api/v1/mentor/skill",
+    },
   },
 } as const;

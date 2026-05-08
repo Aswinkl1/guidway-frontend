@@ -38,6 +38,7 @@ import { useAddEducation } from "../hooks/useEducationMutation";
 import { AchievementModal } from "../components/modals/AchievementModal";
 import { useAddAchievement } from "../hooks/useAchievementMutation";
 import { useProfile } from "../hooks/useProfile";
+import { SkillModal } from "../components/modals/skill-modal/SkillModal";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -45,7 +46,7 @@ const MentorProfilePage = () => {
   const [expOpen, setExpOpen] = useState(false);
   const [eduOpen, setEduOpen] = useState(false);
   const [achOpen, setAchOpen] = useState(false);
-
+  const [skillOpen, setSkillOpen] = useState(false);
   const {
     mutateAsync: mutateAsyncForExperience,
     isPending: isPendingForExperience,
@@ -68,12 +69,18 @@ const MentorProfilePage = () => {
   ];
 
   const { data: { result: mentorData } = {}, isPending } = useProfile();
-
+  console.log(mentorData);
   if (isPending) {
     return <></>;
   }
   return (
     <>
+      <SkillModal
+        open={skillOpen}
+        onClose={() => setSkillOpen(false)}
+        onSave={() => {}}
+        initialData={mentorData.skills}
+      />
       <AchievementModal
         open={achOpen}
         onClose={() => setAchOpen(false)}
@@ -285,7 +292,7 @@ const MentorProfilePage = () => {
             <SectionCard
               title="Skills & Expertise"
               actionLabel="Manage Skills"
-              onAction={() => {}}
+              onAction={() => setSkillOpen(true)}
             >
               <div className="flex flex-wrap gap-2">
                 {skills.map((s) => (
