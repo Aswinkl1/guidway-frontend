@@ -75,6 +75,7 @@ const MentorProfilePage = () => {
   if (isPending) {
     return <></>;
   }
+  console.log("i have renteded ");
   return (
     <>
       <LanguageModal
