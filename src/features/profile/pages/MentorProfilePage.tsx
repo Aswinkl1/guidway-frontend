@@ -39,6 +39,7 @@ import { AchievementModal } from "../components/modals/AchievementModal";
 import { useAddAchievement } from "../hooks/useAchievementMutation";
 import { useProfile } from "../hooks/useProfile";
 import { SkillModal } from "../components/modals/skill-modal/SkillModal";
+import { LanguageModal } from "../components/modals/LanguageModal";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -47,6 +48,7 @@ const MentorProfilePage = () => {
   const [eduOpen, setEduOpen] = useState(false);
   const [achOpen, setAchOpen] = useState(false);
   const [skillOpen, setSkillOpen] = useState(false);
+  const [languageOpen, setLanguageOpen] = useState(false);
   const {
     mutateAsync: mutateAsyncForExperience,
     isPending: isPendingForExperience,
@@ -75,6 +77,12 @@ const MentorProfilePage = () => {
   }
   return (
     <>
+      <LanguageModal
+        open={languageOpen}
+        onClose={() => setLanguageOpen(false)}
+        onSave={() => {}}
+        initialData={mentorData.languages}
+      />
       <SkillModal
         open={skillOpen}
         onClose={() => setSkillOpen(false)}
@@ -280,11 +288,14 @@ const MentorProfilePage = () => {
             <SectionCard
               title="Languages"
               actionLabel="Edit"
-              onAction={() => {}}
+              onAction={() => {
+                setLanguageOpen(true);
+              }}
             >
               <div className="flex flex-wrap gap-2">
-                <LanguageTag lang="English" level="Native" />
-                <LanguageTag lang="Spanish" level="Fluent" />
+                {mentorData.languages.map((l) => (
+                  <LanguageTag key={l.id} lang={l.name} level="" />
+                ))}
               </div>
             </SectionCard>
 
