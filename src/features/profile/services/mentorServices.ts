@@ -43,3 +43,28 @@ export const removeMentorSkill = async (id: string) => {
   const response = await api.delete(`${ROUTES.MENTOR.SKILL.ROOT}/${id}`);
   return response.data;
 };
+
+import type { LanguageEntry } from "../types/language.types";
+
+export const getAllLanguages = async () => {
+  const response = await api.get(ROUTES.MENTOR.LANGUAGE.ROOT);
+
+  console.log(response.data);
+
+  return response.data;
+};
+
+export const addOrUpdateMentorLanguage = async (data: LanguageEntry) => {
+  const response = await api.put(
+    `${ROUTES.MENTOR.LANGUAGE.ROOT}/${data.languageId}`,
+    data,
+  );
+
+  return response.data;
+};
+
+export const removeMentorLanguage = async (id: string) => {
+  const response = await api.delete(`${ROUTES.MENTOR.LANGUAGE.ROOT}/${id}`);
+
+  return response.data;
+};

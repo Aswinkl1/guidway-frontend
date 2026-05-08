@@ -36,5 +36,8 @@ export const ROUTES = {
     SKILL: {
       ROOT: "/api/v1/mentor/skill",
     },
+    LANGUAGE: {
+      ROOT: "/api/v1/mentor/language",
+    },
   },
 } as const;
