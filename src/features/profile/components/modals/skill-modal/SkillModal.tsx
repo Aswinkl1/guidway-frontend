@@ -6,7 +6,7 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Dialog, DialogContent } from "@/components/ui/dialog";
 import { Separator } from "@/components/ui/separator";
 import { Badge } from "@/components/ui/badge";
-import { FormField, ModalHeader, ModalFooter } from "@/components/shared";
+import { FormField, ModalHeader } from "@/components/shared";
 import {
   type SkillModalProps,
   type SkillsFormData,
@@ -112,12 +112,6 @@ export const SkillModal = ({
     mutateForAddOrUpdate({ skillId: id, yearsExperience: v });
 
     update(index, { ...fields[index], yearsExperience: v });
-  };
-
-  const submitHandler = async (data: SkillsFormData) => {
-    await onSave(data.skills);
-    onClose();
-    reset();
   };
 
   const handleClose = () => {

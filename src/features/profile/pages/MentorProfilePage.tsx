@@ -295,8 +295,8 @@ const MentorProfilePage = () => {
               onAction={() => setSkillOpen(true)}
             >
               <div className="flex flex-wrap gap-2">
-                {skills.map((s) => (
-                  <SkillTag key={s} label={s} />
+                {mentorData.skills.map((s) => (
+                  <SkillTag key={s.id} label={s.name} />
                 ))}
               </div>
               <button className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mt-3">
