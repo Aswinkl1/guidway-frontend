@@ -1,3 +1,4 @@
+import type { EmploymentType } from "@/features/profile/types/profile.types";
 import type { ReactNode } from "react";
 
 export interface NavItemProps {
@@ -30,10 +31,16 @@ export interface LanguageTagProps {
 }
 
 export interface WorkEntryProps {
-  company: string;
+  id: string;
   role: string;
-  period: string;
-  duration: string;
+  company: string;
+  employmentType: EmploymentType;
+  startMonth: number;
+  startYear: number;
+  endMonth: number | null;
+  endYear: number | null;
+  isCurrent: boolean;
+  description: string | null;
 }
 
 export interface AwardEntryProps {

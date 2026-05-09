@@ -1,6 +1,9 @@
 import { ROUTES } from "@/constants/apiRoutes";
 import { api } from "@/lib/axios";
-import type { ExperienceFormData } from "../schemas/experience.schema";
+import type {
+  EditExperienceType,
+  ExperienceFormData,
+} from "../schemas/experience.schema";
 import type {
   DeleteEducationType,
   EditEducationType,
@@ -12,6 +15,14 @@ import type { LanguageEntry } from "../types/language.types";
 
 export const AddExperience = async (data: ExperienceFormData) => {
   const response = await api.post(ROUTES.MENTOR.EXPERIENCE.ROOT, data);
+  return response.data;
+};
+
+export const EditExperience = async (data: EditExperienceType) => {
+  const response = await api.put(
+    `${ROUTES.MENTOR.EXPERIENCE.ROOT}/${data.id}`,
+    data,
+  );
   return response.data;
 };
 

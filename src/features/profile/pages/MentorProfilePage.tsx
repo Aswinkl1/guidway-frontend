@@ -329,8 +329,14 @@ const MentorProfilePage = () => {
                     key={e.id}
                     company={e.company}
                     role={e.role}
-                    period={`${e.startYear} - ${e.endYear}`}
-                    duration={`${e.endYear - e.startYear}`}
+                    description={e.description}
+                    employmentType={e.employmentType}
+                    endMonth={e.endMonth}
+                    endYear={e.endYear}
+                    id={e.id}
+                    isCurrent={e.isCurrent}
+                    startMonth={e.startMonth}
+                    startYear={e.startYear}
                   />
                   <Separator />
                 </>
