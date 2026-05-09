@@ -40,6 +40,7 @@ import { useAddAchievement } from "../hooks/useAchievementMutation";
 import { useProfile } from "../hooks/useProfile";
 import { SkillModal } from "../components/modals/skill-modal/SkillModal";
 import { LanguageModal } from "../components/modals/LanguageModal";
+import type { MentorProfileType } from "../types/profile.types";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -62,15 +63,8 @@ const MentorProfilePage = () => {
     mutateAsync: mutateAsyncForAchievement,
     isPending: isPendingForAchievement,
   } = useAddAchievement();
-  const skills = [
-    "Python",
-    "System Design",
-    "Cloud Architecture",
-    "Leadership",
-    "React",
-  ];
 
-  const { data: { result: mentorData } = {}, isPending } = useProfile();
+  const { data: mentorData, isPending } = useProfile();
   console.log(mentorData);
   if (isPending) {
     return <></>;
@@ -392,10 +386,17 @@ const MentorProfilePage = () => {
                 <Fragment key={v.id}>
                   <EducationEntry
                     key={v.id}
-                    school={v.institution}
+                    institution={v.institution}
                     degree={v.degree}
-                    years={v.startYear}
-                    gpa={v.grade}
+                    startYear={v.startYear}
+                    grade={v.grade}
+                    description={v.description}
+                    endMonth={v.endMonth}
+                    endYear={v.endYear}
+                    fieldOfStudy={v.fieldOfStudy}
+                    id={v.id}
+                    isCurrent={v.isCurrent}
+                    startMonth={v.startMonth}
                   />
                   <Separator />
                 </Fragment>
