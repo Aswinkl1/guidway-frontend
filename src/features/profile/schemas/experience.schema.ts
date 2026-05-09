@@ -87,8 +87,8 @@ export const EditExperienceSchema = BaseExperienceSchema.extend({
 
 export type EditExperienceType = z.infer<typeof EditExperienceSchema>;
 
-// export const DeleteExperienceSchema = EditExperienceSchema.pick({
-//   id: true,
-// });
+export const DeleteExperienceSchema = EditExperienceSchema.pick({
+  id: true,
+});
 
-// export type DeleteExperienceType = z.infer<typeof DeleteExperienceSchema>;
+export type DeleteExperienceType = z.infer<typeof DeleteExperienceSchema>;
