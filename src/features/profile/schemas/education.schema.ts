@@ -84,8 +84,12 @@ export const CreateEducationSchema = z
   );
 
 export type EducationFormData = z.infer<typeof CreateEducationSchema>;
-export const EditEducationSchema = CreateEducationSchema.partial().extend({
+export const EditEducationSchema = CreateEducationSchema.extend({
   id: z.uuid(),
 });
 
 export type EditEducationType = z.infer<typeof EditEducationSchema>;
+
+export const DeleteEducationSchema = EditEducationSchema.required({ id: true });
+
+export type DeleteEducationType = z.infer<typeof DeleteEducationSchema>;

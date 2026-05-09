@@ -63,6 +63,7 @@ export const EducationModal = ({
   const isCurrent = watch("isCurrent");
 
   const submitHandler = async (data: EducationFormData) => {
+    console.log("data edit ", data);
     await onSave(data);
     onClose();
     reset();

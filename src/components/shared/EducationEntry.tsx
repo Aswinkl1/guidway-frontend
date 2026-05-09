@@ -1,6 +1,8 @@
 import { EducationModal } from "@/features/profile/components/modals";
+import { useEditEducation } from "@/features/profile/hooks/useEducationMutation";
+import type { EducationFormData } from "@/features/profile/schemas/education.schema";
 import type { EducationEntryProps } from "@/types/mentor.types";
-import { Pencil } from "lucide-react";
+import { Pencil, Trash2 } from "lucide-react";
 import { useState } from "react";
 
 export const EducationEntry = ({
@@ -17,12 +19,16 @@ export const EducationEntry = ({
   startMonth,
 }: EducationEntryProps) => {
   const [openModal, setOpenModal] = useState(false);
+  const { mutateAsync, isPending } = useEditEducation();
+  async function handleSave(data: EducationFormData) {
+    await mutateAsync({ ...data, id });
+  }
   return (
     <>
       <EducationModal
         open={openModal}
         onClose={() => setOpenModal(false)}
-        onSave={() => {}}
+        onSave={handleSave}
         initialData={{
           institution,
           degree,
@@ -49,6 +55,12 @@ export const EducationEntry = ({
             onClick={() => setOpenModal(true)}
           >
             <Pencil size={14} />
+          </button>
+          <button
+            className="text-slate-300 hover:text-slate-500"
+            onClick={() => setOpenModal(true)}
+          >
+            <Trash2 size={14} />
           </button>
         </div>
       </div>

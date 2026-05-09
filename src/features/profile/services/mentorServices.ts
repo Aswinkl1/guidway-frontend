@@ -2,6 +2,7 @@ import { ROUTES } from "@/constants/apiRoutes";
 import { api } from "@/lib/axios";
 import type { ExperienceFormData } from "../schemas/experience.schema";
 import type {
+  DeleteEducationType,
   EditEducationType,
   EducationFormData,
 } from "../schemas/education.schema";
@@ -23,6 +24,13 @@ export const EditEducation = async (data: EditEducationType) => {
   const response = await api.put(
     `${ROUTES.MENTOR.EDUCATION.ROOT}/${data.id}`,
     data,
+  );
+  return response.data;
+};
+
+export const DeleteEducation = async (data: DeleteEducationType) => {
+  const response = await api.delete(
+    `${ROUTES.MENTOR.EDUCATION.ROOT}/${data.id}`,
   );
   return response.data;
 };
