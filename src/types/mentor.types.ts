@@ -43,10 +43,17 @@ export interface AwardEntryProps {
 }
 
 export interface EducationEntryProps {
-  school: string;
+  id: string;
+  institution: string;
   degree: string;
-  years: string;
-  gpa: string;
+  fieldOfStudy: string;
+  startMonth: number;
+  startYear: number;
+  endMonth: number | null;
+  endYear: number | null;
+  isCurrent: boolean;
+  grade: string | null;
+  description: string | null;
 }
 
 export interface QuickActionRowProps {
