@@ -1,5 +1,8 @@
 import { ExperienceModal } from "@/features/profile/components/modals";
-import { useEditExperience } from "@/features/profile/hooks/useExperienceMutation";
+import {
+  useDeleteExperience,
+  useEditExperience,
+} from "@/features/profile/hooks/useExperienceMutation";
 
 import type { ExperienceFormData } from "@/features/profile/schemas/experience.schema";
 import type { WorkEntryProps } from "@/types/mentor.types";
@@ -26,7 +29,7 @@ export const WorkEntry = ({
 
   const { mutateAsync } = useEditExperience();
 
-  // const { mutateAsync: mutateAsyncForExperienceDelete } = useDeleteExperience();
+  const { mutateAsync: mutateAsyncForExperienceDelete } = useDeleteExperience();
 
   async function handleSave(data: ExperienceFormData) {
     await mutateAsync({ ...data, id });
@@ -51,7 +54,7 @@ export const WorkEntry = ({
         }}
       />
 
-      {/* <ConfirmDialog
+      <ConfirmDialog
         title="Delete Experience"
         description="This action cannot be undone. Proceed with deletion?"
         open={openDel}
@@ -61,7 +64,7 @@ export const WorkEntry = ({
         }}
         cancelLabel="Cancel"
         confirmLabel="Delete"
-      /> */}
+      />
 
       <div className="flex items-start justify-between py-3">
         <div>
@@ -84,12 +87,12 @@ export const WorkEntry = ({
             <Pencil size={14} />
           </button>
 
-          {/* <button
+          <button
             className="text-slate-300 hover:text-slate-500"
             onClick={() => setOpenDel(true)}
           >
             <Trash2 size={14} />
-          </button> */}
+          </button>
         </div>
       </div>
     </>
