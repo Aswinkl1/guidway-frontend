@@ -39,5 +39,15 @@ export const ROUTES = {
     LANGUAGE: {
       ROOT: "/api/v1/mentor/language",
     },
+    DOMAIN: {
+      ROOT: "/api/v1/mentor/domain",
+    },
+    SOCIALMEDIA_LINKS: {
+      ROOT: "/api/v1/mentor/socialMediaLink",
+    },
+  },
+  USER: {
+    ROOT: "/api/v1/user",
+    DETAIL: "/api/v1/user/:id",
   },
 } as const;

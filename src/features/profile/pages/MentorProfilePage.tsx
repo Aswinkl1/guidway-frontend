@@ -40,7 +40,10 @@ import { useAddAchievement } from "../hooks/useAchievementMutation";
 import { useProfile } from "../hooks/useProfile";
 import { SkillModal } from "../components/modals/skill-modal/SkillModal";
 import { LanguageModal } from "../components/modals/LanguageModal";
-import type { MentorProfileType } from "../types/profile.types";
+import { EditProfileModal } from "../components/modals/EditProfile.modal";
+import { useFetchDomain } from "../hooks/useDomain";
+import { useEditProfile } from "../hooks/useEditProfileMutation";
+import { getSocialIcon } from "@/constants/SocailIcons";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -50,6 +53,8 @@ const MentorProfilePage = () => {
   const [achOpen, setAchOpen] = useState(false);
   const [skillOpen, setSkillOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
+  const [profileEditOpen, setProfileEditOpen] = useState(false);
+
   const {
     mutateAsync: mutateAsyncForExperience,
     isPending: isPendingForExperience,
@@ -65,13 +70,36 @@ const MentorProfilePage = () => {
   } = useAddAchievement();
 
   const { data: mentorData, isPending } = useProfile();
+  const { data: domainData, isPending: isPendingForDomain } =
+    useFetchDomain(true);
   console.log(mentorData);
-  if (isPending) {
+  const { mutateAsync: mutateAsyncForEditProfile } = useEditProfile();
+  if (isPending || isPendingForDomain) {
     return <></>;
   }
   console.log("i have renteded ");
   return (
     <>
+      <EditProfileModal
+        domains={domainData}
+        onClose={() => {
+          setProfileEditOpen(false);
+        }}
+        onSave={mutateAsyncForEditProfile}
+        open={profileEditOpen}
+        initialData={{
+          phoneNumber: mentorData.phoneNumber,
+          name: mentorData.name,
+          domainId: mentorData.domain.id,
+          avatarFile: mentorData.profileImageKay,
+          headline: mentorData.headline,
+          links: mentorData.socialLinks.map(
+            (obj: { patform: string; url: string }) => ({ value: obj.url }),
+          ),
+          shortBio: mentorData.shortBio,
+          timezone: mentorData.timezone,
+        }}
+      />
       <LanguageModal
         open={languageOpen}
         onClose={() => setLanguageOpen(false)}
@@ -145,16 +173,10 @@ const MentorProfilePage = () => {
             >
               Edit Profile
             </Button>
-            <Button
-              size="sm"
-              className="bg-slate-900 hover:bg-slate-800 text-white"
-            >
-              Save Changes
-            </Button>
           </div>
         </div>
 
-        {/* Alert */}
+        {/* Alert
         <Alert className="mb-5 border-blue-200 bg-blue-50 rounded-xl">
           <Bell size={14} className="text-blue-500 mt-0.5" />
           <AlertDescription className="text-blue-700 text-sm flex items-center justify-between w-full ml-2">
@@ -163,7 +185,7 @@ const MentorProfilePage = () => {
               Preview public view <ExternalLink size={12} />
             </button>
           </AlertDescription>
-        </Alert>
+        </Alert> */}
 
         {/* Two columns */}
         <div className="grid grid-cols-[1fr_224px] gap-5">
@@ -187,10 +209,10 @@ const MentorProfilePage = () => {
                       {mentorData.name}
                     </h2>
                     <p className="text-slate-500 text-sm mt-0.5">
-                      Senior Staff Engineer at Google
+                      {mentorData.headline}
                     </p>
                     <p className="text-slate-400 text-xs mt-0.5">
-                      Primary Domain: Software Engineering
+                      Primary Domain: {mentorData.domain.name}
                     </p>
                     <div className="flex items-center gap-1 mt-1">
                       <MapPin size={12} className="text-blue-400" />
@@ -199,43 +221,18 @@ const MentorProfilePage = () => {
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mt-3">
-                      <a
-                        href="#"
-                        className="w-7 h-7 bg-blue-600 rounded flex items-center justify-center text-white"
-                        aria-label="LinkedIn"
-                      >
-                        <svg
-                          width="13"
-                          height="13"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
+                      {mentorData.socialLinks.map((link) => (
+                        <a
+                          key={link.url}
+                          href={link.url}
+                          target="_blank"
+                          rel="noreferrer"
+                          className="w-7 h-7 bg-slate-100 hover:bg-slate-200 rounded flex items-center justify-center text-slate-600 transition-colors"
+                          aria-label={link.platform}
                         >
-                          <path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z" />
-                          <rect x="2" y="9" width="4" height="12" />
-                          <circle cx="4" cy="4" r="2" />
-                        </svg>
-                      </a>
-                      <a
-                        href="#"
-                        className="w-7 h-7 bg-slate-800 rounded flex items-center justify-center text-white"
-                        aria-label="GitHub"
-                      >
-                        <svg
-                          width="13"
-                          height="13"
-                          viewBox="0 0 24 24"
-                          fill="currentColor"
-                        >
-                          <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22" />
-                        </svg>
-                      </a>
-                      <a
-                        href="#"
-                        className="w-7 h-7 bg-slate-200 rounded flex items-center justify-center text-slate-600"
-                        aria-label="Website"
-                      >
-                        <Globe size={13} />
-                      </a>
+                          {getSocialIcon(link.platform)}
+                        </a>
+                      ))}
                     </div>
                   </div>
                 </div>
@@ -271,11 +268,12 @@ const MentorProfilePage = () => {
             <SectionCard
               title="About Me"
               actionLabel={<Plus size={14} />}
-              onAction={() => {}}
+              onAction={() => {
+                setProfileEditOpen(true);
+              }}
             >
               <p className="text-sm text-slate-600 leading-relaxed">
-                I am a Senior Staff Engineer with over 10 years of experience
-                building scalable distributed systems...
+                {mentorData.shortBio}
               </p>
             </SectionCard>
 
