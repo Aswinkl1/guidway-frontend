@@ -13,6 +13,12 @@ import type {
 import type { AchievementFormData } from "../schemas/achievement.schema";
 import type { SkillEntry } from "../types/skill.types";
 import type { LanguageEntry } from "../types/language.types";
+import type {
+  CreateSocialLinkDTO,
+  EditProfileDTO,
+  EditProfileFormData,
+  UpdateMentorOverviewDTO,
+} from "../schemas/edit-profile.schema";
 
 export const AddExperience = async (data: ExperienceFormData) => {
   const response = await api.post(ROUTES.MENTOR.EXPERIENCE.ROOT, data);
@@ -103,4 +109,57 @@ export const removeMentorLanguage = async (id: string) => {
   const response = await api.delete(`${ROUTES.MENTOR.LANGUAGE.ROOT}/${id}`);
 
   return response.data;
+};
+
+export const getAllDomain = async () => {
+  const response = await api.get(ROUTES.MENTOR.DOMAIN.ROOT);
+  console.log(response.data);
+  return response.data;
+};
+
+const _editUserProfile = async (data: EditProfileDTO) => {
+  console.log("user  data ", data);
+  const response = await api.patch(`${ROUTES.USER.DETAIL}`, data);
+  console.log("resonsonco");
+  console.log(response);
+  return response.data;
+};
+
+const _editMentorOverview = async (data: UpdateMentorOverviewDTO) => {
+  const response = await api.patch(ROUTES.MENTOR.PROFILE.ROOT, data);
+  return response.data;
+};
+
+const _editSocialLinks = async (data: CreateSocialLinkDTO) => {
+  const response = await api.put(ROUTES.MENTOR.SOCIALMEDIA_LINKS.ROOT, data);
+  return response.data;
+};
+
+// ─── Combined ─────────────────────────────────────────────────────────────────
+
+export const EditProfile = async (data: EditProfileFormData) => {
+  console.log("jjdfkjldkfljdklf");
+  const profile: EditProfileDTO = {
+    name: data.name,
+    phoneNumber: data.phoneNumber,
+    timezone: data.timezone,
+  };
+
+  const overview: UpdateMentorOverviewDTO = {
+    shortBio: data.shortBio,
+    headline: data.headline,
+    domainId: data.domainId,
+  };
+
+  const links: CreateSocialLinkDTO = {
+    links: data.links,
+  };
+
+  const [profileResult, overviewResult, linksResult] = await Promise.all([
+    _editUserProfile(profile),
+    _editMentorOverview(overview),
+    _editSocialLinks(links),
+  ]);
+
+  return { profileResult, overviewResult, linksResult };
 };
