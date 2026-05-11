@@ -7,6 +7,11 @@ export const skillsQueryKeys = {
   list: () => [...skillsQueryKeys.all, "list"] as const,
 };
 
+export const domainQueryKeys = {
+  all: ["domain"] as const,
+  list: () => [...domainQueryKeys.all, "list"] as const,
+};
+
 export const languageQueryKeys = {
   all: ["languages"] as const,
 
