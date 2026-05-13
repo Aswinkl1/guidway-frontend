@@ -23,6 +23,10 @@ import type {
   UpdateVisibilityDTO,
 } from "../types/settings.types";
 import { useMentorBookingRules } from "../hooks/useMentorBookingRulesMutation";
+import { ChangePasswordModal } from "../components/modals/ResetPassword.modal";
+import type { ChangePasswordFormData } from "../schemas/resetPassword.schema";
+import { resetPassword } from "../services/settings.services";
+import toast from "react-hot-toast";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -112,7 +116,7 @@ const MentorSettingsPage = () => {
   const [bookingWindow, setBookingWindow] = useState("30");
   const [maxSessions, setMaxSessions] = useState("4");
   const [bufferTime, setBufferTime] = useState("15");
-
+  const [openRP, setOpenRP] = useState(false);
   function handleBookingRules(field: BookingRuleField, value: string) {
     const payload: BookingRulePayload = { [field]: Number(value) };
     mutateAsyncForMentorBookingRules(payload);
@@ -124,155 +128,168 @@ const MentorSettingsPage = () => {
 
   // ── Timezone ───────────────────────────────────────────────────────────────
   // const [timezone, setTimezone] = useState("America/New_York");
-
+  async function handleResetPassword(
+    data: Omit<ChangePasswordFormData, "confirmPassword">,
+  ) {
+    await resetPassword(data);
+    toast.success("reset password successfull");
+  }
   return (
-    <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
-      {/* ── Main ── */}
-      <div className="flex-1 overflow-y-auto">
-        {/* Topbar (reused from MentorProfilePage) */}
-        <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
-          <h1 className="text-lg font-semibold text-slate-900">Settings</h1>
-          <div className="flex items-center gap-3">
-            <button className="relative p-2 rounded-full hover:bg-slate-100">
-              <Bell size={18} className="text-slate-500" />
-              <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
-            </button>
-            <button className="p-2 rounded-full hover:bg-slate-100">
-              <MessageSquare size={18} className="text-slate-500" />
-            </button>
-            <div className="flex items-center gap-2">
-              <Avatar className="w-8 h-8">
-                <AvatarImage
-                  src="https://i.pravatar.cc/40?img=47"
-                  alt="Alex Johnson"
-                />
-                <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
-                  AJ
-                </AvatarFallback>
-              </Avatar>
-              <div className="hidden sm:block text-right">
-                <p className="text-xs font-semibold text-slate-800 leading-tight">
-                  Alex Johnson
-                </p>
-                <p className="text-xs text-slate-400 leading-tight">
-                  Senior Mentor
-                </p>
+    <>
+      <ChangePasswordModal
+        onClose={() => {
+          setOpenRP(false);
+        }}
+        onSave={handleResetPassword}
+        open={openRP}
+      />
+      <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
+        {/* ── Main ── */}
+        <div className="flex-1 overflow-y-auto">
+          {/* Topbar (reused from MentorProfilePage) */}
+          <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
+            <h1 className="text-lg font-semibold text-slate-900">Settings</h1>
+            <div className="flex items-center gap-3">
+              <button className="relative p-2 rounded-full hover:bg-slate-100">
+                <Bell size={18} className="text-slate-500" />
+                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
+              </button>
+              <button className="p-2 rounded-full hover:bg-slate-100">
+                <MessageSquare size={18} className="text-slate-500" />
+              </button>
+              <div className="flex items-center gap-2">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage
+                    src="https://i.pravatar.cc/40?img=47"
+                    alt="Alex Johnson"
+                  />
+                  <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
+                    AJ
+                  </AvatarFallback>
+                </Avatar>
+                <div className="hidden sm:block text-right">
+                  <p className="text-xs font-semibold text-slate-800 leading-tight">
+                    Alex Johnson
+                  </p>
+                  <p className="text-xs text-slate-400 leading-tight">
+                    Senior Mentor
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
-        </header>
+          </header>
 
-        <div className="px-8 py-6 max-w-4xl space-y-5">
-          {/* Page heading */}
-          <div className="mb-1">
-            <h2 className="text-2xl font-bold text-slate-900">
-              Settings & Preferences
-            </h2>
-            <p className="text-sm text-slate-500 mt-0.5">
-              Manage your availability, booking rules, and account security.
-            </p>
-          </div>
+          <div className="px-8 py-6 max-w-4xl space-y-5">
+            {/* Page heading */}
+            <div className="mb-1">
+              <h2 className="text-2xl font-bold text-slate-900">
+                Settings & Preferences
+              </h2>
+              <p className="text-sm text-slate-500 mt-0.5">
+                Manage your availability, booking rules, and account security.
+              </p>
+            </div>
 
-          {/* ── Public Profile Visibility ── */}
-          <Card className="shadow-none border border-slate-200 rounded-2xl">
-            <CardContent className="px-6 py-4">
-              <div className="flex items-center justify-between gap-4">
-                <div className="flex items-center gap-3">
-                  <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
-                    <Globe size={17} className="text-emerald-500" />
+            {/* ── Public Profile Visibility ── */}
+            <Card className="shadow-none border border-slate-200 rounded-2xl">
+              <CardContent className="px-6 py-4">
+                <div className="flex items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className="w-9 h-9 bg-emerald-50 rounded-xl flex items-center justify-center shrink-0">
+                      <Globe size={17} className="text-emerald-500" />
+                    </div>
+                    <div>
+                      <p className="text-sm font-semibold text-slate-800">
+                        Public profile visibility
+                      </p>
+                      <p className="text-xs text-slate-400 mt-0.5">
+                        When turned off, your profile is hidden from search and
+                        new bookings are paused.
+                      </p>
+                    </div>
                   </div>
-                  <div>
-                    <p className="text-sm font-semibold text-slate-800">
-                      Public profile visibility
-                    </p>
-                    <p className="text-xs text-slate-400 mt-0.5">
-                      When turned off, your profile is hidden from search and
-                      new bookings are paused.
-                    </p>
-                  </div>
+                  <Switch
+                    checked={publicProfile}
+                    onCheckedChange={handleMentorVisibility}
+                    className="data-[state=checked]:bg-violet-600 shrink-0"
+                  />
                 </div>
-                <Switch
-                  checked={publicProfile}
-                  onCheckedChange={handleMentorVisibility}
-                  className="data-[state=checked]:bg-violet-600 shrink-0"
-                />
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
 
-          {/* ── Booking Rules + Trust & Dispute (side by side) ── */}
-          <div className="grid grid-cols-1 gap-5">
-            {/* Booking Rules */}
-            <SectionCard icon={<Clock size={15} />} title="Booking Rules">
-              <div className="grid grid-cols-2 gap-4">
-                <SettingSelect
-                  label="Earliest Booking"
-                  value={earliestBooking}
-                  onValueChange={(v: string) => {
-                    setEarliestBooking(v);
-                    handleBookingRules("leadTimeHours", v);
-                  }}
-                  options={[
-                    { value: "1", label: "1 hour before" },
-                    { value: "2", label: "2 hours before" },
-                    { value: "6", label: "6 hours before" },
-                    { value: "12", label: "12 hours before" },
-                    { value: "24", label: "24 hours before" },
-                    { value: "48", label: "48 hours before" },
-                  ]}
-                />
-                <SettingSelect
-                  label="Booking Window"
-                  value={bookingWindow}
-                  onValueChange={(v: string) => {
-                    setBookingWindow(v);
-                    handleBookingRules("futureLimitDays", v);
-                  }}
-                  options={[
-                    { value: "7", label: "7 days into future" },
-                    { value: "14", label: "14 days into future" },
-                    { value: "30", label: "30 days into future" },
-                    { value: "60", label: "60 days into future" },
-                    { value: "90", label: "90 days into future" },
-                  ]}
-                />
-                <SettingSelect
-                  label="Max Sessions / Day"
-                  value={maxSessions}
-                  onValueChange={(v: string) => {
-                    setMaxSessions(v);
-                    handleBookingRules("maxSessionsDaily", v);
-                  }}
-                  options={[
-                    { value: "1", label: "1" },
-                    { value: "2", label: "2" },
-                    { value: "3", label: "3" },
-                    { value: "4", label: "4" },
-                    { value: "5", label: "5" },
-                    { value: "6", label: "6" },
-                  ]}
-                />
-                <SettingSelect
-                  label="Buffer Time"
-                  value={bufferTime}
-                  onValueChange={(v: string) => {
-                    setBufferTime(v);
-                    handleBookingRules("bufferTimeMinutes", v);
-                  }}
-                  options={[
-                    { value: "0", label: "None" },
-                    { value: "5", label: "5 min" },
-                    { value: "10", label: "10 min" },
-                    { value: "15", label: "15 min" },
-                    { value: "30", label: "30 min" },
-                    { value: "60", label: "60 min" },
-                  ]}
-                />
-              </div>
-            </SectionCard>
+            {/* ── Booking Rules + Trust & Dispute (side by side) ── */}
+            <div className="grid grid-cols-1 gap-5">
+              {/* Booking Rules */}
+              <SectionCard icon={<Clock size={15} />} title="Booking Rules">
+                <div className="grid grid-cols-2 gap-4">
+                  <SettingSelect
+                    label="Earliest Booking"
+                    value={earliestBooking}
+                    onValueChange={(v: string) => {
+                      setEarliestBooking(v);
+                      handleBookingRules("leadTimeHours", v);
+                    }}
+                    options={[
+                      { value: "1", label: "1 hour before" },
+                      { value: "2", label: "2 hours before" },
+                      { value: "6", label: "6 hours before" },
+                      { value: "12", label: "12 hours before" },
+                      { value: "24", label: "24 hours before" },
+                      { value: "48", label: "48 hours before" },
+                    ]}
+                  />
+                  <SettingSelect
+                    label="Booking Window"
+                    value={bookingWindow}
+                    onValueChange={(v: string) => {
+                      setBookingWindow(v);
+                      handleBookingRules("futureLimitDays", v);
+                    }}
+                    options={[
+                      { value: "7", label: "7 days into future" },
+                      { value: "14", label: "14 days into future" },
+                      { value: "30", label: "30 days into future" },
+                      { value: "60", label: "60 days into future" },
+                      { value: "90", label: "90 days into future" },
+                    ]}
+                  />
+                  <SettingSelect
+                    label="Max Sessions / Day"
+                    value={maxSessions}
+                    onValueChange={(v: string) => {
+                      setMaxSessions(v);
+                      handleBookingRules("maxSessionsDaily", v);
+                    }}
+                    options={[
+                      { value: "1", label: "1" },
+                      { value: "2", label: "2" },
+                      { value: "3", label: "3" },
+                      { value: "4", label: "4" },
+                      { value: "5", label: "5" },
+                      { value: "6", label: "6" },
+                    ]}
+                  />
+                  <SettingSelect
+                    label="Buffer Time"
+                    value={bufferTime}
+                    onValueChange={(v: string) => {
+                      setBufferTime(v);
+                      handleBookingRules("bufferTimeMinutes", v);
+                    }}
+                    options={[
+                      { value: "0", label: "None" },
+                      { value: "5", label: "5 min" },
+                      { value: "10", label: "10 min" },
+                      { value: "15", label: "15 min" },
+                      { value: "30", label: "30 min" },
+                      { value: "60", label: "60 min" },
+                    ]}
+                  />
+                </div>
+              </SectionCard>
 
-            {/* Trust & Dispute */}
-            {/* <SectionCard
+              {/* Trust & Dispute */}
+              {/* <SectionCard
               icon={<ShieldCheck size={15} />}
               title="Trust & Dispute"
             >
@@ -307,10 +324,10 @@ const MentorSettingsPage = () => {
                 />
               </div>
             </SectionCard> */}
-          </div>
+            </div>
 
-          {/* ── Notification Preferences ── */}
-          {/* <SectionCard
+            {/* ── Notification Preferences ── */}
+            {/* <SectionCard
             icon={<Bell size={15} />}
             title="Notification Preferences"
           >
@@ -350,11 +367,11 @@ const MentorSettingsPage = () => {
             </div>
           </SectionCard> */}
 
-          {/* ── Timezone & Security ── */}
-          <SectionCard icon={<Globe size={15} />} title="Security">
-            <div className="grid grid-cols-2 gap-6">
-              {/* Timezone */}
-              {/* <div className="flex flex-col gap-3">
+            {/* ── Timezone & Security ── */}
+            <SectionCard icon={<Globe size={15} />} title="Security">
+              <div className="grid grid-cols-2 gap-6">
+                {/* Timezone */}
+                {/* <div className="flex flex-col gap-3">
                 <SettingSelect
                   label="Your Timezone"
                   value={timezone}
@@ -394,21 +411,26 @@ const MentorSettingsPage = () => {
                 </div>
               </div> */}
 
-              {/* Security */}
-              <div className="flex flex-col gap-2">
-                <Label className="text-xs text-slate-500">reset</Label>
-                <div className="flex items-center justify-between h-9 px-3 border border-slate-200 rounded-lg bg-white">
-                  <span className="text-sm text-slate-700">Rest password</span>
-                  <button className="text-xs font-medium text-violet-600 hover:text-violet-700 hover:underline">
-                    click
-                  </button>
+                {/* Security */}
+                <div className="flex flex-col gap-2">
+                  <Label className="text-xs text-slate-500">reset</Label>
+                  <div className="flex items-center justify-between h-9 px-3 border border-slate-200 rounded-lg bg-white">
+                    <span className="text-sm text-slate-700">
+                      Rest password
+                    </span>
+                    <button
+                      onClick={() => setOpenRP(true)}
+                      className="text-xs font-medium text-violet-600 hover:text-violet-700 hover:underline"
+                    >
+                      click
+                    </button>
+                  </div>
                 </div>
               </div>
-            </div>
-          </SectionCard>
+            </SectionCard>
 
-          {/* ── Danger Zone ── */}
-          {/* <Card className="shadow-none border border-red-200 rounded-2xl bg-white">
+            {/* ── Danger Zone ── */}
+            {/* <Card className="shadow-none border border-red-200 rounded-2xl bg-white">
             <CardContent className="px-6 py-5">
               <div className="flex items-start justify-between gap-4">
                 <div>
@@ -437,9 +459,10 @@ const MentorSettingsPage = () => {
               </div>
             </CardContent>
           </Card> */}
+          </div>
         </div>
       </div>
-    </div>
+    </>
   );
 };
 
