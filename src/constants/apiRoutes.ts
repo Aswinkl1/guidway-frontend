@@ -45,6 +45,12 @@ export const ROUTES = {
     SOCIALMEDIA_LINKS: {
       ROOT: "/api/v1/mentor/socialMediaLink",
     },
+    SETTINGS: {
+      ROOT: "/api/v1/mentor/settings",
+      STATUS: "/api/v1/mentor/settings/status",
+      BOOKINGRULES: "/api/v1/mentor/settings/bookingrules",
+      CHANGE_PASSWORD: "/api/v1/mentor/settings/change_password",
+    },
   },
   USER: {
     ROOT: "/api/v1/user",
