@@ -22,6 +22,7 @@ import GuidWayHomePage from "@/pages/homePage";
 import MentorProfilePage from "@/features/profile/pages/MentorProfilePage";
 import { MentorLayout } from "@/features/profile/components/MentorLayout";
 import MentorSettingsPage from "@/features/profile/pages/MentorSettings.page";
+import MentorSessionsPage from "@/features/session/pages/mentorSessionPage";
 
 export const router = createBrowserRouter([
   {
@@ -81,6 +82,10 @@ export const router = createBrowserRouter([
           {
             path: CLIENT_ROUTES.MENTOR.SETTINGA,
             Component: MentorSettingsPage,
+          },
+          {
+            path: CLIENT_ROUTES.MENTOR.SESSIONS,
+            Component: MentorSessionsPage,
           },
         ],
       },
