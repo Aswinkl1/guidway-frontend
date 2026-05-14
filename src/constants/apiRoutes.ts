@@ -51,6 +51,10 @@ export const ROUTES = {
       BOOKINGRULES: "/api/v1/mentor/settings/bookingrules",
       CHANGE_PASSWORD: "/api/v1/mentor/settings/change_password",
     },
+    SESSION: {
+      ROOT: "/api/v1/mentor/session",
+      DETAIL: "/api/v1/mentor/session/:id",
+    },
   },
   USER: {
     ROOT: "/api/v1/user",
