@@ -9,69 +9,51 @@ import { SessionTypeCard } from "../components/SessionCard";
 import { CreateSessionModal } from "../components/modal/createSessionModal";
 import { useAddSessionMutation } from "../hooks/useAddSessionMutation";
 import type { CreateSessionDTO } from "../schema/session.dto";
+import { useSessionQuery } from "../hooks/useGetSessionQuery";
+import type { filterProps } from "../types/session.types";
+import { Pagination } from "@/components/shared/Pagination";
+import { useEditSessionMutation } from "../hooks/useEditSessionMutation";
+import { useDebouncedCallback } from "use-debounce";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
 interface SessionType {
   id: string;
   duration: number;
-  title: string;
+  name: string;
   description: string;
   price: number;
+  isActive: boolean;
 }
-
-const SESSIONS: SessionType[] = [
-  {
-    id: "1",
-    duration: 60,
-    title: "Mock Interview",
-    description:
-      "Technical and behavioral interview practice with detailed feedback.",
-    price: 150,
-  },
-  {
-    id: "2",
-    duration: 30,
-    title: "Career Strategy",
-    description:
-      "Let's discuss your career path, resume review, or promotion strategy.",
-    price: 75,
-  },
-  {
-    id: "3",
-    duration: 30,
-    title: "Career Strategy",
-    description:
-      "Let's discuss your career path, resume review, or promotion strategy.",
-    price: 75,
-  },
-  {
-    id: "4",
-    duration: 30,
-    title: "Career Strategy",
-    description:
-      "Let's discuss your career path, resume review, or promotion strategy.",
-    price: 75,
-  },
-];
 
 const TABS = ["Sessions", "All"] as const;
 type Tab = (typeof TABS)[number];
 
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 const MentorSessionsPage = () => {
   const [activeTab, setActiveTab] = useState<Tab>("Sessions");
-  const [searchQuery, setSearchQuery] = useState("");
+  const [filter, setFilter] = useState<filterProps>({
+    search: "",
+    page: 1,
+    isActive: undefined,
+    limit: 5,
+  });
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setFilter({ ...filter, search: value });
+  }, 500);
+
   const [openModal, setOpenModal] = useState(false);
-  const filtered = SESSIONS.filter((s) =>
-    s.title.toLowerCase().includes(searchQuery.toLowerCase()),
-  );
+
   const { mutateAsync } = useAddSessionMutation();
+
   async function handleSave(data: CreateSessionDTO) {
     await mutateAsync(data);
   }
+  const { data, isLoading } = useSessionQuery(filter);
+  if (isLoading) {
+    return <></>;
+  }
 
+  console.log("data", data);
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       <CreateSessionModal
@@ -153,8 +135,8 @@ const MentorSessionsPage = () => {
                 />
                 <input
                   type="text"
-                  value={searchQuery}
-                  onChange={(e) => setSearchQuery(e.target.value)}
+                  // value={filter.search}
+                  onChange={(e) => debouncedSearch(e.target.value)}
                   placeholder="Search sessions..."
                   className="h-9 pl-8 pr-3 w-52 rounded-lg border border-slate-200 text-sm
                     bg-white text-slate-800 placeholder:text-slate-400
@@ -162,24 +144,26 @@ const MentorSessionsPage = () => {
                 />
               </div>
 
-              <button
+              {/* <button
                 className="flex items-center gap-1.5 h-9 px-3 rounded-lg border border-slate-200
                   bg-white text-sm text-slate-600 hover:bg-slate-50 transition-colors"
               >
                 <SlidersHorizontal size={14} />
                 Filter
-              </button>
+              </button> */}
             </div>
           </div>
 
           {/* Session cards grid */}
-          {filtered.length > 0 ? (
+          {data.data.length > 0 ? (
             <div className="grid grid-cols-2 gap-4">
-              {filtered.map((session) => (
+              {data.data.map((session: SessionType) => (
                 <SessionTypeCard
+                  id={session.id}
+                  isActive={session.isActive}
                   key={session.id}
                   duration={session.duration}
-                  title={session.title}
+                  name={session.name}
                   description={session.description}
                   price={session.price}
                 />
@@ -194,12 +178,20 @@ const MentorSessionsPage = () => {
                 No sessions found
               </p>
               <p className="text-xs text-slate-400 mt-1">
-                {searchQuery
-                  ? `No sessions match "${searchQuery}"`
+                {filter.search
+                  ? `No sessions match "${filter.search}"`
                   : "Add a session type to get started"}
               </p>
             </div>
           )}
+          <Pagination
+            limit={filter.limit}
+            onPageChange={(p) => {
+              setFilter({ ...filter, page: p });
+            }}
+            page={filter.page}
+            totalItems={data.totalItems}
+          />
 
           {/* Footer note */}
           <p className="text-xs text-slate-400 text-center mt-12">
