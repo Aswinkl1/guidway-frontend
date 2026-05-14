@@ -13,6 +13,7 @@ import { useSessionQuery } from "../hooks/useGetSessionQuery";
 import type { filterProps } from "../types/session.types";
 import { Pagination } from "@/components/shared/Pagination";
 import { useEditSessionMutation } from "../hooks/useEditSessionMutation";
+import { useDebouncedCallback } from "use-debounce";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -36,6 +37,9 @@ const MentorSessionsPage = () => {
     isActive: undefined,
     limit: 5,
   });
+  const debouncedSearch = useDebouncedCallback((value: string) => {
+    setFilter({ ...filter, search: value });
+  }, 500);
 
   const [openModal, setOpenModal] = useState(false);
 
@@ -131,10 +135,8 @@ const MentorSessionsPage = () => {
                 />
                 <input
                   type="text"
-                  value={filter.search}
-                  onChange={(e) =>
-                    setFilter({ ...filter, search: e.target.value })
-                  }
+                  // value={filter.search}
+                  onChange={(e) => debouncedSearch(e.target.value)}
                   placeholder="Search sessions..."
                   className="h-9 pl-8 pr-3 w-52 rounded-lg border border-slate-200 text-sm
                     bg-white text-slate-800 placeholder:text-slate-400
