@@ -7,6 +7,8 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { SessionTypeCard } from "../components/SessionCard";
 import { CreateSessionModal } from "../components/modal/createSessionModal";
+import { useAddSessionMutation } from "../hooks/useAddSessionMutation";
+import type { CreateSessionDTO } from "../schema/session.dto";
 
 // ─── Data ─────────────────────────────────────────────────────────────────────
 
@@ -58,16 +60,27 @@ type Tab = (typeof TABS)[number];
 
 // ─── Page ─────────────────────────────────────────────────────────────────────
 
-const MentorSessionsPage: React.FC = () => {
+const MentorSessionsPage = () => {
   const [activeTab, setActiveTab] = useState<Tab>("Sessions");
   const [searchQuery, setSearchQuery] = useState("");
   const [openModal, setOpenModal] = useState(false);
   const filtered = SESSIONS.filter((s) =>
     s.title.toLowerCase().includes(searchQuery.toLowerCase()),
   );
+  const { mutateAsync } = useAddSessionMutation();
+  async function handleSave(data: CreateSessionDTO) {
+    await mutateAsync(data);
+  }
 
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
+      <CreateSessionModal
+        onClose={() => {
+          setOpenModal(false);
+        }}
+        onSave={handleSave}
+        open={openModal}
+      />
       {/* ── Main ── */}
       <div className="flex-1 overflow-y-auto">
         {/* Topbar */}
@@ -97,13 +110,6 @@ const MentorSessionsPage: React.FC = () => {
             </Avatar>
           </div>
         </header>
-        <CreateSessionModal
-          onClose={() => {
-            setOpenModal(false);
-          }}
-          onSave={() => {}}
-          open={openModal}
-        />
         {/* Content */}
         <div className="px-8 py-6 max-w-5xl">
           {/* Page heading row */}

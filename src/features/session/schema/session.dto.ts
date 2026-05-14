@@ -10,7 +10,7 @@ export const CreateSessionSchema = z.object({
     .string()
     .min(1, "Description is required")
     .max(1000, "Max 1000 characters"),
-  isActive: z.boolean().default(true),
+  isActive: z.boolean(),
   price: z.number("Price is required").min(0, "Price must be 0 or more"),
 });
 

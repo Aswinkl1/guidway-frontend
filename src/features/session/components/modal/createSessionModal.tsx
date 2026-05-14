@@ -2,7 +2,7 @@
 import { createPortal } from "react-dom";
 import { useForm, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { z } from "zod";
+
 import { CalendarPlus, Clock, DollarSign, ToggleLeft } from "lucide-react";
 
 import { Dialog, DialogContent } from "@/components/ui/dialog";
@@ -19,6 +19,7 @@ import {
 } from "../../schema/session.dto";
 import { CharCount } from "@/components/shared/CharCount";
 import { DurationPill } from "../DurationPill";
+import { handleServerErrors } from "@/helpers/formErrorHelper";
 
 /** Common durations shown as quick-select pills */
 const DURATION_PRESETS = [15, 30, 45, 60, 90, 120] as const;
@@ -56,6 +57,7 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     watch,
     setValue,
     reset,
+    setError,
     formState: { errors, isSubmitting },
   } = useForm<CreateSessionDTO>({
     resolver: zodResolver(CreateSessionSchema),
@@ -70,8 +72,12 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   // ── Handlers ──────────────────────────────────────────────────────────────
 
   const submitHandler = async (data: CreateSessionDTO) => {
-    await onSave(data);
-    handleClose();
+    try {
+      await onSave(data);
+      handleClose();
+    } catch (error) {
+      handleServerErrors(error, setError, data);
+    }
   };
 
   const handleClose = () => {
