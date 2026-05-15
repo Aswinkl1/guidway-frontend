@@ -1,5 +1,5 @@
 // EditProfileModal.tsx
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { createPortal } from "react-dom";
 import { useForm, useFieldArray, Controller } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -27,6 +27,8 @@ import {
 } from "../../schemas/edit-profile.schema";
 import { AvatarUploader } from "../AvatarUploader";
 import { LinkRow } from "../LinkRow";
+import { getSignedUrl, uplodToS3 } from "../../services/mentorServices";
+import { useUploadProfileImageKey } from "../../hooks/useUploadProfileImageKeyMutation";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -107,6 +109,7 @@ export const EditProfileModal = ({
   const [avatarPreview, setAvatarPreview] = useState<string | undefined>(
     currentAvatar,
   );
+  const { mutateAsync } = useUploadProfileImageKey();
 
   // ── Form ───────────────────────────────────────────────────────────────────
 
@@ -139,9 +142,26 @@ export const EditProfileModal = ({
     setAvatarPreview(URL.createObjectURL(file));
   };
 
+  async function hanldeProfileImageSave(file: File) {
+    const responce = await getSignedUrl({ fileType: file.type });
+    return {
+      fileKey: responce.result.fileKey,
+      uploadUrl: responce.result.uploadUrl,
+    };
+  }
+
   // ── Submit — split into 3 payloads ─────────────────────────────────────────
 
   const submitHandler = async (data: EditProfileFormData) => {
+    if (data.avatarFile) {
+      console.log("this is avathar");
+      console.log(data.avatarFile);
+      const { uploadUrl, fileKey } = await hanldeProfileImageSave(
+        data.avatarFile,
+      );
+      await uplodToS3({ singedURl: uploadUrl, file: data.avatarFile });
+      await mutateAsync({ imageKey: fileKey });
+    }
     console.log("savdkfdklfjkldfjkdljflkjkl");
     const profile: EditProfileDTO = {
       name: data.name,
