@@ -55,6 +55,10 @@ export const ROUTES = {
       ROOT: "/api/v1/mentor/session",
       DETAIL: "/api/v1/mentor/session/:id",
     },
+    PRFOILE_IMAGE: {
+      SINGED_URL: "/api/v1/upload-url",
+      PROFILE_KEY_UPLOAD: "/api/v1/mentor/profile-image",
+    },
   },
   USER: {
     ROOT: "/api/v1/user",

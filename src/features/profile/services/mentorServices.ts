@@ -19,6 +19,27 @@ import type {
   EditProfileFormData,
   UpdateMentorOverviewDTO,
 } from "../schemas/edit-profile.schema";
+import axios from "axios";
+
+export const getSignedUrl = async (data: { fileType: string }) => {
+  const response = await api.post(ROUTES.MENTOR.PRFOILE_IMAGE.SINGED_URL, data);
+  return response.data;
+};
+
+export const uploadProfileKey = async (data: { imageKey: string }) => {
+  const response = await api.patch(
+    ROUTES.MENTOR.PRFOILE_IMAGE.PROFILE_KEY_UPLOAD,
+    data,
+  );
+  return response.data;
+};
+
+export const uplodToS3 = async (data: { singedURl: string; file: File }) => {
+  const response = await axios.put(data.singedURl, data.file, {
+    headers: { "Content-Type": data.file.type },
+  });
+  console.log("s3 response", response);
+};
 
 export const AddExperience = async (data: ExperienceFormData) => {
   const response = await api.post(ROUTES.MENTOR.EXPERIENCE.ROOT, data);

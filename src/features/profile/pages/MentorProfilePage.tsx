@@ -20,7 +20,8 @@ import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-
+export const S3_BASE_URL =
+  "https://mentor-marketplace-storage.s3.ap-south-1.amazonaws.com/";
 import {
   StatBadge,
   SectionCard,
@@ -197,8 +198,8 @@ const MentorProfilePage = () => {
                 <div className="flex items-start gap-5">
                   <Avatar className="w-20 h-20 border-2 border-slate-100">
                     <AvatarImage
-                      src="https://i.pravatar.cc/80?img=47"
-                      alt="Sarah Jenkins"
+                      src={S3_BASE_URL + mentorData.profileImageKey}
+                      alt={mentorData.name}
                     />
                     <AvatarFallback className="text-xl bg-blue-100 text-blue-700">
                       SJ
