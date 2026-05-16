@@ -2,7 +2,7 @@ import { Search, ArrowLeft, Home } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ErrorLayout, ErrorActions } from "./ErrorAction";
 
-export const NotFoundPage: React.FC = () => {
+export const NotFoundPage = () => {
   const navigate = useNavigate();
 
   return (

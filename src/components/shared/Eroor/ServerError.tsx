@@ -2,7 +2,7 @@ import { WifiOff, RefreshCw, ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router";
 import { ErrorLayout, ErrorActions } from "./ErrorAction";
 
-export const ServerErrorPage: React.FC = () => {
+export const ServerErrorPage = () => {
   const navigate = useNavigate();
   const handleRetry = () => window.location.reload();
 

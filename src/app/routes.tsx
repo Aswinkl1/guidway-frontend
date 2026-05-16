@@ -23,11 +23,15 @@ import MentorProfilePage from "@/features/profile/pages/MentorProfilePage";
 import { MentorLayout } from "@/features/profile/components/MentorLayout";
 import MentorSettingsPage from "@/features/profile/pages/MentorSettings.page";
 import MentorSessionsPage from "@/features/session/pages/mentorSessionPage";
+import { NotFoundPage } from "@/components/shared/Eroor/NotFoundError";
+import { ServerErrorPage } from "@/components/shared/Eroor/ServerError";
+import { ErrorNavigator } from "@/components/ErrorNavigator";
 
 export const router = createBrowserRouter([
   {
     path: CLIENT_ROUTES.HOME,
     loader: AuthLoader,
+    Component: ErrorNavigator,
     children: [
       {
         index: true,
@@ -106,6 +110,14 @@ export const router = createBrowserRouter([
             Component: AdminMentorPanel,
           },
         ],
+      },
+      {
+        path: "*",
+        Component: NotFoundPage,
+      },
+      {
+        path: "/500",
+        Component: ServerErrorPage,
       },
     ],
   },
