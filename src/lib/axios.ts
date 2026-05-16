@@ -31,6 +31,14 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    const status = error.response.status;
+    if (status === 404 || status === 500) {
+      window.dispatchEvent(
+        new CustomEvent("nav-error", {
+          detail: { status },
+        }),
+      );
+    }
     const originalRequest = error.config as AxiosRequestConfig & {
       _retry: boolean;
     };
