@@ -26,6 +26,7 @@ import MentorSessionsPage from "@/features/session/pages/mentorSessionPage";
 import { NotFoundPage } from "@/components/shared/Eroor/NotFoundError";
 import { ServerErrorPage } from "@/components/shared/Eroor/ServerError";
 import { ErrorNavigator } from "@/components/ErrorNavigator";
+import AdminMentorProfilePage from "@/features/admin/pages/adminMentorProfile";
 
 export const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
           {
             path: CLIENT_ROUTES.ADMIN.MENTORS,
             Component: AdminMentorPanel,
+          },
+          {
+            path: "/admin/mentor/:id",
+            Component: AdminMentorProfilePage,
           },
         ],
       },
