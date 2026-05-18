@@ -4,12 +4,10 @@ import {
   MessageSquare,
   Plus,
   MapPin,
-  ExternalLink,
   Monitor,
   Clock,
   Trophy,
   GraduationCap,
-  Globe,
   Star,
   List,
   CalendarCheck,
@@ -19,7 +17,6 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-import { Alert, AlertDescription } from "@/components/ui/alert";
 export const S3_BASE_URL =
   "https://mentor-marketplace-storage.s3.ap-south-1.amazonaws.com/";
 import {

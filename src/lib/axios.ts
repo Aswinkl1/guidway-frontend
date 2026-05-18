@@ -31,6 +31,7 @@ api.interceptors.request.use(
 api.interceptors.response.use(
   (response) => response,
   async (error) => {
+    console.log(error);
     const status = error.response.status;
     if (status === 404 || status === 500) {
       window.dispatchEvent(

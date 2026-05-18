@@ -53,3 +53,12 @@ export const verifyMentor = async (data: { mentorId: string }) => {
   const response = await api.patch(ROUTES.ADMIN.VERIFY_MENTOR, data);
   return response.data.result;
 };
+
+export const getMentorProfile = async (data: { id: string }) => {
+  const response = await api.get("/api/v1/admin/mentor/" + data.id);
+  return response.data.result;
+};
+
+export const updateMentorBlockstatus = async (data: {}) => {
+  // const response = await api.
+};
