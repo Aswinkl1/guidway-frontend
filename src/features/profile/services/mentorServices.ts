@@ -10,7 +10,11 @@ import type {
   EditEducationType,
   EducationFormData,
 } from "../schemas/education.schema";
-import type { AchievementFormData } from "../schemas/achievement.schema";
+import type {
+  AchievementFormData,
+  deleteAchievementType,
+  editAchievementType,
+} from "../schemas/achievement.schema";
 import type { SkillEntry } from "../types/skill.types";
 import type { LanguageEntry } from "../types/language.types";
 import type {
@@ -156,8 +160,6 @@ const _editSocialLinks = async (data: CreateSocialLinkDTO) => {
   return response.data;
 };
 
-// ─── Combined ─────────────────────────────────────────────────────────────────
-
 export const EditProfile = async (data: EditProfileFormData) => {
   console.log("jjdfkjldkfljdklf");
   const profile: EditProfileDTO = {
@@ -183,4 +185,16 @@ export const EditProfile = async (data: EditProfileFormData) => {
   ]);
 
   return { profileResult, overviewResult, linksResult };
+};
+
+export const editAchievement = async (data: editAchievementType) => {
+  const response = await api.patch(ROUTES.MENTOR.ACHIEVEMENT.ROOT, data);
+  return response.data;
+};
+
+export const deleteAchievement = async (dto: deleteAchievementType) => {
+  const response = await api.delete(
+    ROUTES.MENTOR.ACHIEVEMENT.ROOT + "/" + dto.id,
+  );
+  return response.data;
 };
