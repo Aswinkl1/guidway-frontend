@@ -71,6 +71,7 @@ export interface QuickActionRowProps {
   icon: ReactNode;
   title: string;
   subtitle: string;
+  handler:()=>
 }
 
 export interface VisibilityToggleProps {
