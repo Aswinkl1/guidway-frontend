@@ -366,6 +366,7 @@ const MentorProfilePage = () => {
                     type={v.type}
                     year={v.year}
                     showActions={true}
+                    id={v.id}
                   />
                   <Separator />
                 </>
