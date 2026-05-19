@@ -59,6 +59,13 @@ export const getMentorProfile = async (data: { id: string }) => {
   return response.data.result;
 };
 
-export const updateMentorBlockstatus = async (data: {}) => {
-  // const response = await api.
+export const updateMentorstatus = async (data: {
+  id: string;
+  status: string;
+}) => {
+  const response = await api.patch(
+    `/api/v1/admin/mentors/${data.id}/status`,
+    data,
+  );
+  return response.data.result;
 };

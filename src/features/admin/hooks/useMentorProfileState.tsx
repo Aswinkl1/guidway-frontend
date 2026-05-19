@@ -2,6 +2,7 @@ import type { MentorStatus } from "@/features/profile/types/profile.types";
 import { useRef, useState } from "react";
 import { useMentorProfile } from "./useMentorProfile";
 import { useMentorVerifyMutation } from "./useMentorVerifyMutation";
+import { useMentorStatus } from "./useMentorStatusMutation";
 
 export const useMentorProfileState = (id: string) => {
   const { data: mentor, isPending } = useMentorProfile(id);
@@ -15,6 +16,7 @@ export const useMentorProfileState = (id: string) => {
   } = useMentorVerifyMutation();
   const initialized = useRef(false);
   console.log(mentor);
+  const { mutateAsync: mutateAsyncForMentorStatus } = useMentorStatus();
   if (mentor && !initialized.current) {
     initialized.current = true;
     setStatus(mentor.status);
@@ -32,12 +34,20 @@ export const useMentorProfileState = (id: string) => {
     }
   };
 
+  const handleStatusChange = (id, v) => {
+    console.log(v);
+    setStatus(v);
+    mutateAsyncForMentorStatus({ id, status: v });
+  };
+
   return {
     mentor,
     status,
-    isPending,
+    isPendingForVerifyMentor,
     isVerified,
+    isPending,
     verifying,
     handleVerify,
+    handleStatusChange,
   };
 };

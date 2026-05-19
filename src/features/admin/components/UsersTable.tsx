@@ -3,7 +3,7 @@ import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { filterProb } from "../hooks/useUsers";
 import { BlockUserModal } from "./ToggleUserStatusModal";
-import type { User } from "../user.types";
+import type { User } from "../types/user.types";
 
 export interface UsersTableProps {
   data: {

@@ -12,7 +12,7 @@ import {
   updateBlockStatus,
   verifyMentor,
 } from "../services/adminServices";
-import type { User } from "../user.types";
+import type { User } from "../types/user.types";
 import toast from "react-hot-toast";
 import { Role } from "@/types/role";
 

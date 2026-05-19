@@ -7,7 +7,7 @@ import {
 
 import { UsersTable } from "../components/UsersTable";
 import { Navbar } from "../components/Navbar";
-import type { User } from "../user.types";
+import type { User } from "../types/user.types";
 import { Role } from "@/types/role";
 
 // ─── Main Component ───────────────────────────────────────────────────────────
