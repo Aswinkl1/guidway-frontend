@@ -23,6 +23,7 @@ export const WorkEntry = ({
   endYear,
   isCurrent,
   description,
+  showActions = false,
 }: WorkEntryProps) => {
   const [openModal, setOpenModal] = useState(false);
   const [openDel, setOpenDel] = useState(false);
@@ -37,34 +38,38 @@ export const WorkEntry = ({
 
   return (
     <>
-      <ExperienceModal
-        open={openModal}
-        onClose={() => setOpenModal(false)}
-        onSave={handleSave}
-        initialData={{
-          company,
-          role,
-          employmentType,
-          startMonth,
-          startYear,
-          endMonth,
-          endYear,
-          isCurrent,
-          description,
-        }}
-      />
+      {showActions && (
+        <>
+          <ExperienceModal
+            open={openModal}
+            onClose={() => setOpenModal(false)}
+            onSave={handleSave}
+            initialData={{
+              company,
+              role,
+              employmentType,
+              startMonth,
+              startYear,
+              endMonth,
+              endYear,
+              isCurrent,
+              description,
+            }}
+          />
 
-      <ConfirmDialog
-        title="Delete Experience"
-        description="This action cannot be undone. Proceed with deletion?"
-        open={openDel}
-        onCancel={() => setOpenDel(false)}
-        onConfirm={() => {
-          mutateAsyncForExperienceDelete({ id });
-        }}
-        cancelLabel="Cancel"
-        confirmLabel="Delete"
-      />
+          <ConfirmDialog
+            title="Delete Experience"
+            description="This action cannot be undone. Proceed with deletion?"
+            open={openDel}
+            onCancel={() => setOpenDel(false)}
+            onConfirm={() => {
+              mutateAsyncForExperienceDelete({ id });
+            }}
+            cancelLabel="Cancel"
+            confirmLabel="Delete"
+          />
+        </>
+      )}
 
       <div className="flex items-start justify-between py-3">
         <div>
@@ -76,24 +81,25 @@ export const WorkEntry = ({
             {startYear} · {endYear}
           </p>
         </div>
+        {showActions && (
+          <div className="flex items-center gap-3">
+            <span className="text-xs text-slate-400">{employmentType}</span>
 
-        <div className="flex items-center gap-3">
-          <span className="text-xs text-slate-400">{employmentType}</span>
+            <button
+              className="text-slate-300 hover:text-slate-500"
+              onClick={() => setOpenModal(true)}
+            >
+              <Pencil size={14} />
+            </button>
 
-          <button
-            className="text-slate-300 hover:text-slate-500"
-            onClick={() => setOpenModal(true)}
-          >
-            <Pencil size={14} />
-          </button>
-
-          <button
-            className="text-slate-300 hover:text-slate-500"
-            onClick={() => setOpenDel(true)}
-          >
-            <Trash2 size={14} />
-          </button>
-        </div>
+            <button
+              className="text-slate-300 hover:text-slate-500"
+              onClick={() => setOpenDel(true)}
+            >
+              <Trash2 size={14} />
+            </button>
+          </div>
+        )}
       </div>
     </>
   );
