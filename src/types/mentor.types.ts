@@ -45,6 +45,7 @@ export interface WorkEntryProps {
 }
 
 export interface AwardEntryProps {
+  id: string;
   title: string;
   type: string;
   year: string;

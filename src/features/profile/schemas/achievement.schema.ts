@@ -27,4 +27,14 @@ export const CreateAchievementSchema = z.object({
     .nullable(),
 });
 
+export const editAchievementSchema = CreateAchievementSchema.extend({
+  id: z.uuid(),
+});
+
+export type editAchievementType = z.infer<typeof editAchievementSchema>;
+
+export const deleteAchievementSchema = editAchievementSchema.pick({ id: true });
+
+export type deleteAchievementType = z.infer<typeof deleteAchievementSchema>;
+
 export type AchievementFormData = z.infer<typeof CreateAchievementSchema>;
