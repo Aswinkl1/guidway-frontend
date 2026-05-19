@@ -41,12 +41,14 @@ export interface WorkEntryProps {
   endYear: number | null;
   isCurrent: boolean;
   description: string | null;
+  showActions: boolean;
 }
 
 export interface AwardEntryProps {
   title: string;
   type: string;
   year: string;
+  showActions: boolean;
 }
 
 export interface EducationEntryProps {
