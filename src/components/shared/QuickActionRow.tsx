@@ -5,8 +5,12 @@ export const QuickActionRow = ({
   icon,
   title,
   subtitle,
+  handler,
 }: QuickActionRowProps) => (
-  <button className="flex items-center justify-between w-full p-3 rounded-xl hover:bg-slate-50 transition-colors group">
+  <button
+    className="flex items-center justify-between w-full p-3 rounded-xl hover:bg-slate-50 transition-colors group"
+    onClick={handler}
+  >
     <div className="flex items-center gap-3">
       <div className="w-8 h-8 bg-blue-50 rounded-lg flex items-center justify-center text-blue-600">
         {icon}
