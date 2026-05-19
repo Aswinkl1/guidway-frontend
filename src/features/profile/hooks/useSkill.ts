@@ -1,5 +1,5 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
-import { skillsQueryKeys } from "./keys";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import { QUERYKEY, skillsQueryKeys } from "./keys";
 import {
   addOrUpdateMentorSkill,
   getAllSkills,
@@ -18,20 +18,24 @@ export const useFetchSkill = (startFetch: boolean) => {
 };
 
 export const useAddOrUpdateMentorSkill = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addOrUpdateMentorSkill,
     onSuccess: () => {
       console.log("it is a success");
-      // invalidate the profiel query
+      queryClient.invalidateQueries({ queryKey: QUERYKEY.all });
     },
   });
 };
 
 export const useRemoveMentorSkill = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: removeMentorSkill,
     onSuccess: () => {
       console.log("successfull  removed the skill");
+      queryClient.invalidateQueries({ queryKey: QUERYKEY.all });
     },
   });
 };
