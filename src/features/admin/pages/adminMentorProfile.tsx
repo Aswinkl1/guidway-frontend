@@ -1,5 +1,3 @@
-// AdminMentorProfilePage.tsx
-import { useState } from "react";
 import {
   LayoutDashboard,
   Users,
@@ -45,15 +43,11 @@ import {
   LanguageTag,
 } from "@/components/shared";
 import { useParams } from "react-router";
-import { useProfile } from "@/features/profile/hooks/useProfile";
-import { useMentorProfile } from "../hooks/useMentorProfile";
+
 import { useMentorProfileState } from "../hooks/useMentorProfileState";
+import { Navbar } from "../components/Navbar";
+import { MentorStatus, VALID_TRANSITIONS } from "../types/mentor.types";
 
-// ── All reusable components from shared barrel ────────────────────────────────
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-type MentorStatus = "PENDING" | "ACTIVE" | "SUSPENDED" | "REJECTED";
 type EmploymentType =
   | "FULL_TIME"
   | "PART_TIME"
@@ -141,28 +135,44 @@ const MONTHS = [
   "Dec",
 ] as const;
 
-const STATUS_OPTIONS: { value: MentorStatus; label: string }[] = [
-  { value: "PENDING", label: "Pending" },
-  { value: "ACTIVE", label: "Active" },
-  { value: "SUSPENDED", label: "Suspended" },
-  { value: "REJECTED", label: "Rejected" },
+export const STATUS_OPTIONS: {
+  value: MentorStatus;
+  label: string;
+}[] = [
+  {
+    value: MentorStatus.PENDING,
+    label: "Pending",
+  },
+  {
+    value: MentorStatus.ACTIVE,
+    label: "Active",
+  },
+  {
+    value: MentorStatus.SUSPENDED,
+    label: "Suspended",
+  },
+  {
+    value: MentorStatus.DRAFT,
+    label: "Draft",
+  },
+  {
+    value: MentorStatus.PAUSED,
+    label: "Paused",
+  },
 ];
-
-const EMPLOYMENT_LABELS: Record<EmploymentType, string> = {
-  FULL_TIME: "Full-time",
-  PART_TIME: "Part-time",
-  CONTRACT: "Contract",
-  INTERNSHIP: "Internship",
-  FREELANCE: "Freelance",
-  SELF_EMPLOYED: "Self-employed",
-  VOLUNTEER: "Volunteer",
-};
 
 const STATUS_COLORS: Record<MentorStatus, string> = {
   ACTIVE: "text-emerald-700 border-emerald-200 bg-emerald-50",
-  PENDING: "text-amber-700 border-amber-200 bg-amber-50",
+
+  PENDING_REVIEW: "text-amber-700 border-amber-200 bg-amber-50",
+
   SUSPENDED: "text-red-700 border-red-200 bg-red-50",
-  REJECTED: "text-slate-600 border-slate-200 bg-slate-50",
+
+  // REJECTED: "text-slate-600 border-slate-200 bg-slate-50",
+
+  DRAFT: "text-blue-700 border-blue-200 bg-blue-50",
+
+  PAUSED: "text-orange-700 border-orange-200 bg-orange-50",
 };
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
@@ -177,8 +187,6 @@ const initials = (name: string) =>
     .join("")
     .slice(0, 2)
     .toUpperCase();
-
-// ─── Admin-specific small components ─────────────────────────────────────────
 
 const StatusBadge: React.FC<{ status: MentorStatus }> = ({ status }) => (
   <span
@@ -199,168 +207,28 @@ const VerifiedBadge: React.FC<{ verified: boolean }> = ({ verified }) =>
     </span>
   );
 
-// ─── Mock data — replace with useQuery ───────────────────────────────────────
-
-const MOCK_MENTOR: MentorProfileDto = {
-  userId: "usr_01",
-  name: "Sarah Jenkins",
-  email: "sarah@example.com",
-  profileImageKey: null,
-  timezone: "America/New_York",
-  status: "ACTIVE",
-  isVerified: true,
-  headline: "Senior Staff Engineer at Google",
-  shortBio:
-    "Over 10 years building scalable distributed systems. Passionate about helping junior engineers grow.",
-  averageRating: 4.9,
-  reviewCount: 142,
-  domain: { id: "d1", name: "Software Engineering" },
-  socialLinks: [
-    { platform: "LinkedIn", url: "https://linkedin.com/in/sarah" },
-    { platform: "GitHub", url: "https://github.com/sarah" },
-  ],
-  languages: [
-    { languageId: "l1", name: "English", code: "en", proficiency: "NATIVE" },
-    { languageId: "l2", name: "Spanish", code: "es", proficiency: "FLUENT" },
-  ],
-  skills: [
-    { skillId: "s1", name: "Python", yearsExperience: 8 },
-    { skillId: "s2", name: "System Design", yearsExperience: 6 },
-    { skillId: "s3", name: "Cloud Architecture", yearsExperience: 5 },
-    { skillId: "s4", name: "Leadership", yearsExperience: 4 },
-    { skillId: "s5", name: "React", yearsExperience: 3 },
-  ],
-  experiences: [
-    {
-      id: "e1",
-      role: "Senior Staff Engineer",
-      company: "Google",
-      employmentType: "FULL_TIME",
-      startMonth: 1,
-      startYear: 2019,
-      endMonth: null,
-      endYear: null,
-      isCurrent: true,
-      description: "Cloud infrastructure and developer productivity tools.",
-    },
-    {
-      id: "e2",
-      role: "Senior Software Engineer",
-      company: "Uber",
-      employmentType: "FULL_TIME",
-      startMonth: 3,
-      startYear: 2015,
-      endMonth: 12,
-      endYear: 2018,
-      isCurrent: false,
-      description: null,
-    },
-  ],
-  education: [
-    {
-      id: "ed1",
-      institution: "Stanford University",
-      degree: "M.S.",
-      fieldOfStudy: "Computer Science",
-      startMonth: 9,
-      startYear: 2013,
-      endMonth: 6,
-      endYear: 2015,
-      isCurrent: false,
-      grade: "4.0 GPA",
-      description: null,
-    },
-    {
-      id: "ed2",
-      institution: "UC Berkeley",
-      degree: "B.S.",
-      fieldOfStudy: "Electrical Engineering",
-      startMonth: 9,
-      startYear: 2009,
-      endMonth: 6,
-      endYear: 2013,
-      isCurrent: false,
-      grade: "3.8 GPA",
-      description: null,
-    },
-  ],
-  achievements: [
-    { id: "a1", title: "Best Engineering Mentor", type: "AWARD", year: 2023 },
-    {
-      id: "a2",
-      title: "Cloud Architecture Cert",
-      type: "CERTIFICATE",
-      year: 2021,
-    },
-  ],
-};
-
-// ─── Page ─────────────────────────────────────────────────────────────────────
-
 const AdminMentorProfilePage = () => {
-  // const mentor = MOCK_MENTOR;
   const params = useParams();
-
-  const { isVerified, isPending, mentor, status, handleVerify, verifying } =
-    useMentorProfileState(params.id ?? "");
+  const {
+    isVerified,
+    isPendingForVerifyMentor,
+    isPending,
+    mentor,
+    status,
+    handleVerify,
+    verifying,
+    handleStatusChange,
+  } = useMentorProfileState(params.id ?? "");
 
   if (isPending) {
     return;
   }
 
-  const navLinks = [
-    { icon: <LayoutDashboard size={15} />, label: "Dashboard" },
-    { icon: <Users size={15} />, label: "Mentors", active: true },
-    { icon: <BookOpen size={15} />, label: "Bookings" },
-    { icon: <DollarSign size={15} />, label: "Earnings" },
-  ];
-
+  const filterStatus = VALID_TRANSITIONS[status];
+  console.log("filet", filterStatus, status);
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
-      {/* ── Sidebar — reuses NavItem from shared ── */}
-      <aside className="w-52 bg-white border-r border-slate-200 flex flex-col shrink-0">
-        <div className="flex items-center gap-2.5 px-4 py-5 border-b border-slate-100">
-          <div className="w-7 h-7 bg-violet-600 rounded-lg flex items-center justify-center shrink-0">
-            <ShieldCheck size={14} className="text-white" />
-          </div>
-          <div>
-            <p className="text-sm font-bold text-slate-900 leading-tight">
-              Admin Panel
-            </p>
-            <p className="text-xs text-slate-400 leading-tight">
-              Mentor Booking
-            </p>
-          </div>
-        </div>
-        <nav className="flex-1 px-3 py-3 space-y-0.5">
-          {navLinks.map(({ icon, label, active }) => (
-            <NavItem
-              key={label}
-              icon={icon}
-              label={label}
-              active={active ?? false}
-              // activeClassName="bg-violet-50 text-violet-700 font-medium"
-            />
-          ))}
-        </nav>
-        <div className="px-3 pb-3 border-t border-slate-100 pt-3 space-y-2">
-          <NavItem icon={<LogOut size={15} />} label="Logout" />
-          <div className="flex items-center gap-2.5 px-3 py-2">
-            <Avatar className="w-7 h-7">
-              <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
-                AU
-              </AvatarFallback>
-            </Avatar>
-            <div className="min-w-0">
-              <p className="text-xs font-semibold text-slate-800 truncate">
-                Admin User
-              </p>
-              <p className="text-xs text-slate-400 truncate">admin@...</p>
-            </div>
-          </div>
-        </div>
-      </aside>
-
+      <Navbar />
       {/* ── Main ── */}
       <div className="flex-1 overflow-y-auto">
         <div className="px-8 py-6 max-w-5xl">
@@ -416,7 +284,9 @@ const AdminMentorProfilePage = () => {
                     <div className="flex items-center gap-2 flex-wrap shrink-0">
                       <Select
                         value={status}
-                        onValueChange={(v) => setStatus(v as MentorStatus)}
+                        onValueChange={(v) =>
+                          handleStatusChange(mentor.userId, v)
+                        }
                       >
                         <SelectTrigger
                           className={`h-8 text-xs font-medium rounded-lg border px-3 w-36 ${STATUS_COLORS[status]}`}
@@ -424,15 +294,22 @@ const AdminMentorProfilePage = () => {
                           <SelectValue />
                         </SelectTrigger>
                         <SelectContent>
-                          {STATUS_OPTIONS.map(({ value, label }) => (
-                            <SelectItem
-                              key={value}
-                              value={value}
-                              className="text-sm"
-                            >
-                              {label}
-                            </SelectItem>
-                          ))}
+                          {STATUS_OPTIONS.map(({ value, label }) => {
+                            if (
+                              filterStatus?.includes(value) ||
+                              value === status
+                            ) {
+                              return (
+                                <SelectItem
+                                  key={value}
+                                  value={value}
+                                  className="text-sm"
+                                >
+                                  {label}
+                                </SelectItem>
+                              );
+                            }
+                          })}
                         </SelectContent>
                       </Select>
 
