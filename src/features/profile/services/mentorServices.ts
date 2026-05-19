@@ -188,7 +188,10 @@ export const EditProfile = async (data: EditProfileFormData) => {
 };
 
 export const editAchievement = async (data: editAchievementType) => {
-  const response = await api.patch(ROUTES.MENTOR.ACHIEVEMENT.ROOT, data);
+  const response = await api.put(
+    ROUTES.MENTOR.ACHIEVEMENT.ROOT + "/" + data.id,
+    data,
+  );
   return response.data;
 };
 
