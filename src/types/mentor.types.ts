@@ -61,6 +61,7 @@ export interface EducationEntryProps {
   isCurrent: boolean;
   grade: string | null;
   description: string | null;
+  showActions: boolean;
 }
 
 export interface QuickActionRowProps {
