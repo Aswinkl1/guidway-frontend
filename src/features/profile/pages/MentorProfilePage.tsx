@@ -333,6 +333,7 @@ const MentorProfilePage = () => {
                     isCurrent={e.isCurrent}
                     startMonth={e.startMonth}
                     startYear={e.startYear}
+                    showActions={true}
                   />
                   <Separator />
                 </>
@@ -364,6 +365,7 @@ const MentorProfilePage = () => {
                     title={v.title}
                     type={v.type}
                     year={v.year}
+                    showActions={true}
                   />
                   <Separator />
                 </>
@@ -399,6 +401,7 @@ const MentorProfilePage = () => {
                     id={v.id}
                     isCurrent={v.isCurrent}
                     startMonth={v.startMonth}
+                    showActions={true}
                   />
                   <Separator />
                 </Fragment>
