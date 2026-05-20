@@ -1,11 +1,8 @@
 import { useState } from "react";
 import { Bell, MessageSquare, Clock, Globe } from "lucide-react";
-
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
 import {
   Select,
   SelectContent,
@@ -27,6 +24,7 @@ import { ChangePasswordModal } from "../components/modals/ResetPassword.modal";
 import type { ChangePasswordFormData } from "../schemas/resetPassword.schema";
 import { resetPassword } from "../services/settings.services";
 import toast from "react-hot-toast";
+import { useSettings } from "../hooks/useSettings";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -104,6 +102,7 @@ const MentorSettingsPage = () => {
   const { mutateAsync: mutateAsyncForMentorBookingRules } =
     useMentorBookingRules();
   function handleMentorVisibility(isVisible: boolean) {
+    console.log(isVisible);
     const data: UpdateVisibilityDTO = {
       status: isVisible ? MentorStatus.ACTIVE : MentorStatus.PAUSED,
     };
@@ -112,6 +111,8 @@ const MentorSettingsPage = () => {
   }
 
   // ── Booking Rules ──────────────────────────────────────────────────────────
+  const { data, isPending } = useSettings();
+  console.log(data);
   const [earliestBooking, setEarliestBooking] = useState("24");
   const [bookingWindow, setBookingWindow] = useState("30");
   const [maxSessions, setMaxSessions] = useState("4");
@@ -133,6 +134,10 @@ const MentorSettingsPage = () => {
   ) {
     await resetPassword(data);
     toast.success("reset password successfull");
+  }
+
+  if (isPending) {
+    return;
   }
   return (
     <>
@@ -209,7 +214,7 @@ const MentorSettingsPage = () => {
                     </div>
                   </div>
                   <Switch
-                    checked={publicProfile}
+                    checked={data.status == MentorStatus.ACTIVE}
                     onCheckedChange={handleMentorVisibility}
                     className="data-[state=checked]:bg-violet-600 shrink-0"
                   />
@@ -224,7 +229,7 @@ const MentorSettingsPage = () => {
                 <div className="grid grid-cols-2 gap-4">
                   <SettingSelect
                     label="Earliest Booking"
-                    value={earliestBooking}
+                    value={String(data.BookingRules.leadTimeHours)}
                     onValueChange={(v: string) => {
                       setEarliestBooking(v);
                       handleBookingRules("leadTimeHours", v);
@@ -240,7 +245,7 @@ const MentorSettingsPage = () => {
                   />
                   <SettingSelect
                     label="Booking Window"
-                    value={bookingWindow}
+                    value={data.BookingRules.futureLimitDays + ""}
                     onValueChange={(v: string) => {
                       setBookingWindow(v);
                       handleBookingRules("futureLimitDays", v);
@@ -255,7 +260,7 @@ const MentorSettingsPage = () => {
                   />
                   <SettingSelect
                     label="Max Sessions / Day"
-                    value={maxSessions}
+                    value={data.BookingRules.maxSessionsDaily + ""}
                     onValueChange={(v: string) => {
                       setMaxSessions(v);
                       handleBookingRules("maxSessionsDaily", v);
@@ -271,7 +276,7 @@ const MentorSettingsPage = () => {
                   />
                   <SettingSelect
                     label="Buffer Time"
-                    value={bufferTime}
+                    value={data.BookingRules.bufferTimeMinutes + ""}
                     onValueChange={(v: string) => {
                       setBufferTime(v);
                       handleBookingRules("bufferTimeMinutes", v);
