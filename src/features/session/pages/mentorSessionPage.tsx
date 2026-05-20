@@ -136,7 +136,7 @@ const MentorSessionsPage = () => {
                 <input
                   type="text"
                   // value={filter.search}
-                  onChange={(e) => debouncedSearch(e.target.value)}
+                  onChange={(e) => debouncedSearch(e.target.value.trim())}
                   placeholder="Search sessions..."
                   className="h-9 pl-8 pr-3 w-52 rounded-lg border border-slate-200 text-sm
                     bg-white text-slate-800 placeholder:text-slate-400
