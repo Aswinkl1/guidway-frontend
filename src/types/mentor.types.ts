@@ -41,7 +41,7 @@ export interface WorkEntryProps {
   endYear: number | null;
   isCurrent: boolean;
   description: string | null;
-  showActions: boolean;
+  showActions?: boolean;
 }
 
 export interface AwardEntryProps {
@@ -49,7 +49,7 @@ export interface AwardEntryProps {
   title: string;
   type: string;
   year: string;
-  showActions: boolean;
+  showActions?: boolean;
 }
 
 export interface EducationEntryProps {
@@ -64,14 +64,14 @@ export interface EducationEntryProps {
   isCurrent: boolean;
   grade: string | null;
   description: string | null;
-  showActions: boolean;
+  showActions?: boolean;
 }
 
 export interface QuickActionRowProps {
   icon: ReactNode;
   title: string;
   subtitle: string;
-  handler:()=>
+  handler: () => void;
 }
 
 export interface VisibilityToggleProps {
