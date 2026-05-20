@@ -40,8 +40,15 @@ import { SkillModal } from "../components/modals/skill-modal/SkillModal";
 import { LanguageModal } from "../components/modals/LanguageModal";
 import { EditProfileModal } from "../components/modals/EditProfile.modal";
 import { useFetchDomain } from "../hooks/useDomain";
-import { useEditProfile } from "../hooks/useEditProfileMutation";
+import {
+  useEditProfile,
+  useMentorVisibilityInProfile,
+} from "../hooks/useEditProfileMutation";
 import { getSocialIcon } from "@/constants/SocailIcons";
+import { MentorStatus } from "../types/profile.types";
+
+import type { UpdateVisibilityDTO } from "../types/settings.types";
+import { useNavigate } from "react-router";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -52,6 +59,7 @@ const MentorProfilePage = () => {
   const [skillOpen, setSkillOpen] = useState(false);
   const [languageOpen, setLanguageOpen] = useState(false);
   const [profileEditOpen, setProfileEditOpen] = useState(false);
+  const navigator = useNavigate();
 
   const {
     mutateAsync: mutateAsyncForExperience,
@@ -72,10 +80,20 @@ const MentorProfilePage = () => {
     useFetchDomain(true);
   console.log(mentorData);
   const { mutateAsync: mutateAsyncForEditProfile } = useEditProfile();
+  const { mutateAsync: mutateAsyncForMentorVisibility } =
+    useMentorVisibilityInProfile();
   if (isPending || isPendingForDomain) {
     return <></>;
   }
   console.log("i have renteded ");
+  function handleMentorVisibility(isVisible: boolean) {
+    const data: UpdateVisibilityDTO = {
+      status: isVisible ? MentorStatus.ACTIVE : MentorStatus.PAUSED,
+    };
+    setPublicProfile(isVisible);
+    mutateAsyncForMentorVisibility(data);
+  }
+
   return (
     <>
       <EditProfileModal
@@ -157,17 +175,20 @@ const MentorProfilePage = () => {
             </p>
           </div>
           <div className="flex items-center gap-2">
-            <Button
+            {/* <Button
               variant="outline"
               size="sm"
               className="text-slate-600 border-slate-300"
             >
               View Public Profile
-            </Button>
+            </Button> */}
             <Button
               variant="outline"
               size="sm"
               className="text-slate-700 border-slate-300"
+              onClick={() => {
+                setProfileEditOpen(true);
+              }}
             >
               Edit Profile
             </Button>
@@ -265,10 +286,10 @@ const MentorProfilePage = () => {
             {/* About Me */}
             <SectionCard
               title="About Me"
-              actionLabel={<Plus size={14} />}
-              onAction={() => {
-                setProfileEditOpen(true);
-              }}
+              // actionLabel={<Plus size={14} />}
+              // onAction={() => {
+              //   setProfileEditOpen(true);
+              // }}
             >
               <p className="text-sm text-slate-600 leading-relaxed">
                 {mentorData.shortBio}
@@ -301,9 +322,9 @@ const MentorProfilePage = () => {
                   <SkillTag key={s.id} label={s.name} />
                 ))}
               </div>
-              <button className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mt-3">
+              {/* <button className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700 mt-3">
                 <Plus size={14} /> Add Skill
-              </button>
+              </button> */}
             </SectionCard>
 
             {/* Work Experience */}
@@ -423,11 +444,13 @@ const MentorProfilePage = () => {
                   icon={<List size={15} />}
                   title="Manage Sessions"
                   subtitle="View upcoming & past"
+                  handler={() => navigator("/mentor/sessions")}
                 />
                 <QuickActionRow
                   icon={<CalendarCheck size={15} />}
                   title="Set Availability"
                   subtitle="Update your calendar"
+                  handler={() => {}}
                 />
               </CardContent>
             </Card>
@@ -442,15 +465,15 @@ const MentorProfilePage = () => {
                 <VisibilityToggle
                   label="Public Profile"
                   subtitle="Visible to all mentees"
-                  checked={publicProfile}
-                  onChange={setPublicProfile}
+                  checked={mentorData.status === MentorStatus.ACTIVE}
+                  onChange={handleMentorVisibility}
                 />
-                <VisibilityToggle
+                {/* <VisibilityToggle
                   label="Accepting Bookings"
                   subtitle="Pause new requests"
                   checked={acceptingBookings}
                   onChange={setAcceptingBookings}
-                />
+                /> */}
               </CardContent>
             </Card>
           </div>

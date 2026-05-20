@@ -1,12 +1,13 @@
-import { useMutation, useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 
-import { languageQueryKeys } from "./keys";
+import { languageQueryKeys, QUERYKEY } from "./keys";
 
 import {
   addOrUpdateMentorLanguage,
   getAllLanguages,
   removeMentorLanguage,
 } from "../services/mentorServices";
+import toast from "react-hot-toast";
 
 export const useFetchLanguage = (startFetch: boolean) => {
   return useQuery({
@@ -25,23 +26,26 @@ export const useFetchLanguage = (startFetch: boolean) => {
 };
 
 export const useAddOrUpdateMentorLanguage = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addOrUpdateMentorLanguage,
 
     onSuccess: () => {
-      console.log("language added successfully");
-
-      // invalidate profile query
+      toast.success("language added successgull ");
+      queryClient.invalidateQueries({ queryKey: QUERYKEY.all });
     },
   });
 };
 
 export const useRemoveMentorLanguage = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: removeMentorLanguage,
 
     onSuccess: () => {
       console.log("language removed successfully");
+      queryClient.invalidateQueries({ queryKey: QUERYKEY.all });
     },
   });
 };
