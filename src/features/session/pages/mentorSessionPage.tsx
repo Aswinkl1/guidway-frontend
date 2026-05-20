@@ -1,6 +1,5 @@
-// SessionsPage.tsx
 import { useState } from "react";
-import { List, Bell, Plus, Search, SlidersHorizontal } from "lucide-react";
+import { List, Bell, Plus, Search } from "lucide-react";
 
 import { Button } from "@/components/ui/button";
 
@@ -12,10 +11,7 @@ import type { CreateSessionDTO } from "../schema/session.dto";
 import { useSessionQuery } from "../hooks/useGetSessionQuery";
 import type { filterProps } from "../types/session.types";
 import { Pagination } from "@/components/shared/Pagination";
-import { useEditSessionMutation } from "../hooks/useEditSessionMutation";
 import { useDebouncedCallback } from "use-debounce";
-
-// ─── Data ─────────────────────────────────────────────────────────────────────
 
 interface SessionType {
   id: string;
@@ -136,7 +132,7 @@ const MentorSessionsPage = () => {
                 <input
                   type="text"
                   // value={filter.search}
-                  onChange={(e) => debouncedSearch(e.target.value)}
+                  onChange={(e) => debouncedSearch(e.target.value.trim())}
                   placeholder="Search sessions..."
                   className="h-9 pl-8 pr-3 w-52 rounded-lg border border-slate-200 text-sm
                     bg-white text-slate-800 placeholder:text-slate-400
@@ -194,13 +190,13 @@ const MentorSessionsPage = () => {
           />
 
           {/* Footer note */}
-          <p className="text-xs text-slate-400 text-center mt-12">
+          {/* <p className="text-xs text-slate-400 text-center mt-12">
             All times are displayed in your local timezone (PST). <br />
             Need help?{" "}
             <a href="#" className="text-blue-500 hover:underline">
               Contact Support
             </a>
-          </p>
+          </p> */}
         </div>
       </div>
     </div>
