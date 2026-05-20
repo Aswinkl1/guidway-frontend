@@ -20,7 +20,7 @@ import {
   Globe,
 } from "lucide-react";
 
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -245,6 +245,11 @@ const AdminMentorProfilePage = () => {
             <CardContent className="p-6">
               <div className="flex items-start gap-5">
                 <Avatar className="w-20 h-20 border-2 border-slate-100 shrink-0">
+                  <AvatarImage
+                    src={`${import.meta.env.VITE_S3_BASE_URL + mentor.profileImageKey}`} // Just drop your AWS S3 URL here
+                    alt={`${mentor.name}'s profile picture`}
+                    className="object-cover" // Ensures the image scales nicely inside the circle
+                  />
                   <AvatarFallback className="text-xl bg-violet-100 text-violet-700">
                     {initials(mentor.name)}
                   </AvatarFallback>

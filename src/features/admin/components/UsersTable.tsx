@@ -1,9 +1,10 @@
-import { CircleUser } from "lucide-react";
+import { CircleUser, View, ViewIcon } from "lucide-react";
 import { useState } from "react";
 import { useDebouncedCallback } from "use-debounce";
 import type { filterProb } from "../hooks/useUsers";
 import { BlockUserModal } from "./ToggleUserStatusModal";
 import type { User } from "../types/user.types";
+import { Role } from "@/types/role";
 
 export interface UsersTableProps {
   data: {
@@ -85,7 +86,7 @@ export const UsersTable = ({
   }
 
   const { users, totalItems: totalUsers, totalPages, currentPage } = data;
-
+  console.log(users);
   const getPageNums = (): (number | "...")[] => {
     if (totalPages <= 5)
       return Array.from({ length: totalPages }, (_, i) => i + 1);
@@ -377,8 +378,16 @@ export const UsersTable = ({
                             Block
                           </button>
                         )}
+                        {user.role === Role.MENTOR && (
+                          <a href={`/admin/mentor/${user.id}`}>
+                            <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap">
+                              <View size={15} />
+                              view
+                            </button>
+                          </a>
+                        )}
 
-                        {user.mentorId && !user.mentorIsVerified && (
+                        {/* {user.mentorId && !user.mentorIsVerified && (
                           <button
                             onClick={() => handleVerifyMentor(user)}
                             className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-indigo-600 border border-indigo-200 rounded-lg hover:bg-indigo-50 transition-colors whitespace-nowrap"
@@ -386,7 +395,7 @@ export const UsersTable = ({
                             <UnblockIcon />
                             verify
                           </button>
-                        )}
+                        )} */}
 
                         {/* <button className="inline-flex items-center gap-1.5 px-3 py-1.5 text-xs text-red-400 border border-red-100 rounded-lg hover:bg-red-50 transition-colors whitespace-nowrap">
                         <TrashIcon />
