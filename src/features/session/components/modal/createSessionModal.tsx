@@ -63,7 +63,7 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
     resolver: zodResolver(CreateSessionSchema),
     defaultValues: { ...DEFAULTS, ...initialData },
   });
-
+  console.log("outsie inti", initialData);
   const nameValue = watch("name") ?? "";
   const descriptionValue = watch("description") ?? "";
   const durationValue = watch("duration");
@@ -74,7 +74,10 @@ export const CreateSessionModal: React.FC<CreateSessionModalProps> = ({
   const submitHandler = async (data: CreateSessionDTO) => {
     try {
       await onSave(data);
-      handleClose();
+      console.log("on save intital", initialData);
+      reset({ ...DEFAULTS, ...data });
+      // handleClose();
+      onClose();
     } catch (error) {
       handleServerErrors(error, setError, data);
     }
