@@ -17,3 +17,7 @@ export const languageQueryKeys = {
 
   list: () => [...languageQueryKeys.all, "list"] as const,
 };
+
+export const settingsQueryKeys = {
+  all: ["mentor", "settings"] as const,
+};
