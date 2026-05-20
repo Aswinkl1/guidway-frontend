@@ -26,3 +26,8 @@ export const resetPassword = async (
   console.log(response);
   return response.data;
 };
+
+export const getSettings = async () => {
+  const response = await api.get(ROUTES.MENTOR.SETTINGS.ROOT);
+  return response.data;
+};
