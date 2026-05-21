@@ -9,12 +9,9 @@ import {
   DollarSign,
   Users,
   Star,
-  LogOut,
 } from "lucide-react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavItem } from "@/components/shared";
 import { CLIENT_ROUTES } from "@/constants/clientRoutes";
-import { useSelector } from "react-redux";
 
 const navLinks = [
   {
@@ -56,12 +53,13 @@ const navLinks = [
   { icon: <Star size={16} />, label: "Reviews", path: "/mentor/reviews" },
 ];
 
-export const MentorSidebar: React.FC = () => {
+console.log("location", location);
+
+export const Sidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { name, profileImageKey } = useSelector((state) => state.auth);
   return (
-    <aside className="w-56 bg-white border-r border-slate-200 flex flex-col shrink-0">
+    <aside className="w-56  bg-white border-r border-slate-200 flex flex-col shrink-0">
       {/* Brand */}
       <div className="px-5 py-5 border-b border-slate-100">
         <span className="text-lg font-bold text-slate-900 tracking-tight">
@@ -70,7 +68,7 @@ export const MentorSidebar: React.FC = () => {
       </div>
 
       {/* User chip */}
-      <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-100">
+      {/* <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-100">
         <Avatar className="w-8 h-8">
           <AvatarImage
             src={`${import.meta.env.VITE_S3_BASE_URL}${profileImageKey}`}
@@ -86,10 +84,10 @@ export const MentorSidebar: React.FC = () => {
           </p>
           <p className="text-xs text-slate-400 truncate">Mentor Workspace</p>
         </div>
-      </div>
+      </div> */}
 
       {/* Nav links */}
-      <nav className="flex-1 px-3 py-3 space-y-0.5 overflow-y-auto">
+      <nav className="flex-1 px-3 py-3 space-y-1 overflow-y-auto">
         {navLinks.map(({ icon, label, path }) => (
           <div key={label} onClick={() => navigate(path)}>
             <NavItem
@@ -101,9 +99,9 @@ export const MentorSidebar: React.FC = () => {
         ))}
       </nav>
 
-      <div className="px-3 pb-4">
+      {/* <div className="px-3 pb-4">
         <NavItem icon={<LogOut size={16} />} label="Log out" />
-      </div>
+      </div> */}
     </aside>
   );
 };

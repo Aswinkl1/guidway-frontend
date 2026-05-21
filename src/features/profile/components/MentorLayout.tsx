@@ -3,7 +3,7 @@ import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 import { Role } from "@/types/role";
 import { useEffect } from "react";
 import { Outlet, useNavigate } from "react-router";
-import { MentorSidebar } from "./MentorSidebar";
+import { Sidebar } from "../../../components/shared/Sidebar";
 
 export const MentorLayout = () => {
   const auth = useAppSelector((state) => state.auth);
@@ -15,7 +15,7 @@ export const MentorLayout = () => {
   }, [auth, naviage]);
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
-      <MentorSidebar />
+      <Sidebar />
       <div className="flex-1 overflow-y-auto">
         <Outlet />
       </div>

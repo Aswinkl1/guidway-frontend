@@ -146,7 +146,7 @@ const navLinkStyle: CSSProperties = {
 
 // ─── Header ───────────────────────────────────────────────────────────────────
 
-const Header: FC<HeaderProps> = ({ isLoggedIn, onToggleLogin }) => {
+const Header: FC<HeaderProps> = ({ isLoggedIn = true, onToggleLogin }) => {
   const navigate = useNavigate();
   const [open, setOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
@@ -200,7 +200,14 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, onToggleLogin }) => {
         }}
       >
         {/* Logo */}
-        <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+        <div
+          style={{
+            display: "flex",
+            alignItems: "center",
+            gap: 8,
+            // visibility: "hidden",
+          }}
+        >
           <svg width="20" height="20" viewBox="0 0 22 22" fill="none">
             <circle cx="11" cy="11" r="2.5" fill="#2563EB" />
             {[0, 60, 120, 180, 240, 300].map((deg, i) => (

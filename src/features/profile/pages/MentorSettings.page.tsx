@@ -1,8 +1,7 @@
 import { useState } from "react";
-import { Bell, MessageSquare, Clock, Globe } from "lucide-react";
+import { Clock, Globe } from "lucide-react";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Switch } from "@/components/ui/switch";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   Select,
   SelectContent,
@@ -25,6 +24,7 @@ import type { ChangePasswordFormData } from "../schemas/resetPassword.schema";
 import { resetPassword } from "../services/settings.services";
 import toast from "react-hot-toast";
 import { useSettings } from "../hooks/useSettings";
+import { Header } from "@/components/shared";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -152,38 +152,7 @@ const MentorSettingsPage = () => {
         {/* ── Main ── */}
         <div className="flex-1 overflow-y-auto">
           {/* Topbar (reused from MentorProfilePage) */}
-          <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
-            <h1 className="text-lg font-semibold text-slate-900">Settings</h1>
-            <div className="flex items-center gap-3">
-              <button className="relative p-2 rounded-full hover:bg-slate-100">
-                <Bell size={18} className="text-slate-500" />
-                <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-red-500 rounded-full" />
-              </button>
-              <button className="p-2 rounded-full hover:bg-slate-100">
-                <MessageSquare size={18} className="text-slate-500" />
-              </button>
-              <div className="flex items-center gap-2">
-                <Avatar className="w-8 h-8">
-                  <AvatarImage
-                    src="https://i.pravatar.cc/40?img=47"
-                    alt="Alex Johnson"
-                  />
-                  <AvatarFallback className="text-xs bg-violet-100 text-violet-700">
-                    AJ
-                  </AvatarFallback>
-                </Avatar>
-                <div className="hidden sm:block text-right">
-                  <p className="text-xs font-semibold text-slate-800 leading-tight">
-                    Alex Johnson
-                  </p>
-                  <p className="text-xs text-slate-400 leading-tight">
-                    Senior Mentor
-                  </p>
-                </div>
-              </div>
-            </div>
-          </header>
-
+          <Header />
           <div className="px-8 py-6 max-w-4xl space-y-5">
             {/* Page heading */}
             <div className="mb-1">
