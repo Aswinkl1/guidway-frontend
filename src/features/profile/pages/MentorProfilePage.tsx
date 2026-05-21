@@ -1,7 +1,5 @@
 import { Fragment, useState } from "react";
 import {
-  Bell,
-  MessageSquare,
   Plus,
   MapPin,
   Monitor,
@@ -49,6 +47,7 @@ import { MentorStatus } from "../types/profile.types";
 
 import type { UpdateVisibilityDTO } from "../types/settings.types";
 import { useNavigate } from "react-router";
+import { Header } from "@/components/shared";
 
 const MentorProfilePage = () => {
   const [publicProfile, setPublicProfile] = useState(true);
@@ -143,7 +142,7 @@ const MentorProfilePage = () => {
         onClose={() => setExpOpen(false)}
         onSave={mutateAsyncForExperience}
       />
-      <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
+      {/* <header className="sticky top-0 z-10 bg-white border-b border-slate-200 px-8 py-4 flex items-center justify-between">
         <h1 className="text-lg font-semibold text-slate-900">My Profile</h1>
         <div className="flex items-center gap-3">
           <button className="relative p-2 rounded-full hover:bg-slate-100">
@@ -163,8 +162,8 @@ const MentorProfilePage = () => {
             </AvatarFallback>
           </Avatar>
         </div>
-      </header>
-
+      </header> */}
+      <Header isLoggedIn={true} />
       <div className="px-8 py-6 max-w-5xl">
         {/* Page heading */}
         <div className="flex items-start justify-between mb-5">
