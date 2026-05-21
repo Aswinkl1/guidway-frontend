@@ -20,6 +20,8 @@ export function AdminLoginPage() {
         setCredentials({
           role: res.result.role,
           token: res.result.accessToken,
+          name: res.result.name,
+          profileImageKey: res.result.profileImageKey,
         }),
       );
 
