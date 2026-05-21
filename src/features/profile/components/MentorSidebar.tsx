@@ -1,4 +1,4 @@
-import { useLocation, useNavigate } from "react-router"; // or Next.js usePathname
+import { useLocation, useNavigate } from "react-router";
 import {
   LayoutDashboard,
   List,
@@ -14,6 +14,7 @@ import {
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { NavItem } from "@/components/shared";
 import { CLIENT_ROUTES } from "@/constants/clientRoutes";
+import { useSelector } from "react-redux";
 
 const navLinks = [
   {
@@ -58,7 +59,7 @@ const navLinks = [
 export const MentorSidebar: React.FC = () => {
   const location = useLocation();
   const navigate = useNavigate();
-
+  const { name, profileImageKey } = useSelector((state) => state.auth);
   return (
     <aside className="w-56 bg-white border-r border-slate-200 flex flex-col shrink-0">
       {/* Brand */}
@@ -72,7 +73,7 @@ export const MentorSidebar: React.FC = () => {
       <div className="flex items-center gap-3 px-4 py-4 border-b border-slate-100">
         <Avatar className="w-8 h-8">
           <AvatarImage
-            src="https://i.pravatar.cc/40?img=47"
+            src={`${import.meta.env.VITE_S3_BASE_URL}${profileImageKey}`}
             alt="Sarah Jenkins"
           />
           <AvatarFallback className="text-xs bg-blue-100 text-blue-700">
@@ -81,7 +82,7 @@ export const MentorSidebar: React.FC = () => {
         </Avatar>
         <div className="min-w-0">
           <p className="text-sm font-semibold text-slate-800 truncate">
-            Sarah Jenkins
+            {name}
           </p>
           <p className="text-xs text-slate-400 truncate">Mentor Workspace</p>
         </div>
