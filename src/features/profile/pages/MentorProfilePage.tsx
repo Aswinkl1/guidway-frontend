@@ -106,7 +106,7 @@ const MentorProfilePage = () => {
         initialData={{
           phoneNumber: mentorData.phoneNumber,
           name: mentorData.name,
-          domainId: mentorData.domain.id,
+          domainId: mentorData?.domain?.id,
           avatarFile: mentorData.profileImageKay,
           headline: mentorData.headline,
           links: mentorData.socialLinks.map(
@@ -231,7 +231,7 @@ const MentorProfilePage = () => {
                       {mentorData.headline}
                     </p>
                     <p className="text-slate-400 text-xs mt-0.5">
-                      Primary Domain: {mentorData.domain.name}
+                      Primary Domain: {mentorData.domain?.name}
                     </p>
                     <div className="flex items-center gap-1 mt-1">
                       <MapPin size={12} className="text-blue-400" />
