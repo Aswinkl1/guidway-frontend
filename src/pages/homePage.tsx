@@ -164,7 +164,7 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, onToggleLogin }) => {
   const dropdownItems: DropdownItem[] = [
     { Icon: LayoutDashboard, label: "My Dashboard" },
     { Icon: CalendarDays, label: "My Sessions" },
-    { Icon: User, label: "Profile" },
+    { Icon: User, label: "Profile", link: "/mentor/profile" },
     { Icon: Settings, label: "Settings" },
   ];
   async function handleLogout() {
@@ -332,10 +332,10 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, onToggleLogin }) => {
                     animation: "ddFade 0.12s ease",
                   }}
                 >
-                  {dropdownItems.map(({ Icon, label }) => (
-                    <a
+                  {dropdownItems.map(({ Icon, label, link }) => (
+                    <button
                       key={label}
-                      href="#"
+                      onClick={() => navigate(link)}
                       style={{
                         display: "flex",
                         alignItems: "center",
@@ -354,7 +354,7 @@ const Header: FC<HeaderProps> = ({ isLoggedIn, onToggleLogin }) => {
                       }
                     >
                       <Icon size={14} color="#9CA3AF" /> {label}
-                    </a>
+                    </button>
                   ))}
 
                   <div style={{ height: 1, backgroundColor: "#F1F5F9" }} />

@@ -61,6 +61,8 @@ api.interceptors.response.use(
         setCredentials({
           token: data.result.accessToken,
           role: data.result.role,
+          name: data.result.name,
+          profileImageKey: data.result.name,
         }),
       );
 

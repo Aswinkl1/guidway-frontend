@@ -14,11 +14,13 @@ async function AuthLoader() {
         withCredentials: true,
       },
     );
-    const { accessToken, role } = data.result;
+    const { accessToken, role, name, profileImageKey } = data.result;
     store.dispatch(
       setCredentials({
         token: accessToken,
         role: role,
+        name: name,
+        profileImageKey,
       }),
     );
     console.log("token refreshed", accessToken);

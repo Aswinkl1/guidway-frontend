@@ -14,12 +14,14 @@ export function LoginPage() {
     setIsLoading(true);
     try {
       const res = await userLogin(data);
-
+      console.log("name", res);
       // saving the token in redux
       dispatch(
         setCredentials({
           role: res.result.role,
           token: res.result.accessToken,
+          name: res.result.name,
+          profileImageKey: res.result.profileImageKey,
         }),
       );
 
