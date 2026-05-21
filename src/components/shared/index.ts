@@ -1,3 +1,5 @@
+export { Header } from "./Header";
+
 export { NavItem } from "./NavItem";
 export { StatBadge } from "./StatBadge";
 export { SectionCard } from "./SectionCard";
