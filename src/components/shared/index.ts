@@ -15,3 +15,4 @@ export { MonthYearPicker } from "./MonthYearPicker";
 export { CurrentToggle } from "./CurrentToggle";
 export { ModalHeader } from "./ModalHeader";
 export { ModalFooter } from "./ModalFooter";
+export { SearchBar } from "./SearchBar";

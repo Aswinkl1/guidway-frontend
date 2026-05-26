@@ -27,8 +27,13 @@ import { NotFoundPage } from "@/components/shared/Eroor/NotFoundError";
 import { ServerErrorPage } from "@/components/shared/Eroor/ServerError";
 import { ErrorNavigator } from "@/components/ErrorNavigator";
 import AdminMentorProfilePage from "@/features/admin/pages/adminMentorProfile";
+import MentorListingPage from "@/features/mentor/pages/MentorListingPage";
 
 export const router = createBrowserRouter([
+  {
+    path: CLIENT_ROUTES.MENTOR.ROOT,
+    Component: MentorListingPage,
+  },
   {
     path: CLIENT_ROUTES.HOME,
     loader: AuthLoader,
@@ -94,6 +99,7 @@ export const router = createBrowserRouter([
           },
         ],
       },
+
       {
         path: CLIENT_ROUTES.ADMIN.ROOT,
         Component: AdminRootLayout,

@@ -15,6 +15,7 @@ async function AuthLoader() {
       },
     );
     const { accessToken, role, name, profileImageKey } = data.result;
+    console.log(data);
     store.dispatch(
       setCredentials({
         token: accessToken,

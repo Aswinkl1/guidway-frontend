@@ -1,4 +1,5 @@
 import { useAppSelector } from "@/app/store/store";
+import { Role } from "@/types/role";
 import { useEffect } from "react";
 
 import { Outlet, useNavigate } from "react-router";
@@ -38,7 +39,7 @@ export function AuthLayout() {
   const naviage = useNavigate();
   useEffect(() => {
     if (authState.token) {
-      if (authState.role === "admin") naviage("/admin", { replace: true });
+      if (authState.role === Role.ADMIN) naviage("/admin", { replace: true });
       else naviage("/", { replace: true });
     }
   }, [authState, naviage]);
