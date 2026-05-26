@@ -1,13 +1,11 @@
 // MentorListingPage.tsx
 import { useRef, useCallback, useState } from "react";
-import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 import {
   Star,
   ChevronDown,
   SlidersHorizontal,
   Loader2,
   Users,
-  X,
   BadgeCheck,
 } from "lucide-react";
 
@@ -26,41 +24,7 @@ import type { MentorCardDto } from "../types/mentor.types";
 import { SearchBar } from "@/components/shared";
 import { useMentorListing, userMentorFilter } from "../hooks/useMentorListing";
 import { useDebouncedCallback } from "use-debounce";
-
-// ─── Types ────────────────────────────────────────────────────────────────────
-
-interface DomainOption {
-  id: string;
-  name: string;
-}
-
-interface MentorPage {
-  mentors: MentorCardDto[];
-  nextCursor: string | null; // null means no more pages
-  total: number;
-}
-
-// ─── API ─────────────────────────────────────────────────────────────────────
-
-const PAGE_SIZE = 12;
-
-const fetchDomains = async (): Promise<DomainOption[]> => {
-  const res = await fetch("/api/domains");
-  if (!res.ok) throw new Error("Failed to fetch domains");
-  return res.json();
-};
-
-// ─── Query keys ───────────────────────────────────────────────────────────────
-
-export const mentorKeys = {
-  all: ["mentors"] as const,
-  list: (s: string, d: string) => ["mentors", "list", s, d] as const,
-};
-
-export const domainKeys = {
-  all: ["domains"] as const,
-  list: () => ["domains", "list"] as const,
-};
+import { useFetchDomain } from "@/hooks/useDomain";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -73,33 +37,6 @@ const initials = (name: string) =>
     .toUpperCase();
 
 const formatPrice = (price: number) => (price === 0 ? "Free" : `$${price}`);
-
-// ─────────────────────────────────────────────────────────────────────────────
-// REUSABLE SUB-COMPONENTS
-// ─────────────────────────────────────────────────────────────────────────────
-
-// ── ActiveFilterPill ──────────────────────────────────────────────────────────
-
-interface FilterPillProps {
-  label: string;
-  onRemove: () => void;
-}
-
-const FilterPill: React.FC<FilterPillProps> = ({ label, onRemove }) => (
-  <div
-    className="flex items-center gap-1.5 h-7 px-3 bg-violet-50 border border-violet-200
-    text-violet-700 text-xs font-medium rounded-full"
-  >
-    {label}
-    <button
-      onClick={onRemove}
-      className="hover:text-violet-900"
-      aria-label="Remove filter"
-    >
-      <X size={11} />
-    </button>
-  </div>
-);
 
 // ── MentorCard ────────────────────────────────────────────────────────────────
 
@@ -296,8 +233,6 @@ const MentorListingPage: React.FC = () => {
 
   const [search, setSearch] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("all");
-  // Debounced search — avoids a query per keystroke
-  const [debouncedSearch, setDebouncedSearch] = useState("");
 
   const debounceSetFilter = useDebouncedCallback((val) => {
     setFilter({ search: val });
@@ -316,19 +251,20 @@ const MentorListingPage: React.FC = () => {
   const handleReset = () => {
     handleSearchClear();
     setSelectedDomain("all");
+    setFilter({ search: "", domainId: "" });
   };
+
+  function handleDomainChange(id: string) {
+    setSelectedDomain(id);
+    setFilter({ domainId: id });
+  }
 
   const hasFilters = filter.search !== "" || selectedDomain !== "all";
 
   // ── Domains query ──────────────────────────────────────────────────────────
 
-  const { data: domains = [] } = useQuery<DomainOption[]>({
-    queryKey: domainKeys.list(),
-    queryFn: fetchDomains,
-    staleTime: 10 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-
+  const { data: domains = [] } = useFetchDomain(true);
+  console.log("domain", domains);
   // ── Infinite mentors query ─────────────────────────────────────────────────
   const {
     data,
@@ -345,7 +281,7 @@ const MentorListingPage: React.FC = () => {
   const total = data?.pages[0]?.total ?? 0;
 
   // Domain map for label lookup in cards
-  const domainMap = Object.fromEntries(domains.map((d) => [d.id, d.name]));
+  const domainMap = domains;
 
   // Sentinel callback
   const handleSentinelVisible = useCallback(() => {
@@ -374,7 +310,7 @@ const MentorListingPage: React.FC = () => {
           />
 
           {/* Domain filter */}
-          <Select value={selectedDomain} onValueChange={setSelectedDomain}>
+          <Select value={selectedDomain} onValueChange={handleDomainChange}>
             <SelectTrigger
               className="h-9 w-48 text-sm border-slate-200 bg-white rounded-xl
                 focus:ring-2 focus:ring-violet-200 focus:border-violet-400"
@@ -395,7 +331,7 @@ const MentorListingPage: React.FC = () => {
               </SelectItem>
               {domains.map((d) => (
                 <SelectItem key={d.id} value={d.id} className="text-sm">
-                  {d.name}
+                  {d.domainName}
                 </SelectItem>
               ))}
             </SelectContent>
@@ -412,7 +348,7 @@ const MentorListingPage: React.FC = () => {
         {/* Active filter pills */}
         {hasFilters && (
           <div className="flex items-center gap-2 flex-wrap mb-5">
-            {debouncedSearch && (
+            {/* {debouncedSearch && (
               <FilterPill
                 label={`"${debouncedSearch}"`}
                 onRemove={handleSearchClear}
@@ -423,7 +359,7 @@ const MentorListingPage: React.FC = () => {
                 label={domainMap[selectedDomain] ?? selectedDomain}
                 onRemove={() => setSelectedDomain("all")}
               />
-            )}
+            )} */}
             <button
               onClick={handleReset}
               className="text-xs text-slate-400 hover:text-slate-700 hover:underline ml-1"
@@ -455,7 +391,7 @@ const MentorListingPage: React.FC = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
             {/* Skeleton — first load only */}
             {isLoading &&
-              Array.from({ length: PAGE_SIZE }).map((_, i) => (
+              Array.from({ length: 10 }).map((_, i) => (
                 <MentorCardSkeleton key={i} />
               ))}
 
