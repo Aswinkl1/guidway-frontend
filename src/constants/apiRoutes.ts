@@ -21,6 +21,7 @@ export const ROUTES = {
     VERIFY_MENTOR: "/api/v1/admin/verify-mentor",
   },
   MENTOR: {
+    ROOT: "/api/v1/mentor",
     EXPERIENCE: {
       ROOT: "/api/v1/mentor/experience",
     },
