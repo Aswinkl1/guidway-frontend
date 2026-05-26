@@ -57,7 +57,10 @@ const MentorCard: React.FC<MentorCardProps> = ({ mentor, domain, onClick }) => (
       <div className="flex items-start gap-3">
         <Avatar className="w-12 h-12 border-2 border-slate-100 shrink-0">
           {mentor.profileImageKey && (
-            <AvatarImage src={mentor.profileImageKey} alt={mentor.name} />
+            <AvatarImage
+              src={`${import.meta.env.VITE_S3_BASE_URL}${mentor.profileImageKey}`}
+              alt={mentor.name}
+            />
           )}
           <AvatarFallback className="text-sm font-semibold bg-violet-100 text-violet-700">
             {initials(mentor.name)}
