@@ -9,3 +9,10 @@ export interface MentorCardDto {
   reviewCount: number;
   startingAt: number;
 }
+
+export interface fetchMentorApiResponse {
+  data: MentorCardDto[];
+  meta: {
+    nextCursor: string | null;
+  };
+}
