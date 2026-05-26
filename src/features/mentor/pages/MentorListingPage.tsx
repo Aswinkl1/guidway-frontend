@@ -24,6 +24,8 @@ import {
 } from "@/components/ui/select";
 import type { MentorCardDto } from "../types/mentor.types";
 import { SearchBar } from "@/components/shared";
+import { useMentorListing, userMentorFilter } from "../hooks/useMentorListing";
+import { useDebouncedCallback } from "use-debounce";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -41,26 +43,6 @@ interface MentorPage {
 // ─── API ─────────────────────────────────────────────────────────────────────
 
 const PAGE_SIZE = 12;
-
-const fetchMentors = async ({
-  pageParam = null,
-  search,
-  domainId,
-}: {
-  pageParam?: string | null;
-  search: string;
-  domainId: string;
-}): Promise<MentorPage> => {
-  const params = new URLSearchParams();
-  params.set("limit", String(PAGE_SIZE));
-  if (pageParam) params.set("cursor", pageParam);
-  if (search) params.set("search", search);
-  if (domainId && domainId !== "all") params.set("domainId", domainId);
-
-  const res = await fetch(`/api/mentors?${params.toString()}`);
-  if (!res.ok) throw new Error("Failed to fetch mentors");
-  return res.json();
-};
 
 const fetchDomains = async (): Promise<DomainOption[]> => {
   const res = await fetch("/api/domains");
@@ -310,22 +292,25 @@ const InfiniteScrollSentinel: React.FC<SentinelProps> = ({
 // ─────────────────────────────────────────────────────────────────────────────
 
 const MentorListingPage: React.FC = () => {
+  const { filter, setFilter } = userMentorFilter();
+
   const [search, setSearch] = useState("");
   const [selectedDomain, setSelectedDomain] = useState("all");
   // Debounced search — avoids a query per keystroke
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const debounceRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
+  const debounceSetFilter = useDebouncedCallback((val) => {
+    setFilter({ search: val });
+  }, 400);
   const handleSearchChange = (val: string) => {
     setSearch(val);
-    if (debounceRef.current) clearTimeout(debounceRef.current);
-    debounceRef.current = setTimeout(() => setDebouncedSearch(val), 400);
+    debounceSetFilter(val);
   };
   console.log("yep tis is happenig");
 
   const handleSearchClear = () => {
     setSearch("");
-    setDebouncedSearch("");
+    debounceSetFilter("");
   };
 
   const handleReset = () => {
@@ -333,7 +318,7 @@ const MentorListingPage: React.FC = () => {
     setSelectedDomain("all");
   };
 
-  const hasFilters = debouncedSearch !== "" || selectedDomain !== "all";
+  const hasFilters = filter.search !== "" || selectedDomain !== "all";
 
   // ── Domains query ──────────────────────────────────────────────────────────
 
@@ -345,7 +330,6 @@ const MentorListingPage: React.FC = () => {
   });
 
   // ── Infinite mentors query ─────────────────────────────────────────────────
-
   const {
     data,
     fetchNextPage,
@@ -354,22 +338,10 @@ const MentorListingPage: React.FC = () => {
     isLoading,
     isError,
     refetch,
-  } = useInfiniteQuery({
-    queryKey: mentorKeys.list(debouncedSearch, selectedDomain),
-    queryFn: ({ pageParam }) =>
-      fetchMentors({
-        pageParam: pageParam as string | null,
-        search: debouncedSearch,
-        domainId: selectedDomain,
-      }),
-    initialPageParam: null as string | null,
-    getNextPageParam: (lastPage) => lastPage.nextCursor ?? undefined,
-    staleTime: 2 * 60 * 1000,
-    refetchOnWindowFocus: false,
-  });
-
+  } = useMentorListing(filter);
+  console.log("data", data);
   // Flatten pages into a single array
-  const mentors = data?.pages.flatMap((p) => p.mentors) ?? [];
+  const mentors = data?.pages[0].data ?? [];
   const total = data?.pages[0]?.total ?? 0;
 
   // Domain map for label lookup in cards
