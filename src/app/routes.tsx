@@ -28,11 +28,16 @@ import { ServerErrorPage } from "@/components/shared/Eroor/ServerError";
 import { ErrorNavigator } from "@/components/ErrorNavigator";
 import AdminMentorProfilePage from "@/features/admin/pages/adminMentorProfile";
 import MentorListingPage from "@/features/mentor/pages/MentorListingPage";
+import MentorPublicProfilePage from "@/features/mentor/pages/MentorDetailsPage";
 
 export const router = createBrowserRouter([
   {
     path: CLIENT_ROUTES.MENTOR.ROOT,
     Component: MentorListingPage,
+  },
+  {
+    path: CLIENT_ROUTES.MENTOR.DETAILS,
+    Component: MentorPublicProfilePage,
   },
   {
     path: CLIENT_ROUTES.HOME,
