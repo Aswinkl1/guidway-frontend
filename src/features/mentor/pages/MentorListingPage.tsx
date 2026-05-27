@@ -25,6 +25,7 @@ import { SearchBar } from "@/components/shared";
 import { useMentorListing, userMentorFilter } from "../hooks/useMentorListing";
 import { useDebouncedCallback } from "use-debounce";
 import { useFetchDomain } from "@/hooks/useDomain";
+import { useNavigate } from "react-router";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
@@ -48,7 +49,7 @@ interface MentorCardProps {
 
 const MentorCard: React.FC<MentorCardProps> = ({ mentor, domain, onClick }) => (
   <Card
-    onClick={() => onClick(mentor.userId)}
+    onClick={() => onClick(mentor.id)}
     className="shadow-none border border-slate-200 rounded-2xl cursor-pointer
       hover:border-violet-200 hover:shadow-md transition-all group bg-white"
   >
@@ -232,6 +233,7 @@ const InfiniteScrollSentinel: React.FC<SentinelProps> = ({
 // ─────────────────────────────────────────────────────────────────────────────
 
 const MentorListingPage: React.FC = () => {
+  const navigate = useNavigate();
   const { filter, setFilter } = userMentorFilter();
 
   const [search, setSearch] = useState("");
@@ -402,11 +404,11 @@ const MentorListingPage: React.FC = () => {
             {!isLoading &&
               mentors.map((mentor) => (
                 <MentorCard
-                  key={mentor.userId}
+                  key={mentor.id}
                   mentor={mentor}
                   domain={domainMap[mentor.domainId]}
                   onClick={(id) => {
-                    // navigate(`/mentors/${id}`)
+                    navigate(`/mentor/${id}`);
                     console.log("Navigate to mentor:", id);
                   }}
                 />
