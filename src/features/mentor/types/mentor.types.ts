@@ -1,5 +1,5 @@
 export interface MentorCardDto {
-  userId: string;
+  id: string;
   name: string;
   avgRating: number;
   domainId: string;

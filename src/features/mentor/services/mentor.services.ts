@@ -3,6 +3,7 @@ import type { ApiResponse } from "@/types/apiResponse";
 import type { fetchMentorApiResponse } from "../types/mentor.types";
 import { ROUTES } from "@/constants/apiRoutes";
 import type { filterProps } from "../hooks/useMentorListing";
+import type { MentorProfileType } from "@/types/mentor.types";
 
 export const fetchMentors = async (
   filter: filterProps & { pageParam: string },
@@ -20,5 +21,12 @@ export const fetchMentors = async (
     },
   );
   console.log(response.data.result);
+  return response.data.result;
+};
+
+export const getMentorDetails = async (id: string) => {
+  const response = await api.get<ApiResponse<MentorProfileType>>(
+    `${ROUTES.MENTOR.ROOT}/${id}`,
+  );
   return response.data.result;
 };
