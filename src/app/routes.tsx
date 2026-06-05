@@ -29,6 +29,7 @@ import { ErrorNavigator } from "@/components/ErrorNavigator";
 import AdminMentorProfilePage from "@/features/admin/pages/adminMentorProfile";
 import MentorListingPage from "@/features/mentor/pages/MentorListingPage";
 import MentorPublicProfilePage from "@/features/mentor/pages/MentorDetailsPage";
+import AvailabilityPage from "@/features/mentor/pages/AvailabilityPage";
 
 export const router = createBrowserRouter([
   {
@@ -101,6 +102,10 @@ export const router = createBrowserRouter([
           {
             path: CLIENT_ROUTES.MENTOR.SESSIONS,
             Component: MentorSessionsPage,
+          },
+          {
+            path: "/mentor/availability",
+            Component: AvailabilityPage,
           },
         ],
       },
