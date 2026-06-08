@@ -282,7 +282,7 @@ const MentorListingPage: React.FC = () => {
   } = useMentorListing(filter);
   console.log("data", data);
   // Flatten pages into a single array
-  const mentors = data?.pages[0].data ?? [];
+  const mentors = data?.pages.flatMap((page) => page.data) ?? [];
   const total = data?.pages[0]?.total ?? 0;
 
   // Domain map for label lookup in cards
