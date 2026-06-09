@@ -113,6 +113,7 @@ const MentorProfilePage = () => {
           ),
           shortBio: mentorData.shortBio,
           timezone: mentorData.timezone,
+          slotDurationMinutes: mentorData.slotDurationMinutes,
         }}
       />
       <LanguageModal

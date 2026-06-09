@@ -172,11 +172,13 @@ export const EditProfile = async (data: EditProfileFormData) => {
     shortBio: data.shortBio,
     headline: data.headline,
     domainId: data.domainId,
+    slotDurationMinutes: data.slotDurationMinutes,
   };
 
   const links: CreateSocialLinkDTO = {
     links: data.links,
   };
+  console.log(overview);
 
   const [profileResult, overviewResult, linksResult] = await Promise.all([
     _editUserProfile(profile),

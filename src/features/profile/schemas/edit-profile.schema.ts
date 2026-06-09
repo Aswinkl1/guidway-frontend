@@ -7,6 +7,7 @@ export const UpdateMentorOverviewSchema = z.object({
   shortBio: z.string().trim().optional(),
   headline: z.string().trim().optional(),
   domainId: z.uuid({ message: "Please select a domain" }),
+  slotDurationMinutes: z.number().default(30),
 });
 
 export type UpdateMentorOverviewDTO = z.infer<
@@ -57,6 +58,7 @@ export const EditProfileFormSchema = z.object({
   //   .max(5, { message: "Maximum 5 links allowed" }),
   // Profile picture (File object — validated client-side only)
   avatarFile: z.instanceof(File).optional(),
+  slotDurationMinutes: z.number().default(30),
 });
 
 export type EditProfileFormData = z.infer<typeof EditProfileFormSchema>;
