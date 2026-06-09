@@ -78,6 +78,7 @@ const DEFAULTS: EditProfileFormData = {
   domainId: "",
   links: [],
   avatarFile: undefined,
+  slotDurationMinutes: 30,
 };
 
 // ─── Small reusable pieces ────────────────────────────────────────────────────
@@ -174,6 +175,7 @@ export const EditProfileModal = ({
       shortBio: data.shortBio,
       headline: data.headline,
       domainId: data.domainId,
+      slotDurationMinutes: data.slotDurationMinutes,
     };
 
     // Filter out any empty strings before sending
@@ -336,6 +338,20 @@ export const EditProfileModal = ({
               }`}
             />
             <CharCount current={headlineValue.length} max={MAX_HEADLINE} />
+          </FormField>
+
+          <FormField
+            label="slotDurationMinutes"
+            error={errors.slotDurationMinutes?.message}
+          >
+            <Input
+              type="number"
+              min={30}
+              max={120}
+              placeholder="e.g. 30"
+              {...register("slotDurationMinutes", { valueAsNumber: true })}
+              className={`h-9 text-sm border-slate-200`}
+            />
           </FormField>
 
           {/* Short Bio */}
