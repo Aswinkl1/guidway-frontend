@@ -30,6 +30,7 @@ import AdminMentorProfilePage from "@/features/admin/pages/adminMentorProfile";
 import MentorListingPage from "@/features/mentor/pages/MentorListingPage";
 import MentorPublicProfilePage from "@/features/mentor/pages/MentorDetailsPage";
 import AvailabilityPage from "@/features/mentor/pages/AvailabilityPage";
+import BookingPage from "@/features/booking/pages/BookingPage";
 
 export const router = createBrowserRouter([
   {
@@ -108,6 +109,10 @@ export const router = createBrowserRouter([
             Component: AvailabilityPage,
           },
         ],
+      },
+      {
+        path: "/mentor/:id/book",
+        Component: BookingPage,
       },
 
       {
