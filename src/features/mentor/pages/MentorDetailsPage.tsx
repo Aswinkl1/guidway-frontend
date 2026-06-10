@@ -28,8 +28,10 @@ import {
   Header,
 } from "@/components/shared";
 import { useMentor } from "../hooks/useMentor";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { getSocialIcon } from "@/constants/SocailIcons";
+import { ROUTES } from "@/constants/apiRoutes";
+import { CLIENT_ROUTES } from "@/constants/clientRoutes";
 
 // ── Reused from shared barrel ─────────────────────────────────────────────────
 
@@ -263,11 +265,18 @@ const MentorPublicProfilePage: React.FC = () => {
   const params = useParams();
   const [activeTab, setActiveTab] = useState<Tab>("Mentorship plans");
   const { data: MENTOR, isPending } = useMentor(params.id ?? "");
+  const navigate = useNavigate();
   if (isPending) {
     return;
   }
   if (!MENTOR) {
     return <></>;
+  }
+
+  function handleOnBook() {
+    navigate(
+      `${CLIENT_ROUTES.MENTOR.ROOT}/${MENTOR?.userId}/book?session=${selectedSession}`,
+    );
   }
   return (
     <div className="min-h-screen bg-slate-50 font-sans">
@@ -520,7 +529,10 @@ const MentorPublicProfilePage: React.FC = () => {
                 </div>
 
                 {/* Book now */}
-                <Button className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl h-10 font-semibold">
+                <Button
+                  className="w-full bg-violet-600 hover:bg-violet-700 text-white rounded-xl h-10 font-semibold"
+                  onClick={handleOnBook}
+                >
                   Book now
                 </Button>
 
