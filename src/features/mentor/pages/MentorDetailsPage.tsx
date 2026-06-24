@@ -275,7 +275,7 @@ const MentorPublicProfilePage: React.FC = () => {
 
   function handleOnBook() {
     navigate(
-      `${CLIENT_ROUTES.MENTOR.ROOT}/${MENTOR?.userId}/book?session=${selectedSession}`,
+      `${CLIENT_ROUTES.MENTOR.ROOT}/${MENTOR?.userId}/book?sessionId=${selectedSession}`,
     );
   }
   return (

@@ -407,7 +407,7 @@ export const BookingSummaryCard: React.FC<BookingSummaryCardProps> = ({
         onClick={onBookNow}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white h-11 rounded-xl font-semibold text-sm disabled:opacity-40"
       >
-        Continue
+        Pay now
       </Button>
 
       <button

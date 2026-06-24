@@ -1,9 +1,11 @@
 import { store } from "@/app/store/store";
 import { setCredentials } from "@/features/auth/redux/UserAuthSlice";
+import { api } from "@/lib/axios";
 import axios from "axios";
 
 async function AuthLoader() {
   try {
+    console.log("jkhdfjkdskl");
     const state = store?.getState();
     const token = state?.auth?.token;
     if (token) return token;
