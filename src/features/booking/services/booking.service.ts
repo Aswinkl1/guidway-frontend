@@ -1,7 +1,11 @@
 import { ROUTES } from "@/constants/apiRoutes";
 import { api } from "@/lib/axios";
 import type { ApiResponse } from "@/types/apiResponse";
-import type { BookingSetupDetailsOutput } from "../types/booking.types";
+import type {
+  BookingSetupDetailsOutput,
+  CreateOrderResponse,
+} from "../types/booking.types";
+import type { HoldSlotDto } from "../dto/createOrder.dto";
 
 export const getSlots = async (mentorId: string, date: string) => {
   console.log("jkdfkladjlk");
@@ -19,6 +23,14 @@ export const getBookingSetupDetails = async (
   console.log(mentorId, sessionId, "mentorId, sessionId");
   const response = await api.get<ApiResponse<BookingSetupDetailsOutput>>(
     `${ROUTES.MENTOR.ROOT}/${mentorId}/session/${sessionId}/`,
+  );
+  return response.data.result;
+};
+
+export const createOrder = async (data: HoldSlotDto) => {
+  const response = await api.post<ApiResponse<CreateOrderResponse>>(
+    "/api/v1/booking/initiate",
+    data,
   );
   return response.data.result;
 };
