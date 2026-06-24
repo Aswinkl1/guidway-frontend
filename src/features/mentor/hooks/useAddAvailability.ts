@@ -1,4 +1,9 @@
-import { keepPreviousData, useMutation, useQuery } from "@tanstack/react-query";
+import {
+  keepPreviousData,
+  useMutation,
+  useQuery,
+  useQueryClient,
+} from "@tanstack/react-query";
 import {
   addAvailability,
   deleteAvailability,
@@ -27,27 +32,37 @@ export const useAvailability = () => {
 };
 
 export const useAddAvailability = () => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: addAvailability,
     onSuccess: () => {
       toast.success("slot add successfull");
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
     },
   });
 };
 
 export const useDeleteAvailability = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: deleteAvailability,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+
       toast.success("slot deleted successfull");
     },
   });
 };
 
 export const useToggleAvailability = () => {
+  const queryClient = useQueryClient();
+
   return useMutation({
     mutationFn: toggleAvailability,
     onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["availability"] });
+
       toast.success("slot toggle  successfull");
     },
   });

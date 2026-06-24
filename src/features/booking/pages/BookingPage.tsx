@@ -1,4 +1,3 @@
-import { useSelector } from "react-redux";
 import BookingPageComponent from "../components/BookingComponent";
 import { useState } from "react";
 import { useSlots } from "../hooks/useSlots";
@@ -19,7 +18,7 @@ const BookingPage = () => {
   }
 
   function handleOnBook(date, slots) {
-    console.log(data);
+    console.log(" date adn slots", date, slots);
   }
   return (
     <>
