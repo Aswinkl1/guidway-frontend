@@ -7,7 +7,11 @@ import { useBookingSetupDetails } from "../hooks/useGetBookingSetupDetails";
 import { holdSlotSchema } from "../dto/createOrder.dto";
 import useCreateOrderMutation from "../hooks/useCreateOrder";
 import { loadDynamicScript } from "@/helpers/DynamicScriptLoder";
-import type { CreateOrderResponse } from "../types/booking.types";
+import type {
+  CreateOrderResponse,
+  RazorpayPaymentDetails,
+} from "../types/booking.types";
+import { useBookingMutation } from "../hooks/useBookingMutation";
 
 const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -17,7 +21,7 @@ const BookingPage = () => {
   const sessionId = searchParams.get("sessionId") || "sessionId";
   console.log(searchParams, "searchParams");
   const { id } = useParams();
-
+  const { mutateAsync: mutateAsyncForConfirmBooking } = useBookingMutation();
   // if (!id || !sessionId) {
   //   // Option A: Render a clean error component
   //   return (
@@ -78,10 +82,15 @@ const BookingPage = () => {
         amount: orderResponse.amount_due.toString(),
         currency: orderResponse.currency,
         order_id: orderResponse.orderId,
-        handler: async function (response: any) {
+        handler: async function (response: RazorpayPaymentDetails) {
           // You could even use a SECOND useMutation here for verifying the payment!
-
-          alert("Booking Successful!");
+          console.log("Payment successful!", response);
+          mutateAsyncForConfirmBooking({
+            gatewayOrderId: response.razorpay_order_id,
+            gatewayPaymentId: response.razorpay_payment_id,
+            gatewaySignature: response.razorpay_signature,
+            provider: "RAZORPAY",
+          });
         },
       };
 
