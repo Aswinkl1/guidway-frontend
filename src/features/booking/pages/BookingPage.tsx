@@ -1,7 +1,7 @@
 import BookingPageComponent from "../components/BookingComponent";
 import { useState } from "react";
 import { useSlots } from "../hooks/useSlots";
-import { useParams, useSearchParams } from "react-router";
+import { useNavigate, useParams, useSearchParams } from "react-router";
 import { constructNow, format } from "date-fns";
 import { useBookingSetupDetails } from "../hooks/useGetBookingSetupDetails";
 import { holdSlotSchema } from "../dto/createOrder.dto";
@@ -21,7 +21,12 @@ const BookingPage = () => {
   const sessionId = searchParams.get("sessionId") || "sessionId";
   console.log(searchParams, "searchParams");
   const { id } = useParams();
-  const { mutateAsync: mutateAsyncForConfirmBooking } = useBookingMutation();
+  const {
+    mutateAsync: mutateAsyncForConfirmBooking,
+    isSuccess,
+    data: dataFromConfirmBooking,
+  } = useBookingMutation();
+  const navigate = useNavigate();
   // if (!id || !sessionId) {
   //   // Option A: Render a clean error component
   //   return (
@@ -33,8 +38,7 @@ const BookingPage = () => {
   //   );
   // }
 
-  const { mutateAsync: createOrderMutation, isLoading: isCreatingOrder } =
-    useCreateOrderMutation();
+  const { mutateAsync: createOrderMutation } = useCreateOrderMutation();
   const { data, isPending } = useSlots(id, selectedDate);
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
     useBookingSetupDetails(id, sessionId);
@@ -100,6 +104,30 @@ const BookingPage = () => {
       console.error("Error creating order:", error);
     }
   }
+
+  if (isSuccess) {
+    console.log(dataFromConfirmBooking);
+    return (
+      <div className="success-screen text-center p-8">
+        <h2 className="text-2xl font-bold text-green-600 mb-4">
+          Successfully Booked! 🎉
+        </h2>
+
+        {/* 2. Display the data returned from your API */}
+        <p>Your session has been confirmed.</p>
+        <p className="font-bold mt-2 text-gray-700">
+          Booking ID: {dataFromConfirmBooking?.id}
+        </p>
+
+        <button
+          onClick={() => navigate("/bookings/" + dataFromConfirmBooking?.id)}
+        >
+          Click to View Bookings
+        </button>
+      </div>
+    );
+  }
+
   return (
     <>
       <BookingPageComponent
