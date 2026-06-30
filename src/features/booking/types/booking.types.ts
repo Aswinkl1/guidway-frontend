@@ -31,3 +31,16 @@ export type CreateOrderResponse = {
   amount_due: number;
   currency: string;
 };
+
+export type RazorpayPaymentDetails = {
+  razorpay_order_id: string;
+  razorpay_payment_id: string;
+  razorpay_signature: string;
+};
+
+export type VerifyPaymentPayload = {
+  provider: "RAZORPAY";
+  gatewayOrderId: string;
+  gatewayPaymentId: string;
+  gatewaySignature: string;
+};
