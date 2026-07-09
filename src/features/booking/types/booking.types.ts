@@ -44,3 +44,67 @@ export type VerifyPaymentPayload = {
   gatewayPaymentId: string;
   gatewaySignature: string;
 };
+
+// booking.types.ts
+// Shared types for the sessions (bookings) feature — hosting & attending tabs.
+
+export const BOOKING_STATUS = {
+  CONFIRMED: "CONFIRMED",
+  CANCELLED: "CANCELLED",
+  COMPLETED: "COMPLETED",
+} as const;
+
+export type BookingStatus =
+  (typeof BOOKING_STATUS)[keyof typeof BOOKING_STATUS];
+
+/** Which side of the booking the current user is on. Each has its own search/filter state. */
+export type SessionRole = "hosting" | "attending";
+
+export interface BookingUser {
+  name: string;
+  profileImageKey: string | null;
+}
+
+export interface Booking {
+  id: string;
+  sessionTitle: string;
+  status: BookingStatus;
+  startTime: Date;
+  endTime: Date;
+  duration?: string;
+  user: BookingUser;
+}
+
+export interface GetAllBookingMeta {
+  totalPages: number;
+  page: number;
+  limit: number;
+  totalCount: number;
+}
+
+export interface GetAllBookingOutput {
+  data: Booking[];
+  meta: GetAllBookingMeta;
+}
+
+/** Query params sent to the backend — mirrors getAllBookingSchema, plus `role`. */
+export interface GetAllBookingParams {
+  role: SessionRole;
+  search: string;
+  page: number;
+  limit: number;
+  status: BookingStatus;
+}
+
+/** Per-tab UI filter state (everything except page, which the infinite query owns). */
+export interface SessionFilterState {
+  search: string;
+  status: BookingStatus;
+}
+
+export const DEFAULT_SESSION_FILTER_STATE: SessionFilterState = {
+  search: "",
+  status: BOOKING_STATUS.CONFIRMED,
+};
+
+export const DEFAULT_PAGE_LIMIT = 5;
