@@ -5,7 +5,7 @@
 import { forwardRef } from "react";
 import { Calendar, ChevronDown, Loader2, Search, Video } from "lucide-react";
 import {
-  type SessionRole,
+  SessionRole,
   type BookingStatus,
   BOOKING_STATUS,
   type Booking,
@@ -17,6 +17,7 @@ import {
   formatTimeRange,
   getDurationLabel,
 } from "@/features/booking/utils/booking.utils";
+import { Role } from "@/types/role";
 
 /* ------------------------------------------------------------------ */
 /* RoleTabs — "Hosting" / "Attending"                                  */
@@ -25,13 +26,19 @@ import {
 interface RoleTabsProps {
   value: SessionRole;
   onChange: (role: SessionRole) => void;
+  role: Role;
 }
 
-export function RoleTabs({ value, onChange }: RoleTabsProps) {
-  const tabs: { key: SessionRole; label: string }[] = [
-    { key: "hosting", label: "Hosting" },
-    { key: "attending", label: "Attending" },
-  ];
+export function RoleTabs({ value, onChange, role }: RoleTabsProps) {
+  const tabs: { key: SessionRole; label: string }[] =
+    role === Role.MENTOR
+      ? [
+          { key: SessionRole.HOSTING, label: "Hosting" },
+          { key: SessionRole.ATTENDING, label: "Attending" },
+        ]
+      : role === Role.MENTEE
+        ? [{ key: SessionRole.ATTENDING, label: "Attending" }]
+        : [];
 
   return (
     <div className="flex gap-6 border-b border-slate-200">

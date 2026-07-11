@@ -57,8 +57,13 @@ export const BOOKING_STATUS = {
 export type BookingStatus =
   (typeof BOOKING_STATUS)[keyof typeof BOOKING_STATUS];
 
-/** Which side of the booking the current user is on. Each has its own search/filter state. */
-export type SessionRole = "hosting" | "attending";
+// export type SessionRole = "hosting" | "attending";
+export const SessionRole = {
+  HOSTING: "hosting",
+  ATTENDING: "attending",
+} as const;
+
+export type SessionRole = (typeof SessionRole)[keyof typeof SessionRole];
 
 export interface BookingUser {
   name: string;
@@ -100,11 +105,15 @@ export interface GetAllBookingParams {
 export interface SessionFilterState {
   search: string;
   status: BookingStatus;
+  page: number;
+  limit: number;
 }
 
 export const DEFAULT_SESSION_FILTER_STATE: SessionFilterState = {
   search: "",
   status: BOOKING_STATUS.CONFIRMED,
+  page: 1,
+  limit: 5,
 };
 
-export const DEFAULT_PAGE_LIMIT = 5;
+export const DEFAULT_PAGE_LIMIT = 2;

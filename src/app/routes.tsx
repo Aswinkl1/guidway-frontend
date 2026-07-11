@@ -33,6 +33,8 @@ import AvailabilityPage from "@/features/mentor/pages/AvailabilityPage";
 import BookingPage from "@/features/booking/pages/BookingPage";
 import { SessionsPage } from "@/features/booking/pages/sessionPage";
 import { BookingDetailPage } from "@/features/booking/pages/SessionDetailsPage";
+import { ROUTES } from "@/constants/apiRoutes";
+import { UserLayout } from "@/layout/UserLayout";
 
 export const router = createBrowserRouter([
   {
@@ -144,6 +146,16 @@ export const router = createBrowserRouter([
           {
             path: "/admin/mentor/:id",
             Component: AdminMentorProfilePage,
+          },
+        ],
+      },
+      {
+        path: "/users",
+        Component: UserLayout,
+        children: [
+          {
+            path: "/users/bookings",
+            Component: SessionsPage,
           },
         ],
       },
