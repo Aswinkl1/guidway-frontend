@@ -265,7 +265,10 @@ export default function SignupForm({ onSubmit }: SignupProps) {
           </a>
         ) : (
           <a href="http://localhost:3000/api/v1/auth/google">
-            <button className="w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors">
+            <button
+              type="button"
+              className="cursor-pointer w-full flex items-center justify-center gap-2.5 border border-gray-200 rounded-lg py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-50 transition-colors"
+            >
               <GoogleIcon />
               Login with Google
             </button>

@@ -3,6 +3,7 @@ import {
   LayoutDashboard,
   List,
   MessageSquare,
+  BookOpenIcon,
   User,
   CalendarCheck,
   Settings,
@@ -19,18 +20,14 @@ const navLinks = [
     label: "Dashboard",
     path: "/mentor/dashboard",
   },
-  {
-    icon: <List size={16} />,
-    label: "Sessions",
-    path: CLIENT_ROUTES.MENTOR.SESSIONS,
-  },
+
   {
     icon: <MessageSquare size={16} />,
     label: "Messages",
     path: "/mentor/messages",
   },
   {
-    icon: <MessageSquare size={16} />,
+    icon: <BookOpenIcon size={16} />,
     label: "My Bookings",
     path: "/mentor/bookings",
   },
@@ -39,17 +36,9 @@ const navLinks = [
     label: "My Profile",
     path: CLIENT_ROUTES.MENTOR.PROFILE,
   },
-  {
-    icon: <CalendarCheck size={16} />,
-    label: "Availability",
-    path: "/mentor/availability",
-  },
+
   { icon: <Settings size={16} />, label: "Settings", path: "/mentor/settings" },
-  {
-    icon: <DollarSign size={16} />,
-    label: "Earnings",
-    path: "/mentor/earnings",
-  },
+
   {
     icon: <Users size={16} />,
     label: "Membership Plans",
@@ -60,7 +49,7 @@ const navLinks = [
 
 console.log("location", location);
 
-export const Sidebar = () => {
+export const UserSidebar = () => {
   const location = useLocation();
   const navigate = useNavigate();
   return (
