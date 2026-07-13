@@ -9,6 +9,7 @@ import type {
   VerifyPaymentPayload,
 } from "../types/booking.types";
 import type { HoldSlotDto } from "../dto/createOrder.dto";
+import type { MenteeBookingDetailsOutput } from "../types/bookingDetails.types";
 
 export const getSlots = async (mentorId: string, date: string) => {
   console.log("jkdfkladjlk");
@@ -78,5 +79,33 @@ export const getAllAttendingBooking = async (data: GetAllBookingParams) => {
         endTime: new Date(v.endTime),
       };
     }),
+  };
+};
+
+export const getHostingBookingDetails = async (id: string) => {
+  const res = await api.get<ApiResponse<MenteeBookingDetailsOutput>>(
+    "/api/v1/mentor/bookings/" + id,
+  );
+
+  const result = res.data.result;
+
+  return {
+    ...result,
+    startDateTime: new Date(result.startDateTime),
+    endDateTime: new Date(result.endDateTime),
+  };
+};
+
+export const getAttendeeBookingDetails = async (id: string) => {
+  const res = await api.get<ApiResponse<MenteeBookingDetailsOutput>>(
+    "/api/v1/user/bookings/" + id,
+  );
+
+  const result = res.data.result;
+
+  return {
+    ...result,
+    startDateTime: new Date(result.startDateTime),
+    endDateTime: new Date(result.endDateTime),
   };
 };

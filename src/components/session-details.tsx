@@ -26,6 +26,7 @@ import {
   XCircle,
   Zap,
 } from "lucide-react";
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
 /* ------------------------------------------------------------------ */
 /* MentorInfoCard                                                       */
@@ -33,6 +34,14 @@ import {
 /* If/when the backend adds a title or badges (e.g. "Ex-Amazon"), add    */
 /* optional `title?: string` / `badges?: string[]` props here.           */
 /* ------------------------------------------------------------------ */
+
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
 interface MentorInfoCardProps {
   user: {
@@ -55,21 +64,16 @@ export function MentorInfoCard({
   return (
     <div className="flex items-center justify-between rounded-xl border border-slate-100 bg-white p-5">
       <div className="flex items-center gap-4">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={user.name}
-            className="h-14 w-14 rounded-full object-cover"
+        <Avatar className="w-20 h-20 border-2 border-slate-100 shrink-0">
+          <AvatarImage
+            src={`${import.meta.env.VITE_S3_BASE_URL + imageUrl}`} // Just drop your AWS S3 URL here
+            alt={`${user.name}'s profile picture`}
+            className="object-cover" // Ensures the image scales nicely inside the circle
           />
-        ) : (
-          <div className="flex h-14 w-14 items-center justify-center rounded-full bg-blue-100 text-lg font-semibold text-blue-600">
-            {user.name
-              .split(" ")
-              .slice(0, 2)
-              .map((p) => p[0]?.toUpperCase())
-              .join("")}
-          </div>
-        )}
+          <AvatarFallback className="text-xl bg-violet-100 text-violet-700">
+            {initials(user.name)}
+          </AvatarFallback>
+        </Avatar>
         <p className="font-semibold text-slate-900">{user.name}</p>
       </div>
       <button

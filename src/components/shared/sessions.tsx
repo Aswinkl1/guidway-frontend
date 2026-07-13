@@ -18,6 +18,7 @@ import {
   getDurationLabel,
 } from "@/features/booking/utils/booking.utils";
 import { Role } from "@/types/role";
+import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 
 /* ------------------------------------------------------------------ */
 /* RoleTabs — "Hosting" / "Attending"                                  */
@@ -195,6 +196,13 @@ interface SessionCardProps extends SessionCardActions {
   /** Resolve a profileImageKey to a full URL however your app does it. */
   resolveImageUrl?: (key: string | null) => string | null;
 }
+const initials = (name: string) =>
+  name
+    .split(" ")
+    .map((w) => w[0])
+    .join("")
+    .slice(0, 2)
+    .toUpperCase();
 
 export function SessionCard({
   booking,
@@ -212,7 +220,16 @@ export function SessionCard({
   return (
     <div className="flex flex-col gap-4 rounded-xl border border-slate-100 bg-slate-50/60 p-4 sm:flex-row sm:items-center sm:justify-between">
       <div className="flex items-center gap-3">
-        <SessionAvatar name={booking.user.name} imageUrl={imageUrl} />
+        <Avatar className="w-20 h-20 border-2 border-slate-100 shrink-0">
+          <AvatarImage
+            src={`${import.meta.env.VITE_S3_BASE_URL + imageUrl}`} // Just drop your AWS S3 URL here
+            alt={`${booking.user.name}'s profile picture`}
+            className="object-cover" // Ensures the image scales nicely inside the circle
+          />
+          <AvatarFallback className="text-xl bg-violet-100 text-violet-700">
+            {initials(booking.user.name)}
+          </AvatarFallback>
+        </Avatar>
         <div>
           <p className="text-sm font-semibold text-slate-800">
             {booking.user.name}
