@@ -105,7 +105,11 @@ export function SessionsPage() {
                 console.log("cancel", b.id);
               }}
               onViewDetails={(b) => {
-                navigate("/mentor/bookings/" + b.id);
+                if (role === SessionRole.HOSTING) {
+                  navigate("/mentor/bookings/" + b.id);
+                  return;
+                }
+                navigate("/user/bookings/" + b.id);
               }}
             />
           ))}

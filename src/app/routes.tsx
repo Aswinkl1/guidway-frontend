@@ -150,12 +150,16 @@ export const router = createBrowserRouter([
         ],
       },
       {
-        path: "/users",
+        path: "/user",
         Component: UserLayout,
         children: [
           {
-            path: "/users/bookings",
+            path: "/user/bookings",
             Component: SessionsPage,
+          },
+          {
+            path: "/user/bookings/:id",
+            Component: BookingDetailPage,
           },
         ],
       },

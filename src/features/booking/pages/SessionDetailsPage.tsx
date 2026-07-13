@@ -13,7 +13,8 @@ import {
 } from "@/components/session-details";
 import { StatusBadge } from "@/components/shared/sessions";
 import { useSessionDetail } from "../hooks/useBookingDetails";
-import { useParams } from "react-router";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { SessionRole } from "../types/booking.types";
 
 interface SessionDetailPageProps {
   bookingId: string;
@@ -23,9 +24,14 @@ interface SessionDetailPageProps {
 
 export function BookingDetailPage() {
   const params = useParams();
-  const { data: session, isLoading } = useSessionDetail(params.id);
+  const location = useLocation();
+  const role: SessionRole = location.pathname.includes("/user/")
+    ? SessionRole.ATTENDING
+    : SessionRole.HOSTING;
+  const { data: session, isLoading } = useSessionDetail(params.id, role);
   const [isReviewOpen, setReviewOpen] = useState(false);
   const queryClient = useQueryClient();
+  const navigate = useNavigate();
 
   if (isLoading || !session) {
     return (
@@ -86,7 +92,9 @@ export function BookingDetailPage() {
     <div className="mx-auto max-w-5xl px-6 py-8">
       <button
         type="button"
-        onClick={() => {}}
+        onClick={() => {
+          navigate(-1);
+        }}
         className="flex items-center gap-1 text-sm text-slate-500 hover:text-slate-700"
       >
         <ArrowLeft className="h-4 w-4" />
