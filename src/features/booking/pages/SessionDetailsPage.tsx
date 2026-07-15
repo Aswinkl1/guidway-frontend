@@ -15,6 +15,8 @@ import { StatusBadge } from "@/components/shared/sessions";
 import { useSessionDetail } from "../hooks/useBookingDetails";
 import { useLocation, useNavigate, useParams } from "react-router";
 import { SessionRole } from "../types/booking.types";
+import { UseCancelBooking } from "../hooks/useCancelBooking";
+import { ConfirmDialog } from "@/components/modals/ConfirmDialog";
 
 interface SessionDetailPageProps {
   bookingId: string;
@@ -32,6 +34,8 @@ export function BookingDetailPage() {
   const [isReviewOpen, setReviewOpen] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
+  const { mutateAsync } = UseCancelBooking();
+  const [open, setOpen] = useState(false);
 
   if (isLoading || !session) {
     return (
@@ -72,10 +76,7 @@ export function BookingDetailPage() {
   }
 
   function handleCancel() {
-    // TODO(Asiwn): show a confirmation dialog ("Are you sure you want to
-    // cancel this session?"), then call a `cancelBooking` mutation with
-    // bookingId. On success, invalidate the same two query keys as above.
-    // Only enable this button while status is CONFIRMED.
+    mutateAsync({ role, id: session.id });
   }
 
   function handleSubmitReview(values: LeaveReviewDto) {
@@ -152,13 +153,23 @@ export function BookingDetailPage() {
             />
           </div>
         </div>
+        {open && (
+          <ConfirmDialog
+            description="This action cannot be undone. Are you sure you want to cancel this booking?"
+            onCancel={() => setOpen(false)}
+            onConfirm={handleCancel}
+            open={open}
+            title="Are you sure you want to cancel this booking?"
+          />
+        )}
 
         <div>
           <ManageSessionPanel
             onReport={handleReport}
             onMessageMentor={handleMessageMentor}
             onReschedule={handleReschedule}
-            onCancel={handleCancel}
+            onCancel={() => setOpen(true)}
+            status={session.status}
           />
           <PaymentCard amount={session.amount} currency={session.currency} />
         </div>
