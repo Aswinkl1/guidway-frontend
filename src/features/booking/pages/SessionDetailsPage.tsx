@@ -169,6 +169,7 @@ export function BookingDetailPage() {
             onMessageMentor={handleMessageMentor}
             onReschedule={handleReschedule}
             onCancel={() => setOpen(true)}
+            status={session.status}
           />
           <PaymentCard amount={session.amount} currency={session.currency} />
         </div>

@@ -28,7 +28,7 @@ export function useSessionDetail(bookingId: string, role: SessionRole) {
       if (role === SessionRole.ATTENDING) {
         return getAttendeeBookingDetails(bookingId);
       }
-      getHostingBookingDetails(bookingId);
+      return getHostingBookingDetails(bookingId);
     },
     enabled: !!bookingId,
   });
