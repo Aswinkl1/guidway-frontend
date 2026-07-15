@@ -109,3 +109,13 @@ export const getAttendeeBookingDetails = async (id: string) => {
     endDateTime: new Date(result.endDateTime),
   };
 };
+
+export const cancelBookingByMentor = async (id: string) => {
+  const res = await api.put("/api/v1/mentor/bookings/" + id + "/cancel");
+  return res.data.result;
+};
+
+export const cancelBookingByUser = async (id: string) => {
+  const res = await api.put("/api/v1/user/bookings/" + id + "/cancel");
+  return res.data.result;
+};
