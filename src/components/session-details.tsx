@@ -2,7 +2,10 @@
 // Reusable pieces for the "Session Details" screen.
 // Ignore navbar/sidebar — already provided elsewhere.
 
-import type { BookingStatus } from "@/features/booking/types/booking.types";
+import {
+  BOOKING_STATUS,
+  type BookingStatus,
+} from "@/features/booking/types/booking.types";
 import type {
   MentorFeedback,
   SessionReview,
@@ -25,6 +28,7 @@ import {
   Users,
   XCircle,
   Zap,
+  type LucideIcon,
 } from "lucide-react";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar";
 
@@ -156,6 +160,15 @@ export interface ManageSessionActions {
   onMessageMentor: () => void;
   onReschedule: () => void;
   onCancel: () => void;
+  status: BookingStatus;
+}
+
+interface SessionAction {
+  label: string;
+  icon: LucideIcon;
+  onClick: () => void;
+  danger?: boolean;
+  allowedStatuses: BookingStatus[]; // Widen the type here!
 }
 
 export function ManageSessionPanel({
@@ -163,16 +176,33 @@ export function ManageSessionPanel({
   onMessageMentor,
   onReschedule,
   onCancel,
+  status,
 }: ManageSessionActions) {
-  const items = [
-    { label: "Report Session", icon: Flag, onClick: onReport },
-    { label: "Message Mentor", icon: MessageCircle, onClick: onMessageMentor },
-    { label: "Reschedule Session", icon: CalendarClock, onClick: onReschedule },
+  const items: SessionAction[] = [
+    {
+      label: "Report Session",
+      icon: Flag,
+      onClick: onReport,
+      allowedStatuses: [BOOKING_STATUS.CONFIRMED, BOOKING_STATUS.COMPLETED],
+    },
+    {
+      label: "Message Mentor",
+      icon: MessageCircle,
+      onClick: onMessageMentor,
+      allowedStatuses: [BOOKING_STATUS.CONFIRMED, BOOKING_STATUS.COMPLETED],
+    },
+    {
+      label: "Reschedule Session",
+      icon: CalendarClock,
+      onClick: onReschedule,
+      allowedStatuses: [BOOKING_STATUS.CONFIRMED],
+    },
     {
       label: "Cancel Session",
       icon: XCircle,
       onClick: onCancel,
       danger: true,
+      allowedStatuses: [BOOKING_STATUS.CONFIRMED],
     },
   ];
 
@@ -182,21 +212,26 @@ export function ManageSessionPanel({
         Manage Session
       </p>
       <div className="mt-3 space-y-2">
-        {items.map(({ label, icon: Icon, onClick, danger }) => (
-          <button
-            key={label}
-            type="button"
-            onClick={onClick}
-            className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${
-              danger
-                ? "border-red-100 text-red-500 hover:bg-red-50"
-                : "border-slate-200 text-slate-700 hover:bg-slate-50"
-            }`}
-          >
-            <Icon className="h-4 w-4" />
-            {label}
-          </button>
-        ))}
+        {items.map(
+          ({ label, icon: Icon, onClick, danger, allowedStatuses }) => {
+            if (!allowedStatuses.includes(status)) return null;
+            return (
+              <button
+                key={label}
+                type="button"
+                onClick={onClick}
+                className={`flex w-full items-center gap-2 rounded-lg border px-3 py-2 text-sm font-medium ${
+                  danger
+                    ? "border-red-100 text-red-500 hover:bg-red-50"
+                    : "border-slate-200 text-slate-700 hover:bg-slate-50"
+                }`}
+              >
+                <Icon className="h-4 w-4" />
+                {label}
+              </button>
+            );
+          },
+        )}
       </div>
     </div>
   );
