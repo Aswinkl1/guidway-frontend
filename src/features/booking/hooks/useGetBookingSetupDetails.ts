@@ -6,5 +6,6 @@ export const useBookingSetupDetails = (mentorId: string, sessionId: string) => {
     queryKey: ["bookingSetupDetails", mentorId, sessionId],
     queryFn: () => getBookingSetupDetails(mentorId, sessionId),
     placeholderData: keepPreviousData,
+    enabled: !!mentorId && !!sessionId,
   });
 };
