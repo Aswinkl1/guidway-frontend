@@ -12,6 +12,7 @@ import type {
   RazorpayPaymentDetails,
 } from "../types/booking.types";
 import { useBookingMutation } from "../hooks/useBookingMutation";
+import toast from "react-hot-toast";
 
 const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -96,9 +97,22 @@ const BookingPage = () => {
             provider: "RAZORPAY",
           });
         },
+        modal: {
+          ondismiss: function () {
+            console.log("Modal closed. Releasing the slot lock early...");
+            // User explicitly canceled. Call a mutation to free the slot immediately!
+            // mutateAsyncForReleaseLock({ sessionId, startTime, endTime });
+            toast.success("Booking cancelled. The slot has been released.");
+          },
+        },
       };
 
       const paymentObject = new (window as any).Razorpay(options);
+      paymentObject.on("payment.failed", (response: any) => {
+        toast.error(
+          `Payment failed: ${response.error.description}. Please try again.`,
+        );
+      });
       paymentObject.open();
     } catch (error) {
       console.error("Error creating order:", error);
