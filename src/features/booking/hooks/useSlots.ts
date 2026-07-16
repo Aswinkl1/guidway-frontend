@@ -5,6 +5,6 @@ export const useSlots = (mentorId: string, date: string) => {
   return useQuery({
     queryKey: ["slot", mentorId, date],
     queryFn: () => getSlots(mentorId, date),
-    enabled: !!date,
+    enabled: !!date && !!mentorId,
   });
 };
