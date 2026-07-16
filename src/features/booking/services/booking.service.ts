@@ -10,6 +10,7 @@ import type {
 } from "../types/booking.types";
 import type { HoldSlotDto } from "../dto/createOrder.dto";
 import type { MenteeBookingDetailsOutput } from "../types/bookingDetails.types";
+import type { rescheduleBookingDto } from "../dto/reschedule.dto";
 
 export const getSlots = async (mentorId: string, date: string) => {
   console.log("jkdfkladjlk");
@@ -117,5 +118,13 @@ export const cancelBookingByMentor = async (id: string) => {
 
 export const cancelBookingByUser = async (id: string) => {
   const res = await api.put("/api/v1/user/bookings/" + id + "/cancel");
+  return res.data.result;
+};
+
+export const rescheduleBooking = async (data: rescheduleBookingDto) => {
+  const res = await api.put(
+    "/api/v1/user/bookings/" + data.bookingId + "/reschedule",
+    data,
+  );
   return res.data.result;
 };

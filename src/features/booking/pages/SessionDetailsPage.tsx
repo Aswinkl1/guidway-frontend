@@ -22,6 +22,9 @@ import { useBookingSetupDetails } from "../hooks/useGetBookingSetupDetails";
 import { format } from "date-fns/format";
 import { useSlots } from "../hooks/useSlots";
 import type { IAvailableSlot } from "../components/BookingComponent";
+import { useReschedule } from "../hooks/useReschedule";
+import { rescheduleBookingSchema } from "../dto/reschedule.dto";
+import toast from "react-hot-toast";
 
 interface SessionDetailPageProps {
   bookingId: string;
@@ -41,7 +44,7 @@ export function BookingDetailPage() {
   const navigate = useNavigate();
   const { mutateAsync } = UseCancelBooking();
   const [open, setOpen] = useState(false);
-  const [isRescheduleOpen, setIsRescheduleOpen] = useState(true);
+  const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
     useBookingSetupDetails(
       session?.mentorId,
@@ -50,6 +53,8 @@ export function BookingDetailPage() {
   const [selectedDate, setSelectedDate] = useState<string>(
     format(new Date(), "yyyy-MM-dd"),
   );
+
+  const { mutateAsync: mutateAsyncForReschedule } = useReschedule();
   const { data, isPending } = useSlots(session?.mentorId, selectedDate);
   console.log(bookingSetupDetails, "bookingSetupDetails");
 
@@ -91,7 +96,38 @@ export function BookingDetailPage() {
     date: Date,
     slots: IAvailableSlot[],
   ) {
-    
+    const startTime = Math.min(...slots.map((slot) => slot.startTime));
+    const endTime = Math.max(...slots.map((slot) => slot.endTime));
+
+    const parsed = rescheduleBookingSchema.safeParse({
+      bookingId: session.id,
+      startTime,
+      endTime,
+      date,
+    });
+
+    const diffInMs =
+      session.endDateTime.getTime() - session.startDateTime.getTime();
+    const diffInMinutes = diffInMs / (1000 * 60);
+    const slotDurationMinutes = endTime - startTime;
+    if (diffInMinutes !== slotDurationMinutes) {
+      toast.error(
+        "Selected slots duration does not match the original session duration.",
+      );
+      return;
+    }
+    console.log(
+      diffInMinutes,
+      slotDurationMinutes,
+      "diffInMinutes, slotDurationMinutes",
+    );
+    if (!parsed.success) {
+      console.error("Invalid reschedule data:", parsed.error);
+      return;
+    }
+
+    mutateAsyncForReschedule(parsed.data);
+    setIsRescheduleOpen(false);
   }
 
   function handleCancel() {
@@ -116,7 +152,7 @@ export function BookingDetailPage() {
         availableSlots={data ?? []}
         timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
         mentorId={session.mentorId}
-        onConfirmReschedule={() => {}}
+        onConfirmReschedule={handleReschedule}
         onDateChange={handleDateChange}
         // session={undefined}
         mentor={{
