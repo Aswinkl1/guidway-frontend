@@ -8,5 +8,8 @@ export const useReview = () => {
     onSuccess: () => {
       toast.success("review added successfully");
     },
+    onError: () => {
+      toast.error("some error occured");
+    },
   });
 };
