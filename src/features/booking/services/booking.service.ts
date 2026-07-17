@@ -142,6 +142,6 @@ export const addReview = async (data: addReviewDto) => {
 };
 
 export const deleteReview = async (id: string) => {
-  const res = await api.delete("/api/v1/review" + id);
+  const res = await api.delete("/api/v1/review/" + id);
   return res.data.result;
 };

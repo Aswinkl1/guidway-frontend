@@ -105,7 +105,9 @@ export function SessionsPage() {
                 console.log("cancel", b.id);
               }}
               onViewDetails={(b) => {
+                console.log(role);
                 if (role === SessionRole.HOSTING) {
+                  console.log("i am teh fowser os this thing");
                   navigate("/mentor/bookings/" + b.id);
                   return;
                 }

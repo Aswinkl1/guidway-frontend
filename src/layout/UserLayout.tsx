@@ -11,9 +11,11 @@ export const UserLayout = () => {
   const naviage = useNavigate();
   useEffect(() => {
     if (!auth.token) naviage(CLIENT_ROUTES.AUTH.LOGIN, { replace: true });
-    if (auth.role !== Role.MENTEE)
+    if (auth.role !== Role.MENTEE && auth.role !== Role.MENTOR)
       naviage(CLIENT_ROUTES.HOME, { replace: true });
   }, [auth, naviage]);
+
+  console.log("he my deat vazha");
   return (
     <div className="flex h-screen bg-slate-50 font-sans overflow-hidden">
       <UserSidebar />
