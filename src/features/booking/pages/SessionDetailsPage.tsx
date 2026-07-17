@@ -1,4 +1,3 @@
-// pages/SessionDetailPage.tsx
 import { useState } from "react";
 import { ArrowLeft, StickyNote } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -30,7 +29,6 @@ import {
   type ReviewFormData,
 } from "../components/AddReviewModal";
 import { useReview } from "../hooks/useReview";
-import { FaUserCheck } from "react-icons/fa";
 import { useDeleteReview } from "../hooks/useDeleteReview";
 
 export function BookingDetailPage() {

@@ -14,6 +14,7 @@ import { logout } from "@/features/auth/services/authService";
 import toast from "react-hot-toast";
 import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 import { logout as reduxLogout } from "@/features/auth/redux/UserAuthSlice";
+import { useAppSelector } from "@/app/store/store";
 interface HeaderProps {
   isLoggedIn?: boolean;
 
@@ -57,7 +58,7 @@ export const Header: FC<HeaderProps> = ({
   const dispatch = useDispatch();
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
-  const { profileImageKey } = useSelector((state: any) => state.auth);
+  const { profileImageKey } = useAppSelector((state) => state.auth);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {

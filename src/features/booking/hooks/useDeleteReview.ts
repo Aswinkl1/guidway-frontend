@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { addReview, deleteReview } from "../services/booking.service";
+import { deleteReview } from "../services/booking.service";
 import toast from "react-hot-toast";
 
 export const useDeleteReview = () => {
