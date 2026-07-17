@@ -15,8 +15,9 @@ import {
   SessionRole,
 } from "../types/booking.types";
 import { useNavigate } from "react-router"; // (or react-router-dom depending on your setup)
-import { useSelector } from "react-redux";
+
 import { Role } from "@/types/role";
+import { useAppSelector } from "@/app/store/store";
 
 function useSessionTabState() {
   const [hostingFilter, setHostingFilter] = useState<SessionFilterState>(
@@ -33,7 +34,7 @@ function useSessionTabState() {
 }
 
 export function SessionsPage() {
-  const userRole = useSelector((state) => state.auth.role);
+  const userRole = useAppSelector((state) => state.auth.role);
   const navigate = useNavigate();
   const DefaultSessionRole =
     userRole === Role.MENTEE ? SessionRole.ATTENDING : SessionRole.HOSTING;
@@ -105,7 +106,9 @@ export function SessionsPage() {
                 console.log("cancel", b.id);
               }}
               onViewDetails={(b) => {
+                console.log(role);
                 if (role === SessionRole.HOSTING) {
+                  console.log("i am teh fowser os this thing");
                   navigate("/mentor/bookings/" + b.id);
                   return;
                 }

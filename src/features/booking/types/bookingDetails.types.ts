@@ -22,6 +22,11 @@ export interface MenteeBookingDetailsOutput {
   currency: string;
   status: BookingStatus;
   id: string;
+  review?: {
+    rating: number;
+    comment: string | null;
+    id: string;
+  };
 }
 
 /**
@@ -43,6 +48,7 @@ export interface MentorFeedback {
 }
 
 export interface SessionReview {
-  rating: number; // 1-5
-  comment: string;
+  rating: number;
+  comment: string | null;
+  id: string;
 }

@@ -1,7 +1,3 @@
-// components/shared/sessions.tsx
-// Reusable pieces for the "My Sessions" screen — Hosting & Attending tabs.
-// Ignore navbar/sidebar here, those are already provided elsewhere.
-
 import { forwardRef } from "react";
 import { Calendar, ChevronDown, Loader2, Search, Video } from "lucide-react";
 import {
@@ -27,7 +23,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 interface RoleTabsProps {
   value: SessionRole;
   onChange: (role: SessionRole) => void;
-  role: Role;
+  role: Role | null;
 }
 
 export function RoleTabs({ value, onChange, role }: RoleTabsProps) {

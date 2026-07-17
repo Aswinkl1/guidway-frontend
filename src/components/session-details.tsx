@@ -25,6 +25,7 @@ import {
   MessageSquare,
   Star,
   ThumbsUp,
+  Trash2,
   Users,
   XCircle,
   Zap,
@@ -406,15 +407,32 @@ export function MentorFeedbackCard({
 export function ReviewCard({
   review,
   onLeaveReview,
+  onDeleteReview,
 }: {
   review?: SessionReview;
   onLeaveReview: () => void;
+  onDeleteReview: (id: string) => void;
 }) {
   return (
     <div className="overflow-hidden rounded-xl border border-slate-100 bg-white">
-      <div className="flex items-center gap-2 border-b border-slate-100 px-5 py-3 text-sm font-semibold text-slate-800">
-        <Star className="h-4 w-4 text-amber-400" />
-        Your Review
+      {/* Header with Title and Delete Button */}
+      <div className="flex items-center justify-between border-b border-slate-100 px-5 py-3">
+        <div className="flex items-center gap-2 text-sm font-semibold text-slate-800">
+          <Star className="h-4 w-4 text-amber-400" />
+          Your Review
+        </div>
+
+        {/* Only show the delete button if a review exists */}
+        {review && (
+          <button
+            type="button"
+            onClick={() => onDeleteReview(review.id)}
+            className="rounded p-1 text-slate-400 transition-colors hover:bg-red-50 hover:text-red-600"
+            title="Delete review"
+          >
+            <Trash2 className="h-4 w-4" />
+          </button>
+        )}
       </div>
 
       {review ? (

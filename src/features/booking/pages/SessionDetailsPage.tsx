@@ -1,4 +1,3 @@
-// pages/SessionDetailPage.tsx
 import { useState } from "react";
 import { ArrowLeft, StickyNote } from "lucide-react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -25,12 +24,12 @@ import type { IAvailableSlot } from "../components/BookingComponent";
 import { useReschedule } from "../hooks/useReschedule";
 import { rescheduleBookingSchema } from "../dto/reschedule.dto";
 import toast from "react-hot-toast";
-
-interface SessionDetailPageProps {
-  bookingId: string;
-  /** Called from the "‹ My Sessions" breadcrumb / back arrow. */
-  onBack: () => void;
-}
+import {
+  AddReviewModal,
+  type ReviewFormData,
+} from "../components/AddReviewModal";
+import { useReview } from "../hooks/useReview";
+import { useDeleteReview } from "../hooks/useDeleteReview";
 
 export function BookingDetailPage() {
   const params = useParams();
@@ -45,6 +44,7 @@ export function BookingDetailPage() {
   const { mutateAsync } = UseCancelBooking(params.id);
   const [open, setOpen] = useState(false);
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
+  const { mutateAsync: mutateAsyncForDeleteReview } = useDeleteReview();
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
     useBookingSetupDetails(
       session?.mentorId,
@@ -54,8 +54,11 @@ export function BookingDetailPage() {
     format(new Date(), "yyyy-MM-dd"),
   );
 
+  const { mutateAsync: mutateAsyncForAddReview } = useReview();
+
   const { mutateAsync: mutateAsyncForReschedule } = useReschedule();
   const { data, isPending } = useSlots(session?.mentorId, selectedDate);
+  const [openAddReview, setOpenAddReview] = useState(false);
   console.log(bookingSetupDetails, "bookingSetupDetails");
 
   if (isLoading || !session) {
@@ -89,6 +92,10 @@ export function BookingDetailPage() {
   function handleMessageMentor() {
     // TODO(Asiwn): navigate to /messages?with=<mentorId>, opening (or creating)
     // the DM thread with this mentor.
+  }
+
+  function handleDeleteReview(id: string) {
+    mutateAsyncForDeleteReview(id);
   }
 
   function handleReschedule(
@@ -134,18 +141,22 @@ export function BookingDetailPage() {
     mutateAsync({ role, id: session.id });
   }
 
-  function handleSubmitReview(values: LeaveReviewDto) {
-    // TODO(Asiwn): call a `submitReview` mutation with { bookingId, ...values }.
-    // This endpoint doesn't exist on MenteeBookingDetailsOutput yet — you'll
-    // need a POST /bookings/:id/review, and to either add the saved review
-    // to this response or fetch it separately in useSessionDetail.
-    // On success, invalidate:
-    //   queryClient.invalidateQueries({ queryKey: ["session-detail", bookingId] })
-    setReviewOpen(false);
+  function handleSubmitReview(values: ReviewFormData) {
+    mutateAsyncForAddReview({
+      bookingId: session?.id,
+      mentorId: session?.mentorId,
+      rating: values.rating,
+      comment: values.comment,
+    });
   }
   console.log(isRescheduleOpen);
   return (
     <>
+      <AddReviewModal
+        open={openAddReview}
+        onClose={() => setOpenAddReview(false)}
+        onSave={handleSubmitReview}
+      />
       <RescheduleModal
         open={isRescheduleOpen}
         onOpenChange={setIsRescheduleOpen}
@@ -227,8 +238,9 @@ export function BookingDetailPage() {
 						*/}
               <MentorFeedbackCard feedback={undefined} />
               <ReviewCard
-                review={undefined}
-                onLeaveReview={() => setReviewOpen(true)}
+                review={session.review}
+                onLeaveReview={() => setOpenAddReview(true)}
+                onDeleteReview={handleDeleteReview}
               />
             </div>
           </div>
