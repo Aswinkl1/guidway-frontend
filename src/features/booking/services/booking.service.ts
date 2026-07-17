@@ -11,6 +11,7 @@ import type {
 import type { HoldSlotDto } from "../dto/createOrder.dto";
 import type { MenteeBookingDetailsOutput } from "../types/bookingDetails.types";
 import type { rescheduleBookingDto } from "../dto/reschedule.dto";
+import type { addReviewDto } from "../dto/review.dto";
 
 export const getSlots = async (mentorId: string, date: string) => {
   console.log("jkdfkladjlk");
@@ -131,5 +132,10 @@ export const rescheduleBooking = async (data: rescheduleBookingDto) => {
     "/api/v1/user/bookings/" + data.bookingId + "/reschedule",
     data,
   );
+  return res.data.result;
+};
+
+export const addReview = async (data: addReviewDto) => {
+  const res = await api.post("/api/v1/review", data);
   return res.data.result;
 };
