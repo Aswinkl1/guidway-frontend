@@ -40,6 +40,11 @@ export const createOrder = async (data: HoldSlotDto) => {
   return response.data.result;
 };
 
+export const handleFailure = async (slotId: string) => {
+  const res = await api.patch("/api/v1/slots/" + slotId + "/release");
+  return res.data.result;
+};
+
 export const confirmBooking = async (data: VerifyPaymentPayload) => {
   const response = await api.post(`/api/v1/booking/confirm`, data);
   return response.data.result;

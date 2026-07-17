@@ -1,4 +1,4 @@
-import { useMutation } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   cancelBookingByMentor,
   cancelBookingByUser,
@@ -6,7 +6,8 @@ import {
 import { SessionRole } from "../types/booking.types";
 import toast from "react-hot-toast";
 
-export const UseCancelBooking = () => {
+export const UseCancelBooking = (id: string) => {
+  const queryClient = useQueryClient();
   return useMutation({
     mutationFn: ({ role, id }: { role: SessionRole; id: string }) => {
       if (role === SessionRole.HOSTING) {
@@ -16,6 +17,8 @@ export const UseCancelBooking = () => {
       return cancelBookingByUser(id);
     },
     onSuccess: () => {
+      console.log("id", id);
+      queryClient.invalidateQueries({ queryKey: ["session-detail", id] });
       toast.success("Booking cancelled successfully");
     },
     onError: (error: any) => {

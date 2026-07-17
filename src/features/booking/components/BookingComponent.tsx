@@ -4,13 +4,10 @@ import {
   ChevronRight,
   Globe,
   Lock,
-  Clock,
-  Calendar,
-  User,
   StickyNote,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
+
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Separator } from "@/components/ui/separator";
 
@@ -328,6 +325,7 @@ interface BookingSummaryCardProps {
   selectedSlots: IAvailableSlot[];
   onBookNow: () => void;
   onAddNote: () => void;
+  isReschedule?: boolean;
 }
 
 export const BookingSummaryCard: React.FC<BookingSummaryCardProps> = ({
@@ -337,6 +335,7 @@ export const BookingSummaryCard: React.FC<BookingSummaryCardProps> = ({
   selectedSlots,
   onBookNow,
   onAddNote,
+  isReschedule = false,
 }) => {
   const sorted = [...selectedSlots].sort((a, b) => a.startTime - b.startTime);
   const totalSlots = sorted.length;
@@ -407,7 +406,7 @@ export const BookingSummaryCard: React.FC<BookingSummaryCardProps> = ({
         onClick={onBookNow}
         className="w-full bg-blue-600 hover:bg-blue-700 text-white h-11 rounded-xl font-semibold text-sm disabled:opacity-40"
       >
-        Pay now
+        {isReschedule ? "Book now" : "Pay now"}
       </Button>
 
       <button
