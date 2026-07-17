@@ -13,6 +13,7 @@ import type {
 } from "../types/booking.types";
 import { useBookingMutation } from "../hooks/useBookingMutation";
 import toast from "react-hot-toast";
+import { usePaymentFailure } from "../hooks/UserPaymentFailure";
 
 const BookingPage = () => {
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -38,11 +39,11 @@ const BookingPage = () => {
   //     </div>
   //   );
   // }
-
+  const { mutateAsync: mutateAsyncForPaymentFailure } = usePaymentFailure();
   const { mutateAsync: createOrderMutation } = useCreateOrderMutation();
-  const { data, isPending } = useSlots(id, selectedDate);
+  const { data, isPending } = useSlots(id ?? "", selectedDate);
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
-    useBookingSetupDetails(id, sessionId);
+    useBookingSetupDetails(id ?? "", sessionId);
   function handleDateChange(date: Date) {
     const formattedDate = format(date, "yyyy-MM-dd");
     setSelectedDate(formattedDate);
@@ -100,8 +101,7 @@ const BookingPage = () => {
         modal: {
           ondismiss: function () {
             console.log("Modal closed. Releasing the slot lock early...");
-            // User explicitly canceled. Call a mutation to free the slot immediately!
-            // mutateAsyncForReleaseLock({ sessionId, startTime, endTime });
+            mutateAsyncForPaymentFailure(orderResponse.slotId);
             toast.success("Booking cancelled. The slot has been released.");
           },
         },

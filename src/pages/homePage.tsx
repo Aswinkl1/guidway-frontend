@@ -24,9 +24,10 @@ import { useAppSelector } from "@/app/store/store";
 import { useNavigate } from "react-router";
 import { logout as reduxLogout } from "@/features/auth/redux/UserAuthSlice";
 
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import toast from "react-hot-toast";
 import { logout } from "@/features/auth/services/authService";
+import { Role } from "@/types/role";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -56,6 +57,7 @@ interface TrustItem {
 interface DropdownItem {
   Icon: LucideIcon;
   label: string;
+  link: string;
 }
 
 interface HeaderProps {
@@ -144,6 +146,20 @@ const navLinkStyle: CSSProperties = {
   padding: 0,
 };
 
+const MenteeDropDown = [
+  { Icon: LayoutDashboard, label: "My Dashboard", link: "/user/" },
+  { Icon: CalendarDays, label: "My bookings", link: "/user/bookings" },
+  { Icon: User, label: "Profile", link: "/user/profile" },
+  { Icon: Settings, label: "Settings", link: "/user/settings" },
+];
+
+const mentorDropDown = [
+  { Icon: LayoutDashboard, label: "My Dashboard", link: "/mentor/" },
+  { Icon: CalendarDays, label: "My bookings", link: "/mentor/bookings" },
+  { Icon: User, label: "Profile", link: "/mentor/profile" },
+  { Icon: Settings, label: "Settings", link: "/mentor/settings" },
+];
+
 // ─── Header ───────────────────────────────────────────────────────────────────
 
 const Header: FC<HeaderProps> = ({ isLoggedIn = true, onToggleLogin }) => {
@@ -151,6 +167,8 @@ const Header: FC<HeaderProps> = ({ isLoggedIn = true, onToggleLogin }) => {
   const [open, setOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
+  const role = useSelector((state) => state.auth.role);
+
   useEffect(() => {
     const handler = (e: MouseEvent) => {
       if (ref.current && !ref.current.contains(e.target as Node)) {
@@ -161,12 +179,10 @@ const Header: FC<HeaderProps> = ({ isLoggedIn = true, onToggleLogin }) => {
     return () => document.removeEventListener("mousedown", handler);
   }, []);
 
-  const dropdownItems: DropdownItem[] = [
-    { Icon: LayoutDashboard, label: "My Dashboard" },
-    { Icon: CalendarDays, label: "My Sessions" },
-    { Icon: User, label: "Profile", link: "/mentor/profile" },
-    { Icon: Settings, label: "Settings" },
-  ];
+  // dropdown based on role
+  const dropdownItems: DropdownItem[] =
+    role === Role.MENTOR ? mentorDropDown : MenteeDropDown;
+
   async function handleLogout() {
     try {
       const res = await logout();

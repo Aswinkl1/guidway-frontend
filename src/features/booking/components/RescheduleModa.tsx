@@ -147,6 +147,7 @@ export const RescheduleModal: React.FC<RescheduleModalProps> = ({
             selectedSlots={selectedSlots}
             onBookNow={handleReschedule}
             onAddNote={() => {}}
+            isReschedule={true}
             // NOTE: BookingSummaryCard's button label is currently hardcoded
             // to "Pay now" — see below for the one-line change to make it say
             // "Confirm reschedule" instead.

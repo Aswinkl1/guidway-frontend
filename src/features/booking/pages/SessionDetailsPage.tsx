@@ -42,7 +42,7 @@ export function BookingDetailPage() {
   const [isReviewOpen, setReviewOpen] = useState(false);
   const queryClient = useQueryClient();
   const navigate = useNavigate();
-  const { mutateAsync } = UseCancelBooking();
+  const { mutateAsync } = UseCancelBooking(params.id);
   const [open, setOpen] = useState(false);
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
