@@ -24,7 +24,7 @@ import { useAppSelector } from "@/app/store/store";
 import { useNavigate } from "react-router";
 import { logout as reduxLogout } from "@/features/auth/redux/UserAuthSlice";
 
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import toast from "react-hot-toast";
 import { logout } from "@/features/auth/services/authService";
 import { Role } from "@/types/role";
@@ -167,7 +167,7 @@ const Header: FC<HeaderProps> = ({ isLoggedIn = true, onToggleLogin }) => {
   const [open, setOpen] = useState<boolean>(false);
   const ref = useRef<HTMLDivElement>(null);
   const dispatch = useDispatch();
-  const role = useSelector((state) => state.auth.role);
+  const role = useAppSelector((state) => state.auth.role);
 
   useEffect(() => {
     const handler = (e: MouseEvent) => {

@@ -27,7 +27,7 @@ import { Avatar, AvatarFallback, AvatarImage } from "../ui/avatar";
 interface RoleTabsProps {
   value: SessionRole;
   onChange: (role: SessionRole) => void;
-  role: Role;
+  role: Role | null;
 }
 
 export function RoleTabs({ value, onChange, role }: RoleTabsProps) {
