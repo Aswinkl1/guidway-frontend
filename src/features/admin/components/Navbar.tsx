@@ -20,6 +20,7 @@ const NAV_ITEMS = [
         <rect x="14" y="14" width="7" height="7" rx="1" strokeWidth="2" />
       </svg>
     ),
+    link: "/",
   },
   {
     label: "Users",
@@ -44,6 +45,7 @@ const NAV_ITEMS = [
         />
       </svg>
     ),
+    link: "Users",
   },
   {
     label: "Mentors",
@@ -61,6 +63,7 @@ const NAV_ITEMS = [
         />
       </svg>
     ),
+    link: "Mentors",
   },
   {
     label: "Bookings",
@@ -75,6 +78,7 @@ const NAV_ITEMS = [
         <path strokeWidth="2" strokeLinecap="round" d="M16 2v4M8 2v4M3 10h18" />
       </svg>
     ),
+    link: "bookings",
   },
   {
     label: "Earnings",
@@ -89,6 +93,7 @@ const NAV_ITEMS = [
         <path strokeWidth="2" strokeLinecap="round" d="M12 7v5l3 3" />
       </svg>
     ),
+    link: "earnings",
   },
 ];
 
@@ -132,7 +137,7 @@ export const Navbar = () => {
         {NAV_ITEMS.map((item) => (
           <button
             key={item.label}
-            onClick={() => handleClick(item.label)}
+            onClick={() => handleClick(item.link)}
             className={`flex items-center gap-2.5 px-3 py-2 rounded-lg text-[15px] w-full text-left transition-colors ${
               item.active
                 ? "bg-indigo-50 text-indigo-600 font-semibold"
