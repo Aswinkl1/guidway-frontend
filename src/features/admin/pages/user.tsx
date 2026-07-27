@@ -31,31 +31,20 @@ export default function AdminUsersPanel() {
 
   return (
     <>
-      <div
-        className="flex h-screen bg-gray-50 overflow-hidden"
-        style={{ fontFamily: "'Inter', sans-serif" }}
-        // onClick={() => {
-        //   setStatusDropdownOpen(false);
-        //   setVerifyDropdownOpen(false);
-        // }}
-      >
-        {/* Sidebar */}
-        <Navbar />
-        {isLoading ? (
-          <main className="flex-1 flex items-center justify-center">
-            <span>Loading...</span>
-          </main>
-        ) : (
-          <UsersTable
-            data={data}
-            toggleBlock={toggleBlock}
-            setFilter={setFilter}
-            filter={filter}
-            title={Role.MENTEE}
-            handleVerifyMentor={() => {}}
-          />
-        )}
-      </div>
+      {isLoading ? (
+        <main className="flex-1 flex items-center justify-center">
+          <span>Loading...</span>
+        </main>
+      ) : (
+        <UsersTable
+          data={data}
+          toggleBlock={toggleBlock}
+          setFilter={setFilter}
+          filter={filter}
+          title={Role.MENTEE}
+          handleVerifyMentor={() => {}}
+        />
+      )}
     </>
   );
 }

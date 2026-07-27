@@ -35,6 +35,7 @@ import { SessionsPage } from "@/features/booking/pages/sessionPage";
 import { BookingDetailPage } from "@/features/booking/pages/SessionDetailsPage";
 import { ROUTES } from "@/constants/apiRoutes";
 import { UserLayout } from "@/layout/UserLayout";
+import AdminBookingDetailsPage from "@/features/booking/pages/AdminBookingDetailsPage";
 
 export const router = createBrowserRouter([
   {
@@ -146,6 +147,14 @@ export const router = createBrowserRouter([
           {
             path: "/admin/mentor/:id",
             Component: AdminMentorProfilePage,
+          },
+          {
+            path: "/admin/bookings/:id",
+            Component: AdminBookingDetailsPage,
+          },
+          {
+            path: "/admin/bookings",
+            Component: AdminRoot,
           },
         ],
       },
