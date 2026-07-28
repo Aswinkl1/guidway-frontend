@@ -128,7 +128,7 @@ export const router = createBrowserRouter([
         Component: BookingPage,
       },
       {
-        path: "booking/:id/call",
+        path: "/bookings/:id/call",
         Component: VedioCallPage,
       },
 
