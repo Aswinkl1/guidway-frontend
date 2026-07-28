@@ -1,5 +1,6 @@
 import { useEffect } from "react";
 import type { Socket } from "socket.io-client";
+import { WEBRTC_EVENTS } from "../../types/vedioCall.types";
 
 type useWebrtcSocket = {
   bookingId: string;
@@ -11,8 +12,17 @@ export const useWertcSocket = ({ bookingId, socket }: useWebrtcSocket) => {
   }
 
   useEffect(() => {
-    socket.on("user-joined", (event) => {
+    socket.on(WEBRTC_EVENTS.USER_JOINED, (event) => {
       console.log(event);
     });
+
+    socket.on(WEBRTC_EVENTS.SIGNALING_MESSAGE, (event) => {
+      console.log(event);
+    });
+
+    return () => {
+      socket.off(WEBRTC_EVENTS.USER_JOINED);
+      socket.off(WEBRTC_EVENTS.SIGNALING_MESSAGE);
+    };
   }, [socket]);
 };

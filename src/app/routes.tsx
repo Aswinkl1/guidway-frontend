@@ -33,9 +33,9 @@ import AvailabilityPage from "@/features/mentor/pages/AvailabilityPage";
 import BookingPage from "@/features/booking/pages/BookingPage";
 import { SessionsPage } from "@/features/booking/pages/sessionPage";
 import { BookingDetailPage } from "@/features/booking/pages/SessionDetailsPage";
-import { ROUTES } from "@/constants/apiRoutes";
 import { UserLayout } from "@/layout/UserLayout";
 import AdminBookingDetailsPage from "@/features/booking/pages/AdminBookingDetailsPage";
+import { VedioCallPage } from "@/features/booking/pages/VedioCallPage";
 
 export const router = createBrowserRouter([
   {
@@ -126,6 +126,10 @@ export const router = createBrowserRouter([
       {
         path: "/mentor/:id/book",
         Component: BookingPage,
+      },
+      {
+        path: "booking/:id/call",
+        Component: VedioCallPage,
       },
 
       {
