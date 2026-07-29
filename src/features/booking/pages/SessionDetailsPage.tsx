@@ -46,19 +46,20 @@ export function BookingDetailPage() {
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const { mutateAsync: mutateAsyncForDeleteReview } = useDeleteReview();
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
-    useBookingSetupDetails(
-      session?.mentorId,
-      session?.sessionId ?? "8fa3f2a9-6b92-4c8b-a669-af18bd53828b",
-    );
+    useBookingSetupDetails(session?.mentorId, session?.sessionId);
   const [selectedDate, setSelectedDate] = useState<string>(
     format(new Date(), "yyyy-MM-dd"),
   );
+  console.log("session", session);
 
   const { mutateAsync: mutateAsyncForAddReview } = useReview();
 
   const { mutateAsync: mutateAsyncForReschedule } = useReschedule();
   const { data, isPending } = useSlots(session?.mentorId, selectedDate);
   const [openAddReview, setOpenAddReview] = useState(false);
+  // if (isBookingSetupDetailsPending || isPending) {
+  //   return;
+  // }
   console.log(bookingSetupDetails, "bookingSetupDetails");
 
   if (isLoading || !session) {
@@ -157,28 +158,30 @@ export function BookingDetailPage() {
         onClose={() => setOpenAddReview(false)}
         onSave={handleSubmitReview}
       />
-      <RescheduleModal
-        open={isRescheduleOpen}
-        onOpenChange={setIsRescheduleOpen}
-        availableSlots={data ?? []}
-        timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
-        mentorId={session.mentorId}
-        onConfirmReschedule={handleReschedule}
-        onDateChange={handleDateChange}
-        // session={undefined}
-        mentor={{
-          name: bookingSetupDetails?.mentor.name ?? "",
+      {isRescheduleOpen ?? (
+        <RescheduleModal
+          open={isRescheduleOpen}
+          onOpenChange={setIsRescheduleOpen}
+          availableSlots={data ?? []}
+          timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+          mentorId={session.mentorId}
+          onConfirmReschedule={handleReschedule}
+          onDateChange={handleDateChange}
+          // session={undefined}
+          mentor={{
+            name: bookingSetupDetails?.mentor.name ?? "",
 
-          title: bookingSetupDetails?.mentor.name ?? "",
-          avatarUrl: bookingSetupDetails?.mentor.avatarUrl ?? "",
-        }}
-        session={{
-          durationPerSlot: bookingSetupDetails?.session.duration ?? 1,
-          pricePerSlot: bookingSetupDetails?.session.price ?? 0,
-          type: bookingSetupDetails?.session.title ?? "",
-          currencySymbol: "$",
-        }}
-      />
+            title: bookingSetupDetails?.mentor.name ?? "",
+            avatarUrl: bookingSetupDetails?.mentor.avatarUrl ?? "",
+          }}
+          session={{
+            durationPerSlot: bookingSetupDetails?.session.duration ?? 1,
+            pricePerSlot: bookingSetupDetails?.session.price ?? 0,
+            type: bookingSetupDetails?.session.title ?? "",
+            currencySymbol: "$",
+          }}
+        />
+      )}
 
       <div className="mx-auto max-w-5xl px-6 py-8">
         <button

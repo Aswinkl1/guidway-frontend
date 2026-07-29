@@ -8,7 +8,7 @@ export const useSocket = () => {
     const socketInstance = io("http://localhost:3000", {
       auth: { token },
     });
-
+    console.log("token", token);
     socketInstance.on("connect", () => {
       console.log("socket connected");
     });

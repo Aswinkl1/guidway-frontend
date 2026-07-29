@@ -108,7 +108,7 @@ export function SessionsPage() {
               onViewDetails={(b) => {
                 console.log(role);
                 if (role === SessionRole.HOSTING) {
-                  console.log("i am teh fowser os this thing");
+                  console.log("i am teh fowser os this thing", b.id);
                   navigate("/mentor/bookings/" + b.id);
                   return;
                 }

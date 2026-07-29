@@ -26,6 +26,7 @@ export const VedioCallPage = () => {
     socket,
     handleSingaling: handleSingallingMessage,
     handleUserJoint: handleUserJoined,
+    localCameraStream,
   });
 
   useEffect(() => {
@@ -70,6 +71,13 @@ export const VedioCallPage = () => {
           isPinned={false}
           // key={1}
           label="ScreenShare"
+        />
+        <VideoPlayer
+          stream={remoteVedioStream}
+          isLocal={true}
+          isPinned={false}
+          // key={1}
+          label="friend"
         />
 
         <div className="">
