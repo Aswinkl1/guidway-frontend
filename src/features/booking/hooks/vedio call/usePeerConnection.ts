@@ -10,6 +10,7 @@ export const usePeerConnection = (
   socket: Socket | null,
   bookingId: string | undefined,
   localStream: MediaStream | null,
+  localShareStream: MediaStream | null,
 ) => {
   if (!localStream) {
     console.log("no local stream");
@@ -19,10 +20,30 @@ export const usePeerConnection = (
     useState<MediaStream | null>(null);
 
   const localStreamRef = useRef<MediaStream | null>(localStream);
-
+  // const localShareRef = useRef<MediaStream | null>(localShareStream);
+  const screenSendersRef = useRef<RTCRtpSender[]>([]);
   useEffect(() => {
     localStreamRef.current = localStream;
   }, [localStream]);
+
+  useEffect(() => {
+    const pc = peerConnection.current;
+    if (!pc) return;
+
+    if (localShareStream) {
+      localShareStream.getTracks().forEach((track) => {
+        const sender = pc.addTrack(track, localShareStream);
+        screenSendersRef.current.push(sender);
+      });
+    } else {
+      if (screenSendersRef.current.length > 0) {
+        screenSendersRef.current.forEach((track) => {
+          pc.removeTrack(track);
+        });
+        screenSendersRef.current = [];
+      }
+    }
+  }, [localShareStream]);
   const CONFIG = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
   };
@@ -46,11 +67,24 @@ export const usePeerConnection = (
       }
     };
 
-    // pc.addEventListener("icecandidate", (event) => {
-    //   console.log("ice andiatein kitti", event);
-    // });
-    const currentStream = localStreamRef.current;
+    pc.onnegotiationneeded = async (event) => {
+      console.log("we are on negotation");
+      if (pc.signalingState !== "stable") return;
 
+      const offer = await pc.createOffer();
+      await pc.setLocalDescription(offer);
+
+      socket?.emit(WEBRTC_EVENTS.SIGNALING_MESSAGE, {
+        bookingId,
+        message: { type: SignalingType.OFFER, data: offer },
+      });
+
+      console.log(
+        "succeffully created the offer and emmited the singal from onnegotiationneeded",
+      );
+    };
+
+    const currentStream = localStreamRef.current;
     if (currentStream) {
       currentStream.getTracks().forEach((track) => {
         console.log("adding track...");
@@ -74,12 +108,6 @@ export const usePeerConnection = (
     const currentStream = localStreamRef.current;
 
     console.log("currentStream", currentStream);
-    // if (currentStream) {
-    //   currentStream.getTracks().forEach((track) => {
-    //     console.log("adding track...");
-    //     pc.addTrack(track, currentStream);
-    //   });
-    // }
     const offer = await pc.createOffer();
     await pc.setLocalDescription(offer);
 
@@ -97,19 +125,7 @@ export const usePeerConnection = (
         console.log("got the offer");
 
         await pc.setRemoteDescription(new RTCSessionDescription(message.data));
-        // const currentStream = localStreamRef.current;
-        // if (currentStream) {
-        //   const senders = pc.getSenders();
-        //   currentStream.getTracks().forEach((track) => {
-        //     const isTrackAlreadyAdded = senders.find(
-        //       (s) => s.track?.id === track.id,
-        //     );
-        //     if (!isTrackAlreadyAdded) {
-        //       console.log("Refresher adding track to answer...");
-        //       pc.addTrack(track, currentStream);
-        //     }
-        //   });
-        // }
+
         const answer = await pc.createAnswer();
         await pc.setLocalDescription(answer);
         socket?.emit(WEBRTC_EVENTS.SIGNALING_MESSAGE, {

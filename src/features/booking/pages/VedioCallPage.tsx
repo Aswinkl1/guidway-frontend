@@ -19,7 +19,7 @@ export const VedioCallPage = () => {
   const socket = useSocket();
   const { id } = useParams();
   const { handleSingallingMessage, handleUserJoined, remoteVedioStream } =
-    usePeerConnection(socket, id, localCameraStream);
+    usePeerConnection(socket, id, localCameraStream, localScreenStream);
 
   useWertcSocket({
     bookingId: id,
