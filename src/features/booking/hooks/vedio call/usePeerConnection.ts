@@ -23,6 +23,13 @@ export const usePeerConnection = (
   // const localShareRef = useRef<MediaStream | null>(localShareStream);
   const screenSendersRef = useRef<RTCRtpSender[]>([]);
   const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([]);
+
+  const [messages, setMessages] = useState<
+    { sender: "you" | "friend"; text: string }[]
+  >([]);
+
+  const dataChannelRef = useRef<RTCDataChannel | null>(null);
+
   useEffect(() => {
     localStreamRef.current = localStream;
   }, [localStream]);
@@ -45,9 +52,32 @@ export const usePeerConnection = (
       }
     }
   }, [localShareStream]);
+
+  // DESTROY CONNECTION ON UNMOUNT
+  useEffect(() => {
+    return () => {
+      if (peerConnection.current) {
+        console.log("Component unmounting, closing peer connection...");
+        peerConnection.current.close();
+        peerConnection.current = null;
+      }
+    };
+  }, []);
   const CONFIG = {
     iceServers: [{ urls: "stun:stun.l.google.com:19302" }],
   };
+
+  const setupDataChannel = (channel: RTCDataChannel) => {
+    channel.onopen = () => console.log("Data channel opened! Ready to chat.");
+    channel.onclose = () => console.log("Data channel closed.");
+
+    // 🚨 When a message arrives, add it to the React state!
+    channel.onmessage = (event) => {
+      console.log("New message received:", event.data);
+      setMessages((prev) => [...prev, { sender: "friend", text: event.data }]);
+    };
+  };
+
   const initilizePeerConnection = useCallback(() => {
     if (peerConnection.current) {
       console.log("Cleaning up old connection...");
@@ -58,6 +88,13 @@ export const usePeerConnection = (
       setRemoteVedioStream(null);
     }
     const pc = new RTCPeerConnection(CONFIG);
+    dataChannelRef.current = pc.createDataChannel("chat-channel");
+    setupDataChannel(dataChannelRef.current);
+
+    pc.ondatachannel = (event) => {
+      setupDataChannel(event.channel);
+      dataChannelRef.current = event.channel;
+    };
     pc.onicecandidate = (event) => {
       console.log("icecandiate got", event.candidate);
       if (event.candidate && socket) {
@@ -119,6 +156,15 @@ export const usePeerConnection = (
     return pc;
   }, [socket, bookingId]);
 
+  const sendMessage = useCallback((text: string) => {
+    if (
+      dataChannelRef.current &&
+      dataChannelRef.current.readyState === "open"
+    ) {
+      dataChannelRef.current.send(text);
+      setMessages((prev) => [...prev, { sender: "you", text }]);
+    }
+  }, []);
   const handleUserJoined = useCallback(async () => {
     console.log("user is jonniedez");
     console.log(localStreamRef.current);
@@ -169,5 +215,7 @@ export const usePeerConnection = (
     handleSingallingMessage,
     handleUserJoined,
     remoteStreams,
+    messages,
+    sendMessage,
   };
 };
