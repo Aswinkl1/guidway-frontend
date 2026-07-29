@@ -29,7 +29,7 @@ export const usePeerConnection = (
   >([]);
 
   const dataChannelRef = useRef<RTCDataChannel | null>(null);
-
+  console.log("remote stream ", remoteStreams);
   useEffect(() => {
     localStreamRef.current = localStream;
   }, [localStream]);
@@ -85,7 +85,8 @@ export const usePeerConnection = (
       peerConnection.current.ontrack = null;
       peerConnection.current.close();
       peerConnection.current = null;
-      setRemoteVedioStream(null);
+      // setRemoteVedioStream(null);
+      setRemoteStreams([]);
     }
     const pc = new RTCPeerConnection(CONFIG);
     dataChannelRef.current = pc.createDataChannel("chat-channel");
@@ -102,6 +103,21 @@ export const usePeerConnection = (
           bookingId,
           message: { type: SignalingType.ICE_CANDIDATE, data: event.candidate },
         });
+      }
+    };
+    pc.onconnectionstatechange = (event) => {
+      console.log("connectoin ", pc.connectionState);
+      if (
+        pc.connectionState === "closed" ||
+        pc.connectionState === "disconnected" ||
+        pc.connectionState === "failed"
+      ) {
+        setRemoteStreams([]);
+
+        if (peerConnection.current) {
+          peerConnection.current.close();
+          peerConnection.current = null;
+        }
       }
     };
 
@@ -133,6 +149,7 @@ export const usePeerConnection = (
     pc.ontrack = (event) => {
       console.log("getting remote vedio");
       const incomingStream = event.streams[0];
+      console.log("incomingStream", incomingStream);
       // setRemoteVedioStream(event.streams[0]);
       setRemoteStreams((prevStreams) => {
         if (prevStreams.some((s) => s.id === incomingStream.id)) {
@@ -146,7 +163,7 @@ export const usePeerConnection = (
         // If the stream has no tracks left, it's completely dead. Delete it.
         if (incomingStream.getTracks().length === 0) {
           setRemoteStreams((prev) =>
-            prev.filter((s) => s.id !== incomingStream.id),
+            prev.filter((s) => s.id !== incomingStream.id || s.active == true),
           );
         }
       };

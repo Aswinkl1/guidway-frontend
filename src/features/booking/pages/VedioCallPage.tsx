@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import { useSocket } from "@/hooks/useSocket";
 import { usePeerConnection } from "../hooks/vedio call/usePeerConnection";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useWertcSocket } from "../hooks/vedio call/useWebrtcSocket";
 
 // Unique key for each of the max-4 tiles so pin state can track them individually
@@ -31,7 +31,9 @@ export const VedioCallPage = () => {
 
   const {
     localCameraStream,
+    stopCamera,
     startCamera,
+    stopScreenShare,
     startShareScreen,
     localScreenStream,
   } = useMedia();
@@ -54,7 +56,7 @@ export const VedioCallPage = () => {
   });
 
   const chatInputRef = useRef<HTMLInputElement | null>(null);
-
+  const navigate = useNavigate();
   useEffect(() => {
     startCamera();
   }, []);
@@ -88,12 +90,9 @@ export const VedioCallPage = () => {
   };
 
   function handleEndCall() {
-    if (localCameraStream) {
-      localCameraStream.getTracks().forEach((track) => track.stop());
-    }
-    if (localScreenStream) {
-      localScreenStream.getTracks().forEach((track) => track.stop());
-    }
+    stopCamera();
+    stopScreenShare();
+    navigate(-1);
   }
 
   // Build the list of tiles (max 4) with stable keys, in one place,
