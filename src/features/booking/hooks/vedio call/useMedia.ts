@@ -21,6 +21,7 @@ export const useMedia = () => {
       video: true,
     });
     setLocalScreenStream(stream);
+
     return stream;
   };
 

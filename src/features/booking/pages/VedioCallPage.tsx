@@ -18,7 +18,7 @@ export const VedioCallPage = () => {
   } = useMedia();
   const socket = useSocket();
   const { id } = useParams();
-  const { handleSingallingMessage, handleUserJoined, remoteVedioStream } =
+  const { handleSingallingMessage, handleUserJoined, remoteStreams } =
     usePeerConnection(socket, id, localCameraStream, localScreenStream);
 
   useWertcSocket({
@@ -65,20 +65,26 @@ export const VedioCallPage = () => {
           // key={1}
           label="you"
         />
-        <VideoPlayer
-          stream={localScreenStream}
-          isLocal={true}
-          isPinned={false}
-          // key={1}
-          label="ScreenShare"
-        />
-        <VideoPlayer
-          stream={remoteVedioStream}
-          isLocal={true}
-          isPinned={false}
-          // key={1}
-          label="friend"
-        />
+        {localScreenStream && (
+          <VideoPlayer
+            stream={localScreenStream}
+            isLocal={true}
+            isPinned={false}
+            // key={1}
+            label="ScreenShare"
+          />
+        )}
+        {remoteStreams.map((stream) => {
+          return (
+            <VideoPlayer
+              stream={stream}
+              isLocal={true}
+              isPinned={false}
+              key={stream.id}
+              label="friend"
+            />
+          );
+        })}
 
         <div className="">
           <button className="border-2 rounded-full p-2" onClick={toggleMic}>

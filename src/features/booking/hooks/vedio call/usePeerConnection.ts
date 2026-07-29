@@ -22,6 +22,7 @@ export const usePeerConnection = (
   const localStreamRef = useRef<MediaStream | null>(localStream);
   // const localShareRef = useRef<MediaStream | null>(localShareStream);
   const screenSendersRef = useRef<RTCRtpSender[]>([]);
+  const [remoteStreams, setRemoteStreams] = useState<MediaStream[]>([]);
   useEffect(() => {
     localStreamRef.current = localStream;
   }, [localStream]);
@@ -94,7 +95,24 @@ export const usePeerConnection = (
 
     pc.ontrack = (event) => {
       console.log("getting remote vedio");
-      setRemoteVedioStream(event.streams[0]);
+      const incomingStream = event.streams[0];
+      // setRemoteVedioStream(event.streams[0]);
+      setRemoteStreams((prevStreams) => {
+        if (prevStreams.some((s) => s.id === incomingStream.id)) {
+          return prevStreams;
+        }
+        return [...prevStreams, incomingStream];
+      });
+
+      incomingStream.onremovetrack = () => {
+        console.log("A remote track was removed!");
+        // If the stream has no tracks left, it's completely dead. Delete it.
+        if (incomingStream.getTracks().length === 0) {
+          setRemoteStreams((prev) =>
+            prev.filter((s) => s.id !== incomingStream.id),
+          );
+        }
+      };
     };
 
     peerConnection.current = pc;
@@ -148,8 +166,8 @@ export const usePeerConnection = (
   );
 
   return {
-    remoteVedioStream,
     handleSingallingMessage,
     handleUserJoined,
+    remoteStreams,
   };
 };
