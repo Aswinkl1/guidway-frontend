@@ -83,7 +83,7 @@ export const VedioCallPage = () => {
     const text = chatInputRef.current?.value;
     if (text && text.trim() !== "") {
       sendMessage(text);
-      chatInputRef.current.value = "";
+      if (chatInputRef.current) chatInputRef.current.value = "";
     }
   };
 
