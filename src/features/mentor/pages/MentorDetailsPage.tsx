@@ -324,7 +324,7 @@ const MentorPublicProfilePage: React.FC = () => {
                       <p className="text-sm text-slate-500">
                         {
                           MENTOR.experiences.filter((e) => e.isCurrent)[0]
-                            .company
+                            ?.company
                         }
                       </p>
                     </div>

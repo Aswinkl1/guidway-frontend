@@ -27,6 +27,7 @@ import {
   ThumbsUp,
   Trash2,
   Users,
+  VideoIcon,
   XCircle,
   Zap,
   type LucideIcon,
@@ -161,6 +162,7 @@ export interface ManageSessionActions {
   onMessageMentor: () => void;
   onReschedule: () => void;
   onCancel: () => void;
+  onJoinCall: () => void;
   status: BookingStatus;
 }
 
@@ -177,9 +179,16 @@ export function ManageSessionPanel({
   onMessageMentor,
   onReschedule,
   onCancel,
+  onJoinCall,
   status,
 }: ManageSessionActions) {
   const items: SessionAction[] = [
+    {
+      label: "Join Session",
+      icon: VideoIcon,
+      onClick: onJoinCall,
+      allowedStatuses: [BOOKING_STATUS.CONFIRMED],
+    },
     {
       label: "Report Session",
       icon: Flag,
