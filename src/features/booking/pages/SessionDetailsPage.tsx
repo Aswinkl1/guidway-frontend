@@ -162,30 +162,29 @@ export function BookingDetailPage() {
         onClose={() => setOpenAddReview(false)}
         onSave={handleSubmitReview}
       />
-      {isRescheduleOpen ?? (
-        <RescheduleModal
-          open={isRescheduleOpen}
-          onOpenChange={setIsRescheduleOpen}
-          availableSlots={data ?? []}
-          timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
-          mentorId={session.mentorId}
-          onConfirmReschedule={handleReschedule}
-          onDateChange={handleDateChange}
-          // session={undefined}
-          mentor={{
-            name: bookingSetupDetails?.mentor.name ?? "",
 
-            title: bookingSetupDetails?.mentor.name ?? "",
-            avatarUrl: bookingSetupDetails?.mentor.avatarUrl ?? "",
-          }}
-          session={{
-            durationPerSlot: bookingSetupDetails?.session.duration ?? 1,
-            pricePerSlot: bookingSetupDetails?.session.price ?? 0,
-            type: bookingSetupDetails?.session.title ?? "",
-            currencySymbol: "$",
-          }}
-        />
-      )}
+      <RescheduleModal
+        open={isRescheduleOpen}
+        onOpenChange={setIsRescheduleOpen}
+        availableSlots={data ?? []}
+        timezone={Intl.DateTimeFormat().resolvedOptions().timeZone}
+        mentorId={session.mentorId}
+        onConfirmReschedule={handleReschedule}
+        onDateChange={handleDateChange}
+        // session={undefined}
+        mentor={{
+          name: bookingSetupDetails?.mentor.name ?? "",
+
+          title: bookingSetupDetails?.mentor.name ?? "",
+          avatarUrl: bookingSetupDetails?.mentor.avatarUrl ?? "",
+        }}
+        session={{
+          durationPerSlot: bookingSetupDetails?.session.duration ?? 1,
+          pricePerSlot: bookingSetupDetails?.session.price ?? 0,
+          type: bookingSetupDetails?.session.title ?? "",
+          currencySymbol: "$",
+        }}
+      />
 
       <div className="mx-auto max-w-5xl px-6 py-8">
         <button
