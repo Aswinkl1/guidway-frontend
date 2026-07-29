@@ -46,7 +46,7 @@ export function BookingDetailPage() {
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
   const { mutateAsync: mutateAsyncForDeleteReview } = useDeleteReview();
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
-    useBookingSetupDetails(session?.mentorId, session?.sessionId);
+    useBookingSetupDetails(session?.mentorId, session?.sessionId); //TODO : sessin id does exist so this functoin wont run need to fix
   const [selectedDate, setSelectedDate] = useState<string>(
     format(new Date(), "yyyy-MM-dd"),
   );
