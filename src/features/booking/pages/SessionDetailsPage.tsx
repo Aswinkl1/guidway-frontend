@@ -142,6 +142,10 @@ export function BookingDetailPage() {
     mutateAsync({ role, id: session.id });
   }
 
+  function handleOnJoin() {
+    navigate(`/bookings/${session.id}/call`);
+  }
+
   function handleSubmitReview(values: ReviewFormData) {
     mutateAsyncForAddReview({
       bookingId: session?.id,
@@ -259,6 +263,7 @@ export function BookingDetailPage() {
 
           <div>
             <ManageSessionPanel
+              onJoinCall={handleOnJoin}
               onReport={handleReport}
               onMessageMentor={handleMessageMentor}
               onReschedule={() => setIsRescheduleOpen(true)}
