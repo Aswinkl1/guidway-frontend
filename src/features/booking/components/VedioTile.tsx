@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { Pin } from "lucide-react";
 
 interface VideoPlayerProps {
   stream: MediaStream | null;
@@ -22,24 +23,12 @@ export function VideoPlayer({
     if (videoRef.current && stream) {
       videoRef.current.srcObject = stream;
     }
-
-    // const playPromise = videoRef.current.play();
-
-    // // 3. Handle the promise to prevent console errors
-    // if (playPromise !== undefined) {
-    //   playPromise.catch((error) => {
-    //     // We can safely ignore AbortErrors caused by React mounting/unmounting
-    //     if (error.name !== "AbortError") {
-    //       console.error("Video playback failed:", error);
-    //     }
-    //   });
-    // }
   }, [stream]);
 
   return (
     <div
       onClick={onPin}
-      className={`relative rounded-xl overflow-hidden bg-black border-2 transition-all cursor-pointer ${
+      className={`relative w-full h-full rounded-xl overflow-hidden bg-neutral-900 border-2 transition-all duration-200 cursor-pointer group ${
         isPinned
           ? "border-blue-500 ring-2 ring-blue-500/50"
           : "border-gray-800 hover:border-gray-600"
@@ -52,6 +41,18 @@ export function VideoPlayer({
         muted={isLocal} // ALWAYS mute local stream to prevent loud audio feedback loop!
         className="w-full h-full object-cover"
       />
+
+      {/* Pin indicator - only shows on hover or when pinned */}
+      <div
+        className={`absolute top-2 right-2 bg-black/60 backdrop-blur-md rounded-md p-1.5 transition-opacity ${
+          isPinned ? "opacity-100" : "opacity-0 group-hover:opacity-100"
+        }`}
+      >
+        <Pin
+          size={14}
+          className={isPinned ? "text-blue-400 fill-blue-400" : "text-white"}
+        />
+      </div>
 
       {/* Participant Label */}
       <div className="absolute bottom-3 left-3 bg-black/60 backdrop-blur-md text-white text-xs px-2.5 py-1 rounded-md font-medium">
