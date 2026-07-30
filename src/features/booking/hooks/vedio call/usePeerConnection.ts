@@ -93,6 +93,7 @@ export const usePeerConnection = (
     setupDataChannel(dataChannelRef.current);
 
     pc.ondatachannel = (event) => {
+      console.log("ondatachannel is running");
       setupDataChannel(event.channel);
       dataChannelRef.current = event.channel;
     };

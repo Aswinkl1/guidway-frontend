@@ -1,4 +1,5 @@
 import { useState } from "react";
+import toast from "react-hot-toast";
 
 export const useMedia = () => {
   const [localScreenStream, setLocalScreenStream] =
@@ -17,6 +18,10 @@ export const useMedia = () => {
   };
 
   const startShareScreen = async () => {
+    if (localScreenStream) {
+      toast.error("Screen is already sharing");
+      return;
+    }
     const stream = await navigator.mediaDevices.getDisplayMedia({
       video: true,
     });
