@@ -44,7 +44,9 @@ export function BookingDetailPage() {
   const { mutateAsync } = UseCancelBooking(params.id);
   const [open, setOpen] = useState(false);
   const [isRescheduleOpen, setIsRescheduleOpen] = useState(false);
-  const { mutateAsync: mutateAsyncForDeleteReview } = useDeleteReview();
+  const { mutateAsync: mutateAsyncForDeleteReview } = useDeleteReview(
+    params.id,
+  );
   const { data: bookingSetupDetails, isPending: isBookingSetupDetailsPending } =
     useBookingSetupDetails(session?.mentorId, session?.sessionId); //TODO : sessin id does exist so this functoin wont run need to fix
   const [selectedDate, setSelectedDate] = useState<string>(
@@ -52,9 +54,9 @@ export function BookingDetailPage() {
   );
   console.log("session", session);
 
-  const { mutateAsync: mutateAsyncForAddReview } = useReview();
+  const { mutateAsync: mutateAsyncForAddReview } = useReview(params.id);
 
-  const { mutateAsync: mutateAsyncForReschedule } = useReschedule();
+  const { mutateAsync: mutateAsyncForReschedule } = useReschedule(params.id);
   const { data, isPending } = useSlots(session?.mentorId, selectedDate);
   const [openAddReview, setOpenAddReview] = useState(false);
   // if (isBookingSetupDetailsPending || isPending) {

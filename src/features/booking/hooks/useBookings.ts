@@ -6,8 +6,8 @@ import {
   getAllHostedBooking,
 } from "../services/booking.service";
 
+export const bookingKeys = createKeys("booking");
 export function useBookings(params: GetAllBookingParams) {
-  const bookingKeys = createKeys("booking");
   return useQuery({
     queryKey: [bookingKeys.list(params)],
     queryFn: () => {

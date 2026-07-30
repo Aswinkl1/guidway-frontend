@@ -5,6 +5,7 @@ import {
 } from "../services/booking.service";
 import { SessionRole } from "../types/booking.types";
 import toast from "react-hot-toast";
+import { bookingKeys } from "./useBookings";
 
 export const UseCancelBooking = (id: string) => {
   const queryClient = useQueryClient();
@@ -18,7 +19,7 @@ export const UseCancelBooking = (id: string) => {
     },
     onSuccess: () => {
       console.log("id", id);
-      queryClient.invalidateQueries({ queryKey: ["session-detail", id] });
+      queryClient.invalidateQueries({ queryKey: bookingKeys.details(id) });
       toast.success("Booking cancelled successfully");
     },
     onError: (error: any) => {
